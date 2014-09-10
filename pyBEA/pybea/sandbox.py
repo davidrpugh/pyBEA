@@ -1,11 +1,11 @@
 import requests
 
 
-class DataSet(object):
+class Request(object):
 
     base_url = 'http://www.bea.gov/api/data?'
 
-    def __init__(self, api_key, data_set_name, result_format='json'):
+    def __init__(self, api_key, data_set_name, result_format='json', **kwargs):
         # data_set_name is read-only
         self._data_set_name = data_set_name
 
@@ -72,7 +72,11 @@ class DataSet(object):
         return tmp_response
 
 
-class RegionalData(DataSet):
+class Results(object):
+    pass
+
+
+class RegionalData(Request):
 
     def __init__(self, api_key, result_format='json'):
         super(RegionalData, self).__init__(api_key, 'RegionalData', result_format)
@@ -89,19 +93,19 @@ class RegionalData(DataSet):
         return tmp_response
 
 
-class NIPA(DataSet):
+class NIPA(Request):
 
     def __init__(self, api_key, result_format='json'):
         super(RegionalData, self).__init__(api_key, 'NIPA', result_format)
 
 
-class NIUnderlyingDetail(DataSet):
+class NIUnderlyingDetail(Request):
 
     def __init__(self, api_key, result_format='json'):
         super(RegionalData, self).__init__(api_key, 'NIUnderlyingDetail', result_format)
 
 
-class FixedAssets(DataSet):
+class FixedAssets(Request):
 
     def __init__(self, api_key, result_format='json'):
         super(RegionalData, self).__init__(api_key, 'FixedAssets', result_format)
