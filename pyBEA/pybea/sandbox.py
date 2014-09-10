@@ -13,6 +13,14 @@ class DataSet(object):
         self.result_format = result_format
 
     @property
+    def data_set_list(self):
+        tmp_query = {'UserID': self.api_key,
+                     'Method': 'GetDataSetList',
+                     'ResultFormat': self.result_format}
+        tmp_response = requests.get(url=self.base_url, params=tmp_query)
+        return tmp_response
+
+    @property
     def data_set_name(self):
         return self._data_set_name
 
@@ -25,13 +33,30 @@ class DataSet(object):
         tmp_response = requests.get(url=self.base_url, params=tmp_query)
         return tmp_response
 
+    @property
+    def result_format(self):
+        return self._result_format
+
+    @result_format.setter
+    def result_format(self, value):
+        self._result_format = value
+
+    def _validate_result_format(self, value):
+        """Validates the result_format attribute."""
+        if not isinstance(value, str):
+            raise AttributeError
+        elif value.lower() not in ['json', 'xml']:
+            raise AttributeError
+        else:
+            return value
+
     def grab_data(self, **kwargs):
         base_query = {'UserID': self.api_key,
                       'Method': 'GetData',
                       'DataSetName': self.data_set_name,
                       'ResultFormat': self.result_format}
-        tmp_query = base_query.update(kwargs)
-        tmp_response = requests.get(url=self.base_url, params=tmp_query)
+        base_query.update(kwargs)
+        tmp_response = requests.get(url=self.base_url, params=base_query)
         return tmp_response
 
     def grab_parameter_values(self, parameter):
@@ -44,27 +69,21 @@ class DataSet(object):
         return tmp_response
 
 
-class MetaData(object):
-
-    base_url = 'http://www.bea.gov/api/data?'
-
-    def __init__(self, api_key, result_format='json'):
-        self.api_key = api_key
-        self.result_format = result_format
-
-    @property
-    def data_set_list(self):
-        tmp_query = {'UserID': self.api_key,
-                     'Method': 'GetDataSetList',
-                     'ResultFormat': self.result_format}
-        tmp_response = requests.get(url=self.base_url, params=tmp_query)
-        return tmp_response
-
-
 class RegionalData(DataSet):
 
     def __init__(self, api_key, result_format='json'):
         super(RegionalData, self).__init__(api_key, 'RegionalData', result_format)
+
+    def grab_data(self, key_code, geo_fips='STATE', year='ALL'):
+        base_query = {'UserID': self.api_key,
+                      'Method': 'GetData',
+                      'DataSetName': self.data_set_name,
+                      'KeyCode': key_code,
+                      'GeoFIPS': geo_fips,
+                      'Year': year,
+                      'ResultFormat': self.result_format}
+        tmp_response = requests.get(url=self.base_url, params=base_query)
+        return tmp_response
 
 
 class NIPA(DataSet):
