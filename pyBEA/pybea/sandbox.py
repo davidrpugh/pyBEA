@@ -5,8 +5,9 @@ class BEA(object):
 
     base_url = 'http://www.bea.gov/api/data?'
 
-    def __init__(self, api_key, result_format='json'):
+    def __init__(self, api_key, data_set_name, result_format='json'):
         self.api_key = api_key
+        self.data_set_name = data_set_name
         self.result_format = result_format
 
     @property
