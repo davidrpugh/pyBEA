@@ -39,14 +39,17 @@ class DataSet(object):
 
     @result_format.setter
     def result_format(self, value):
-        self._result_format = value
+        self._result_format = self._validate_result_format(value)
 
     def _validate_result_format(self, value):
         """Validates the result_format attribute."""
+        valid_formats = ['json', 'xml']
         if not isinstance(value, str):
-            raise AttributeError
-        elif value.lower() not in ['json', 'xml']:
-            raise AttributeError
+            mesg = "'result_format' must be a {} instance."
+            raise AttributeError(mesg.format(str))
+        elif value.lower() not in valid_formats:
+            mesg = "'result_format' must be either {} or {}."
+            raise AttributeError(mesg.format(*valid_formats))
         else:
             return value
 
