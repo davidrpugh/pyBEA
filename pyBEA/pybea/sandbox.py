@@ -62,16 +62,24 @@ class MetaData(object):
 
 
 class RegionalData(DataSet):
-    pass
+
+    def __init__(self, api_key, result_format='json'):
+        super(RegionalData, self).__init__(api_key, 'RegionalData', result_format)
 
 
 class NIPA(DataSet):
-    pass
+
+    def __init__(self, api_key, result_format='json'):
+        super(RegionalData, self).__init__(api_key, 'NIPA', result_format)
 
 
 class NIUnderlyingDetail(DataSet):
-    pass
+
+    def __init__(self, api_key, result_format='json'):
+        super(RegionalData, self).__init__(api_key, 'NIUnderlyingDetail', result_format)
 
 
 class FixedAssets(DataSet):
-    pass
+
+    def __init__(self, api_key, result_format='json'):
+        super(RegionalData, self).__init__(api_key, 'FixedAssets', result_format)
