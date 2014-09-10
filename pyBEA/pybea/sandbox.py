@@ -1,7 +1,7 @@
 import requests
 
 
-class Data(object):
+class API(object):
 
     base_url = 'http://www.bea.gov/api/data?'
 
@@ -30,7 +30,25 @@ class Data(object):
         tmp_response = requests.get(url=self.base_url, params=tmp_query)
         return tmp_response
 
+    @property
+    def parameter_name(self):
+        return self._parameter_name
+
+    @property
+    def parameter_values(self):
+        tmp_query = {'UserID': self.api_key,
+                     'Method': 'GetParameterValues',
+                     'DataSetName': self.data_set_name,
+                     'ParameterName': self.parameter_name,
+                     'ResultFormat': self.result_format}
+        tmp_response = requests.get(url=self.base_url, params=tmp_query)
+        return tmp_response
+
     @data_set_name.setter
     def data_set_name(self, value):
         self._data_set_name = value
+
+    @parameter_name.setter
+    def parameter_name(self, value):
+        self._parameter_name = value
     
