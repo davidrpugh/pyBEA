@@ -60,4 +60,19 @@ class BEA(object):
     @parameter_name.setter
     def parameter_name(self, value):
         self._parameter_name = value
-    
+
+
+class RegionalData(BEA):
+    pass
+
+
+class NIPA(BEA):
+    pass
+
+
+class NIUnderlyingDetail(NIPA):
+    pass
+
+
+class FixedAssets(BEA):
+    pass
