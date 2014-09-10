@@ -1,7 +1,7 @@
 import requests
 
 
-class API(object):
+class BEA(object):
 
     base_url = 'http://www.bea.gov/api/data?'
 
