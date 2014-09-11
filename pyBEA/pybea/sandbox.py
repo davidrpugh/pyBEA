@@ -41,7 +41,7 @@ def get_data_set_list(UserID, ResultFormat='JSON'):
     return data_set_list
 
 
-def get_parameter_list(UserID, DataSetName, ResultFormat='JSON', **params):
+def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
     """
     Retrieve list of required and optional parameters for a given data set.
 
@@ -58,21 +58,39 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON', **params):
         format of the results. If ResultFormat is not supplied on the request,
         or an invalid ResultFormat is specified, the default format returned is
         JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
-    params : dict
 
     Returns
     -------
-    data : Pandas.DataFrame
-        A Pandas DataFrame containing the requested data.
+    parameter_list : Pandas.DataFrame
+        A Pandas DataFrame containing the metadata associated with the
+        parameters of the requested data set.
+
+    Notes
+    -----
+    The function returns the following metadata for each required and optional
+    parameter in the specified data set.
+
+    - ParameterName: the name of the parameter as used in a data request
+    - ParameterDataType: String or Integer
+    - ParameterDescription: a description of the parameter
+    - ParameterIsRequired: 0 if the parameter can be omitted from a request, 1
+    if required.
+    - ParameterDefaultValue: the default value used for the request if the
+    parameter is not supplied
+    - MultipleAcceptedFlag: 0 if the parameter may only have a single value, 1
+    if multiple values are permitted. Note that multiple values for a parameter
+    are submitted as a comma-separated string.
+    - AllValue: the special value for a parameter that means all valid values
+    are used without supplying them individually
 
     """
-    tmp_request = Request(UserID=UserID,
-                          Method='GetParameterList',
-                          DataSetName=DataSetName,
-                          ResultFormat=ResultFormat,
-                          **params)
-
-    return tmp_request.response.content
+    tmp_request = ParameterListRequest(UserID=UserID,
+                                       Method='GetParameterList',
+                                       DataSetName=DataSetName,
+                                       ResultFormat=ResultFormat,
+                                       )
+    parameter_list = pd.DataFrame(tmp_request.parameter_list, dtype=np.int64)
+    return parameter_list
 
 
 def get_parameter_values(self, UserID, DataSetName, ParameterName,
