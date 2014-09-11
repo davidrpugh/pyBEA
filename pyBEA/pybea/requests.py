@@ -14,6 +14,14 @@ class Request(dict):
         required_params.update(params)
         super(Request, self).__init__(**required_params)
 
+    def __setitem__(self, item, value):
+        self._response = None
+        return super(Request, self).__setitem__(self, item, value)
+
+    def __delitem__(self, item):
+        self._response = None
+        return super(Request, self).__delitem__(self, item)
+
     @property
     def response(self):
         if self._response is None:
