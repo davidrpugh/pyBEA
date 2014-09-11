@@ -47,6 +47,13 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
 
     Parameters
     ----------
+    UserID : str
+
+    DataSetName : str
+
+    ResultFormat : str
+
+    params : dict
 
     Returns
     -------
