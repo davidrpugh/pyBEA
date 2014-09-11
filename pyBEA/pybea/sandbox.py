@@ -10,7 +10,7 @@ import pandas as pd
 from api import *
 
 
-def get_data_set_list(UserID, ResultFormat='JSON', **params):
+def get_data_set_list(UserID, ResultFormat='JSON'):
     """
     Retrieve list of currently available data sets.
 
@@ -25,22 +25,20 @@ def get_data_set_list(UserID, ResultFormat='JSON', **params):
         format of the results. If ResultFormat is not supplied on the request,
         or an invalid ResultFormat is specified, the default format returned is
         JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
-    params : dict
 
     Returns
     -------
-    data : Pandas.DataFrame
-        A Pandas DataFrame containing the requested data.
+    data_set_list : Pandas.DataFrame
+        A Pandas DataFrame containing the DatasetName and DatasetDescription
+        attributes for all available data sets.
 
     """
     tmp_request = DataSetListRequest(UserID=UserID,
                                      Method='GetDataSetList',
                                      ResultFormat=ResultFormat,
-                                     **params)
-
-    # convert to DataFrame
-    tmp_df = pd.DataFrame(tmp_request.data_set, dtype=np.int64)
-    return tmp_df
+                                     )
+    data_set_list = pd.DataFrame(tmp_request.data_set, dtype=np.int64)
+    return data_set_list
 
 
 def get_parameter_list(UserID, DataSetName, ResultFormat='JSON', **params):
