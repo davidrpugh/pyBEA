@@ -17,9 +17,14 @@ def get_data_set_list(UserID, ResultFormat='JSON', **params):
     Parameters
     ----------
     UserID : str
-
-    ResultFormat : str
-
+        Before using the API, users must obtain a unique 36-character UserID by
+        registering at http://www.bea.gov/api/signup/.
+    ResultFormat : str (default='JSON')
+        The API returns data in one of two formats: JSON or XML. The
+        ResultFormat parameter can be included on any request to specify the
+        format of the results. If ResultFormat is not supplied on the request,
+        or an invalid ResultFormat is specified, the default format returned is
+        JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
     params : dict
 
     Returns
@@ -28,12 +33,14 @@ def get_data_set_list(UserID, ResultFormat='JSON', **params):
         A Pandas DataFrame containing the requested data.
 
     """
-    tmp_request = Request(UserID=UserID,
-                          Method='GetDataSetList',
-                          ResultFormat=ResultFormat,
-                          **params)
+    tmp_request = DataSetListRequest(UserID=UserID,
+                                     Method='GetDataSetList',
+                                     ResultFormat=ResultFormat,
+                                     **params)
 
-    return tmp_request.response.content
+    # convert to DataFrame
+    tmp_df = pd.DataFrame(tmp_request.data_set, dtype=np.int64)
+    return tmp_df
 
 
 def get_parameter_list(UserID, DataSetName, ResultFormat='JSON', **params):
@@ -43,11 +50,16 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON', **params):
     Parameters
     ----------
     UserID : str
-
+        Before using the API, users must obtain a unique 36-character UserID by
+        registering at http://www.bea.gov/api/signup/.
     DataSetName : str
 
-    ResultFormat : str
-
+    ResultFormat : str (default='JSON')
+        The API returns data in one of two formats: JSON or XML. The
+        ResultFormat parameter can be included on any request to specify the
+        format of the results. If ResultFormat is not supplied on the request,
+        or an invalid ResultFormat is specified, the default format returned is
+        JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
     params : dict
 
     Returns
@@ -73,13 +85,18 @@ def get_parameter_values(self, UserID, DataSetName, ParameterName,
     Parameters
     ----------
     UserID : str
-
+        Before using the API, users must obtain a unique 36-character UserID by
+        registering at http://www.bea.gov/api/signup/.
     DataSetName : str
 
     ParameterName : str
 
-    ResultFormat : str
-
+    ResultFormat : str (default='JSON')
+        The API returns data in one of two formats: JSON or XML. The
+        ResultFormat parameter can be included on any request to specify the
+        format of the results. If ResultFormat is not supplied on the request,
+        or an invalid ResultFormat is specified, the default format returned is
+        JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
     params : dict
 
     Returns
@@ -105,11 +122,16 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     Parameters
     ----------
     UserID : str
-
+        Before using the API, users must obtain a unique 36-character UserID by
+        registering at http://www.bea.gov/api/signup/.
     DataSetName : str
 
-    ResultFormat : str
-
+    ResultFormat : str (default='JSON')
+        The API returns data in one of two formats: JSON or XML. The
+        ResultFormat parameter can be included on any request to specify the
+        format of the results. If ResultFormat is not supplied on the request,
+        or an invalid ResultFormat is specified, the default format returned is
+        JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
     params : dict
 
     Returns
