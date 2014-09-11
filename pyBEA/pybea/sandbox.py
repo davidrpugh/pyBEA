@@ -4,7 +4,10 @@ TODO:
 1. Create functions out of the subclasses of the Request object.
 
 """
-from api import Request
+import numpy as np
+import pandas as pd
+
+from api import *
 
 
 def get_data_set_list(UserID, ResultFormat='JSON', **params):
@@ -39,11 +42,42 @@ def get_parameter_values(self, UserID, DataSetName, ParameterName,
 
 
 def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
-    tmp_request = Request(UserID=UserID,
-                          Method='GetData',
-                          DataSetName=DataSetName,
-                          ParameterName=DataSetName,
-                          ResultFormat=ResultFormat,
-                          **params)
+    """
+    Retrieve data from the Bureau of Economic Analysis (BEA) data api.
 
-    return tmp_request.response.content
+    Parameters
+    ----------
+
+    Returns
+    -------
+    data : Pandas.DataFrame
+        A Pandas DataFrame containing the requested data.
+
+    """
+    if DataSetName == 'RegionalData':
+        tmp_request = RegionalDataRequest(UserID=UserID,
+                                          Method='GetData',
+                                          ResultFormat=ResultFormat,
+                                          **params)
+    elif DataSetName == 'NIPA':
+        tmp_request = NIPARequest(UserID=UserID,
+                                  Method='GetData',
+                                  ResultFormat=ResultFormat,
+                                  **params)
+    elif DataSetName == 'NIUnderlyingDetail':
+        tmp_request = NIPARequest(UserID=UserID,
+                                  Method='GetData',
+                                  ResultFormat=ResultFormat,
+                                  **params)
+    elif DataSetName == 'FixedAssets':
+        tmp_request = NIPARequest(UserID=UserID,
+                                  Method='GetData',
+                                  ResultFormat=ResultFormat,
+                                  **params)
+    else:
+        raise ValueError("Invalid DataSetName requested.")
+
+    # convert to DataFrame
+    tmp_df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+
+    return tmp_df
