@@ -11,6 +11,23 @@ from api import *
 
 
 def get_data_set_list(UserID, ResultFormat='JSON', **params):
+    """
+    Retrieve list of currently available data sets.
+
+    Parameters
+    ----------
+    UserID : str
+
+    ResultFormat : str
+
+    params : dict
+
+    Returns
+    -------
+    data : Pandas.DataFrame
+        A Pandas DataFrame containing the requested data.
+
+    """
     tmp_request = Request(UserID=UserID,
                           Method='GetDataSetList',
                           ResultFormat=ResultFormat,
@@ -20,6 +37,25 @@ def get_data_set_list(UserID, ResultFormat='JSON', **params):
 
 
 def get_parameter_list(UserID, DataSetName, ResultFormat='JSON', **params):
+    """
+    Retrieve list of required and optional parameters for a given data set.
+
+    Parameters
+    ----------
+    UserID : str
+
+    DataSetName : str
+
+    ResultFormat : str
+
+    params : dict
+
+    Returns
+    -------
+    data : Pandas.DataFrame
+        A Pandas DataFrame containing the requested data.
+
+    """
     tmp_request = Request(UserID=UserID,
                           Method='GetParameterList',
                           DataSetName=DataSetName,
@@ -31,6 +67,27 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON', **params):
 
 def get_parameter_values(self, UserID, DataSetName, ParameterName,
                          ResultFormat='JSON', **params):
+    """
+    Retrieve list of valid parameter values for a given data set.
+
+    Parameters
+    ----------
+    UserID : str
+
+    DataSetName : str
+
+    ParameterName : str
+
+    ResultFormat : str
+
+    params : dict
+
+    Returns
+    -------
+    data : Pandas.DataFrame
+        A Pandas DataFrame containing the requested data.
+
+    """
     tmp_request = Request(UserID=UserID,
                           Method='GetParameterValues',
                           DataSetName=DataSetName,
