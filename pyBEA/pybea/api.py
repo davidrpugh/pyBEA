@@ -1,12 +1,9 @@
 """
-Want the request to have nicely formated request and results attributes that
-can easily be passed to the Pandas DataFrame constructor.
-
-Notes
+TODO
 -----
-
-1. No longer clear to me that we need the subclasses for request.
-2. Use ElementTree for XML parsing.
+1. Use ElementTree to implement XML parsing of BEA data.
+2. Lots of documentation needs to be written! Mostly this can be copied
+verbatim from the BEA user guide.
 
 """
 import json
@@ -90,6 +87,22 @@ class DataSetListRequest(Request):
         required_params.update(params)
         super(DataSetListRequest, self).__init__(**required_params)
 
+    @property
+    def _json_data_set(self):
+        return self.results['Dataset']
+
+    @property
+    def _xml_data_set(self):
+        raise NotImplementedError
+
+    @property
+    def data_set(self):
+        if self['ResultFormat'] == 'JSON':
+            tmp_data_set = self._json_data_set
+        else:
+            tmp_data_set = self._xml_data_set
+        return tmp_data_set
+
 
 class ParameterListRequest(Request):
 
@@ -100,6 +113,22 @@ class ParameterListRequest(Request):
                            'ResultFormat': ResultFormat}
         required_params.update(params)
         super(ParameterListRequest, self).__init__(**required_params)
+
+    @property
+    def _json_parameter_list(self):
+        return self.results['Parameter']
+
+    @property
+    def _xml_parameter_list(self):
+        raise NotImplementedError
+
+    @property
+    def parameter_list(self):
+        if self['ResultFormat'] == 'JSON':
+            tmp_parameter_list = self._json_parameter_list
+        else:
+            tmp_parameter_list = self._xml_parameter_list
+        return tmp_parameter_list
 
 
 class ParameterValuesRequest(Request):
@@ -113,6 +142,22 @@ class ParameterValuesRequest(Request):
                            'ResultFormat': ResultFormat}
         required_params.update(params)
         super(ParameterValuesRequest, self).__init__(**required_params)
+
+    @property
+    def _json_parameter_values(self):
+        return self.results['ParamValue']
+
+    @property
+    def _xml_parameter_values(self):
+        raise NotImplementedError
+
+    @property
+    def parameter_values(self):
+        if self['ResultFormat'] == 'JSON':
+            tmp_parameter_values = self._json_parameter_values
+        else:
+            tmp_parameter_values = self._xml_parameter_values
+        return tmp_parameter_values
 
 
 class DataRequest(Request):
