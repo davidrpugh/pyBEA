@@ -1,16 +1,41 @@
 import requests
 
 
-class Request(object):
+class Request(dict):
 
-    base_url = 'http://www.bea.gov/api/data?'
+    _response = None
 
-    def __init__(self, api_key, data_set_name, result_format='json', **kwargs):
-        # data_set_name is read-only
-        self._data_set_name = data_set_name
+    base_url = 'http://www.bea.gov/api/data'
 
-        self.api_key = api_key
-        self.result_format = result_format
+    def __init__(self, **params):
+        valid_params = self._validate_params_keys(params)
+        super(Request, self).__init__(**valid_params)
+
+    def _validate_params(self, params):
+        """Validate dictionary of query parameters."""
+        if 'UserID' not in params:
+            raise KeyError
+        elif 'Method' not in params:
+            raise KeyError
+        else:
+            return params
+
+    @property
+    def response(self):
+        if self._response is None:
+            self._response = requests.get(url=self.base_url, params=self)
+        return self._response
+
+    
+class Blah:
+
+    @property
+    def query(self):
+        return self._query
+
+    @query.setter
+    def query(self, **kwargs):
+        self._query.update(kwargs)
 
     @property
     def data_set_list(self):
