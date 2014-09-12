@@ -279,7 +279,7 @@ class NIPARequest(DataRequest):
     def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON',
                  **params):
         """
-        Create an instance of the RegionalDataRequest class.
+        Create an instance of the NIPARequest class.
 
         Parameters
         ----------
@@ -316,7 +316,7 @@ class NIUnderlyingDetailRequest(DataRequest):
     def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON',
                  **params):
         """
-        Create an instance of the RegionalDataRequest class.
+        Create an instance of the NIUnderlyingDetailRequest class.
 
         Parameters
         ----------
@@ -352,7 +352,7 @@ class FixedAssetsRequest(DataRequest):
 
     def __init__(self, UserID, TableID, Year, ResultFormat='JSON', **params):
         """
-        Create an instance of the RegionalDataRequest class.
+        Create an instance of the FixedAssetsRequest class.
 
         Parameters
         ----------
