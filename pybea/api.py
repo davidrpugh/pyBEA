@@ -1,4 +1,8 @@
 """
+@author : David R. Pugh
+@date : 2014-09-09
+
+
 TODO
 -----
 1. Use ElementTree to implement XML parsing of BEA data.
