@@ -1,7 +1,6 @@
 """
-TODO:
-
-1. Create functions out of the subclasses of the Request object.
+@author : David R. Pugh
+@date : 2014-09-09
 
 """
 import numpy as np
@@ -34,7 +33,6 @@ def get_data_set_list(UserID, ResultFormat='JSON'):
 
     """
     tmp_request = DataSetListRequest(UserID=UserID,
-                                     Method='GetDataSetList',
                                      ResultFormat=ResultFormat,
                                      )
     data_set_list = pd.DataFrame(tmp_request.data_set, dtype=np.int64)
@@ -51,7 +49,9 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
         Before using the API, users must obtain a unique 36-character UserID by
         registering at http://www.bea.gov/api/signup/.
     DataSetName : str
-
+        A valid name of an available BEA data set. The get_data_set_list
+        function returns a complete listing of available data sets and the
+        associated DataSetName attributes.
     ResultFormat : str (default='JSON')
         The API returns data in one of two formats: JSON or XML. The
         ResultFormat parameter can be included on any request to specify the
@@ -85,7 +85,6 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
 
     """
     tmp_request = ParameterListRequest(UserID=UserID,
-                                       Method='GetParameterList',
                                        DataSetName=DataSetName,
                                        ResultFormat=ResultFormat,
                                        )
@@ -94,7 +93,7 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
 
 
 def get_parameter_values(self, UserID, DataSetName, ParameterName,
-                         ResultFormat='JSON', **params):
+                         ResultFormat='JSON'):
     """
     Retrieve list of valid parameter values for a given data set.
 
@@ -104,35 +103,38 @@ def get_parameter_values(self, UserID, DataSetName, ParameterName,
         Before using the API, users must obtain a unique 36-character UserID by
         registering at http://www.bea.gov/api/signup/.
     DataSetName : str
-
+        A valid name of an available BEA data set. Note that the
+        get_data_set_list function returns a complete listing of available data
+        sets and their associated DataSetName attributes.
     ParameterName : str
-
+        A valid parameter name for a given data set. Note that the
+        get_parameter_list function returns a complete listing of valid
+        parameters names for a given data set.
     ResultFormat : str (default='JSON')
         The API returns data in one of two formats: JSON or XML. The
         ResultFormat parameter can be included on any request to specify the
         format of the results. If ResultFormat is not supplied on the request,
         or an invalid ResultFormat is specified, the default format returned is
         JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
-    params : dict
 
     Returns
     -------
-    data : Pandas.DataFrame
-        A Pandas DataFrame containing the requested data.
+    param_values : Pandas.DataFrame
+        A Pandas DataFrame containing the list of valid parameter values for
+        the given data set.
 
     """
-    tmp_request = Request(UserID=UserID,
-                          Method='GetParameterValues',
-                          DataSetName=DataSetName,
-                          ParameterName=DataSetName,
-                          ResultFormat=ResultFormat,
-                          **params)
-
-    return tmp_request.response.content
+    tmp_request = ParameterValuesRequest(UserID=UserID,
+                                         DataSetName=DataSetName,
+                                         ParameterName=DataSetName,
+                                         ResultFormat=ResultFormat,
+                                         )
+    param_values = pd.DataFrame(tmp_request.parameter_values, dtype=np.int64)
+    return param_values
 
 
 def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
-    """
+    r"""
     Retrieve data from the Bureau of Economic Analysis (BEA) data api.
 
     Parameters
@@ -141,7 +143,9 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         Before using the API, users must obtain a unique 36-character UserID by
         registering at http://www.bea.gov/api/signup/.
     DataSetName : str
-
+        A valid name of an available BEA data set. The get_data_set_list
+        function returns a complete listing of available data sets and the
+        associated DataSetName attributes.
     ResultFormat : str (default='JSON')
         The API returns data in one of two formats: JSON or XML. The
         ResultFormat parameter can be included on any request to specify the
@@ -149,11 +153,21 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         or an invalid ResultFormat is specified, the default format returned is
         JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
     params : dict
+        Dictionary of optional parameters. Note that the list of valid optional
+        parameters is data set specific. The get_parameter_list function will
+        return a complete listing of all required and optional parameters for
+        a given data set.
 
     Returns
     -------
     data : Pandas.DataFrame
         A Pandas DataFrame containing the requested data.
+
+    Notes
+    -----
+    For additional information see the BEA data API `user guide`_.
+
+    .. _`user guide`: http://www.bea.gov/api/_pdf/bea_web_service_api_user_guide.pdf
 
     """
     if DataSetName == 'RegionalData':
@@ -179,7 +193,5 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     else:
         raise ValueError("Invalid DataSetName requested.")
 
-    # convert to DataFrame
-    tmp_df = pd.DataFrame(tmp_request.data, dtype=np.int64)
-
-    return tmp_df
+    data = pd.DataFrame(tmp_request.data, dtype=np.int64)
+    return data

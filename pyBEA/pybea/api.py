@@ -11,6 +11,7 @@ import requests
 
 
 class Request(dict):
+    """Base class for a Request."""
 
     _response = None
 
@@ -80,11 +81,27 @@ class Request(dict):
 
 class DataSetListRequest(Request):
 
-    def __init__(self, UserID, ResultFormat='JSON', **params):
+    def __init__(self, UserID, ResultFormat='JSON'):
+        """
+        Create an instance of the DataSetListRequest class.
+
+        Parameters
+        ----------
+        UserID : str
+            Before using the API, users must obtain a unique 36-character
+            UserID by registering at http://www.bea.gov/api/signup/.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. If ResultFormat is not supplied on the
+            request, or an invalid ResultFormat is specified, the default
+            format returned is JSON. The valid values for ResultFormat are
+            `JSON' and 'XML'.
+
+        """
         required_params = {'UserID': UserID,
                            'Method': 'GetDataSetList',
                            'ResultFormat': ResultFormat}
-        required_params.update(params)
         super(DataSetListRequest, self).__init__(**required_params)
 
     @property
@@ -106,12 +123,30 @@ class DataSetListRequest(Request):
 
 class ParameterListRequest(Request):
 
-    def __init__(self, UserID, DataSetName, ResultFormat='JSON', **params):
+    def __init__(self, UserID, DataSetName, ResultFormat='JSON'):
+        """
+        Create an instance of the ParameterListRequest class.
+
+        Parameters
+        ----------
+        UserID : str
+            Before using the API, users must obtain a unique 36-character
+            UserID by registering at http://www.bea.gov/api/signup/.
+        DataSetName : str
+            A valid name of an available BEA data set.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. If ResultFormat is not supplied on the
+            request, or an invalid ResultFormat is specified, the default
+            format returned is JSON. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+
+        """
         required_params = {'UserID': UserID,
                            'Method': 'GetParameterList',
                            'DataSetName': DataSetName,
                            'ResultFormat': ResultFormat}
-        required_params.update(params)
         super(ParameterListRequest, self).__init__(**required_params)
 
     @property
@@ -133,14 +168,35 @@ class ParameterListRequest(Request):
 
 class ParameterValuesRequest(Request):
 
-    def __init__(self, UserID, DataSetName, ParameterName, ResultFormat='JSON',
-                 **params):
+    def __init__(self, UserID, DataSetName, ParameterName, ResultFormat='JSON'):
+        """
+        Create an instance of the ParameterValuesRequest class.
+
+        Parameters
+        ----------
+        UserID : str
+            Before using the API, users must obtain a unique 36-character
+            UserID by registering at http://www.bea.gov/api/signup/.
+        DataSetName : str
+            A valid name of an available BEA data set.
+        ParameterName : str
+            A valid parameter name for a given data set. Note that the
+            get_parameter_list function returns a complete listing of valid
+            parameters names for a given data set.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. If ResultFormat is not supplied on the
+            request, or an invalid ResultFormat is specified, the default
+            format returned is JSON. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+
+        """
         required_params = {'UserID': UserID,
                            'Method': 'GetParameterValues',
                            'DataSetName': DataSetName,
                            'ParameterName': ParameterName,
                            'ResultFormat': ResultFormat}
-        required_params.update(params)
         super(ParameterValuesRequest, self).__init__(**required_params)
 
     @property
@@ -161,6 +217,7 @@ class ParameterValuesRequest(Request):
 
 
 class DataRequest(Request):
+    """Base class for a DataRequest."""
 
     @property
     def _json_data(self):
@@ -182,6 +239,28 @@ class DataRequest(Request):
 class RegionalDataRequest(DataRequest):
 
     def __init__(self, UserID, KeyCode, ResultFormat='JSON', **params):
+        """
+        Create an instance of the RegionalDataRequest class.
+
+        Parameters
+        ----------
+        UserID : str
+            Before using the API, users must obtain a unique 36-character
+            UserID by registering at http://www.bea.gov/api/signup/.
+        DataSetName : str
+            A valid name of an available BEA data set.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. If ResultFormat is not supplied on the
+            request, or an invalid ResultFormat is specified, the default
+            format returned is JSON. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+        params : dict
+            Dictionary of optional parameters. Note that the list of valid
+            optional parameters is data set specific.
+
+        """
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'RegionalData',
@@ -195,6 +274,28 @@ class NIPARequest(DataRequest):
 
     def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON',
                  **params):
+        """
+        Create an instance of the RegionalDataRequest class.
+
+        Parameters
+        ----------
+        UserID : str
+            Before using the API, users must obtain a unique 36-character
+            UserID by registering at http://www.bea.gov/api/signup/.
+        DataSetName : str
+            A valid name of an available BEA data set.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. If ResultFormat is not supplied on the
+            request, or an invalid ResultFormat is specified, the default
+            format returned is JSON. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+        params : dict
+            Dictionary of optional parameters. Note that the list of valid
+            optional parameters is data set specific.
+
+        """
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'NIPA',
@@ -210,6 +311,28 @@ class NIUnderlyingDetailRequest(DataRequest):
 
     def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON',
                  **params):
+        """
+        Create an instance of the RegionalDataRequest class.
+
+        Parameters
+        ----------
+        UserID : str
+            Before using the API, users must obtain a unique 36-character
+            UserID by registering at http://www.bea.gov/api/signup/.
+        DataSetName : str
+            A valid name of an available BEA data set.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. If ResultFormat is not supplied on the
+            request, or an invalid ResultFormat is specified, the default
+            format returned is JSON. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+        params : dict
+            Dictionary of optional parameters. Note that the list of valid
+            optional parameters is data set specific.
+
+        """
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'NIUnderlyingDetail',
@@ -224,6 +347,28 @@ class NIUnderlyingDetailRequest(DataRequest):
 class FixedAssetsRequest(DataRequest):
 
     def __init__(self, UserID, TableID, Year, ResultFormat='JSON', **params):
+        """
+        Create an instance of the RegionalDataRequest class.
+
+        Parameters
+        ----------
+        UserID : str
+            Before using the API, users must obtain a unique 36-character
+            UserID by registering at http://www.bea.gov/api/signup/.
+        DataSetName : str
+            A valid name of an available BEA data set.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. If ResultFormat is not supplied on the
+            request, or an invalid ResultFormat is specified, the default
+            format returned is JSON. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+        params : dict
+            Dictionary of optional parameters. Note that the list of valid
+            optional parameters is data set specific.
+
+        """
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'FixedAssets',
