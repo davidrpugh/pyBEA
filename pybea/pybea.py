@@ -6,7 +6,7 @@
 import numpy as np
 import pandas as pd
 
-from api import *
+import api
 
 
 def get_data_set_list(UserID, ResultFormat='JSON'):
@@ -32,9 +32,9 @@ def get_data_set_list(UserID, ResultFormat='JSON'):
         attributes for all available data sets.
 
     """
-    tmp_request = DataSetListRequest(UserID=UserID,
-                                     ResultFormat=ResultFormat,
-                                     )
+    tmp_request = api.DataSetListRequest(UserID=UserID,
+                                         ResultFormat=ResultFormat,
+                                         )
     data_set_list = pd.DataFrame(tmp_request.data_set, dtype=np.int64)
     return data_set_list
 
@@ -84,10 +84,10 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
     are used without supplying them individually
 
     """
-    tmp_request = ParameterListRequest(UserID=UserID,
-                                       DataSetName=DataSetName,
-                                       ResultFormat=ResultFormat,
-                                       )
+    tmp_request = api.ParameterListRequest(UserID=UserID,
+                                           DataSetName=DataSetName,
+                                           ResultFormat=ResultFormat,
+                                           )
     parameter_list = pd.DataFrame(tmp_request.parameter_list, dtype=np.int64)
     return parameter_list
 
@@ -123,11 +123,11 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
         the given data set.
 
     """
-    tmp_request = ParameterValuesRequest(UserID=UserID,
-                                         DataSetName=DataSetName,
-                                         ParameterName=DataSetName,
-                                         ResultFormat=ResultFormat,
-                                         )
+    tmp_request = api.ParameterValuesRequest(UserID=UserID,
+                                             DataSetName=DataSetName,
+                                             ParameterName=DataSetName,
+                                             ResultFormat=ResultFormat,
+                                             )
     param_values = pd.DataFrame(tmp_request.parameter_values, dtype=np.int64)
     return param_values
 
@@ -170,25 +170,25 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
 
     """
     if DataSetName == 'RegionalData':
-        tmp_request = RegionalDataRequest(UserID=UserID,
-                                          Method='GetData',
-                                          ResultFormat=ResultFormat,
-                                          **params)
+        tmp_request = api.RegionalDataRequest(UserID=UserID,
+                                              Method='GetData',
+                                              ResultFormat=ResultFormat,
+                                              **params)
     elif DataSetName == 'NIPA':
-        tmp_request = NIPARequest(UserID=UserID,
-                                  Method='GetData',
-                                  ResultFormat=ResultFormat,
-                                  **params)
+        tmp_request = api.NIPARequest(UserID=UserID,
+                                      Method='GetData',
+                                      ResultFormat=ResultFormat,
+                                      **params)
     elif DataSetName == 'NIUnderlyingDetail':
-        tmp_request = NIPARequest(UserID=UserID,
-                                  Method='GetData',
-                                  ResultFormat=ResultFormat,
-                                  **params)
+        tmp_request = api.NIPARequest(UserID=UserID,
+                                      Method='GetData',
+                                      ResultFormat=ResultFormat,
+                                      **params)
     elif DataSetName == 'FixedAssets':
-        tmp_request = NIPARequest(UserID=UserID,
-                                  Method='GetData',
-                                  ResultFormat=ResultFormat,
-                                  **params)
+        tmp_request = api.NIPARequest(UserID=UserID,
+                                      Method='GetData',
+                                      ResultFormat=ResultFormat,
+                                      **params)
     else:
         raise ValueError("Invalid DataSetName requested.")
 
