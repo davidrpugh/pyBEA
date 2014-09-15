@@ -92,8 +92,7 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
     return parameter_list
 
 
-def get_parameter_values(self, UserID, DataSetName, ParameterName,
-                         ResultFormat='JSON'):
+def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'):
     """
     Retrieve list of valid parameter values for a given data set.
 
