@@ -272,9 +272,11 @@ class RegionalDataRequest(DataRequest):
             specified. State, county, and metropolitan statistical area FIPS
             codes can be obtained from `Census`_. A comprehensive list of MSAs
             and their component counties is available on the `BEA website`_.
-        Year : str (default='ALL')
-            Year will default to all available years if the parameter is not
-            specified.
+        Year : str or list(str) (default='ALL')
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list: `Year=['2000', '2005' , '2010']`. Note that Year will default
+            to all available years if the parameter is not specified.
 
         .. _`Census`: http://www.census.gov/geo/www/ansi/ansi.html
         .. _`BEA website`: http://www.bea.gov/regional/docs/msalist.cfm
@@ -301,8 +303,21 @@ class NIPARequest(DataRequest):
         UserID : str
             Before using the API, users must obtain a unique 36-character
             UserID by registering at http://www.bea.gov/api/signup/.
-        DataSetName : str
-            A valid name of an available BEA data set.
+        TableID : str
+            The TableID parameter is an integer that refers to a specific NIPA
+            table. Note that the list of valid TableIDs may change depending on
+            the monthly news release cycles.
+        Frequency : str or list(str)
+            The Frequency parameter is a string that refers to the time series
+            for the requested NIPA table. Multiple frequencies are requested by
+            specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
+            is requested for frequencies that don’t exist for a particular NIPA
+            table, only data that exists is returned.
+        Year : str or list(str) (default='ALL')
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list: `Year=['2000', '2005' , '2010']`. Note that Year will default
+            to all available years if the parameter is not specified.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
@@ -313,6 +328,18 @@ class NIPARequest(DataRequest):
         params : dict
             Dictionary of optional parameters. Note that the list of valid
             optional parameters is data set specific.
+
+        Notes
+        -----
+        The optional parameters for NIPADataRequest are:
+
+        ShowMillions : str
+            The ShowMillions parameter is a string indicating whether the data
+            for the requested NIPA table should be returned in million-dollar
+            units. Million-dollar estimate data doesn’t exist for all tables,
+            and data is returned in million-dollar units only if available.
+            When million-dollar data doesn’t exist for a table, data is
+            returned as if million-dollar data was not requested.
 
         """
         required_params = {'UserID': UserID,
