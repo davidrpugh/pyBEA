@@ -243,7 +243,7 @@ class DataRequest(Request):
 class RegionalDataRequest(DataRequest):
 
     def __init__(self, UserID, KeyCode, ResultFormat='JSON', **params):
-        """
+        r"""
         Create an instance of the RegionalDataRequest class.
 
         Parameters
@@ -261,8 +261,23 @@ class RegionalDataRequest(DataRequest):
             format returned is JSON. The valid values for ResultFormat are
             'JSON' and 'XML'.
         params : dict
-            Dictionary of optional parameters. Note that the list of valid
-            optional parameters is data set specific.
+            Dictionary of optional parameters.
+
+        Notes
+        -----
+        The optional parameters for RegionalDataRequest are:
+
+        GeoFips : str
+            GeoFips will default to returning all available areas unless
+            specified. State, county, and metropolitan statistical area FIPS
+            codes can be obtained from `Census`_. A comprehensive list of MSAs
+            and their component counties is available on the `BEA website`_.
+        Year : str (default='ALL')
+            Year will default to all available years if the parameter is not
+            specified.
+
+        .. _`Census`: http://www.census.gov/geo/www/ansi/ansi.html
+        .. _`BEA website`: http://www.bea.gov/regional/docs/msalist.cfm
 
         """
         required_params = {'UserID': UserID,
