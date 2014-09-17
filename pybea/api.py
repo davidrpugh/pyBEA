@@ -355,8 +355,7 @@ class NIPARequest(DataRequest):
 
 class NIUnderlyingDetailRequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON',
-                 **params):
+    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON'):
         """
         Create an instance of the NIUnderlyingDetailRequest class.
 
@@ -365,8 +364,20 @@ class NIUnderlyingDetailRequest(DataRequest):
         UserID : str
             Before using the API, users must obtain a unique 36-character
             UserID by registering at http://www.bea.gov/api/signup/.
-        DataSetName : str
-            A valid name of an available BEA data set.
+        TableID : str
+            The TableID parameter is an integer that refers to a specific NIPA
+            table.
+        Frequency : str or list(str)
+            The Frequency parameter is a string that refers to the time series
+            for the requested NIPA table. Multiple frequencies are requested by
+            specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
+            is requested for frequencies that don’t exist for a particular NIPA
+            table, only data that exists is returned.
+        Year : str or list(str) (default='ALL')
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list: `Year=['2000', '2005' , '2010']`. Note that Year will default
+            to all available years if the parameter is not specified.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
@@ -374,9 +385,6 @@ class NIUnderlyingDetailRequest(DataRequest):
             request, or an invalid ResultFormat is specified, the default
             format returned is JSON. The valid values for ResultFormat are
             'JSON' and 'XML'.
-        params : dict
-            Dictionary of optional parameters. Note that the list of valid
-            optional parameters is data set specific.
 
         """
         required_params = {'UserID': UserID,
@@ -386,13 +394,12 @@ class NIUnderlyingDetailRequest(DataRequest):
                            'Frequency': Frequency,
                            'Year': Year,
                            'ResultFormat': ResultFormat}
-        required_params.update(params)
         super(NIUnderlyingDetailRequest, self).__init__(**required_params)
 
 
 class FixedAssetsRequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Year, ResultFormat='JSON', **params):
+    def __init__(self, UserID, TableID, Year, ResultFormat='JSON'):
         """
         Create an instance of the FixedAssetsRequest class.
 
@@ -401,8 +408,14 @@ class FixedAssetsRequest(DataRequest):
         UserID : str
             Before using the API, users must obtain a unique 36-character
             UserID by registering at http://www.bea.gov/api/signup/.
-        DataSetName : str
-            A valid name of an available BEA data set.
+        TableID : str
+            The TableID parameter is an integer that refers to a specific
+            FixedAssets table.
+        Year : str or list(str) (default='ALL')
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list: `Year=['2000', '2005' , '2010']`. Note that Year will default
+            to all available years if the parameter is not specified.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
@@ -410,9 +423,6 @@ class FixedAssetsRequest(DataRequest):
             request, or an invalid ResultFormat is specified, the default
             format returned is JSON. The valid values for ResultFormat are
             'JSON' and 'XML'.
-        params : dict
-            Dictionary of optional parameters. Note that the list of valid
-            optional parameters is data set specific.
 
         """
         required_params = {'UserID': UserID,
@@ -421,5 +431,4 @@ class FixedAssetsRequest(DataRequest):
                            'TableID': TableID,
                            'Year': Year,
                            'ResultFormat': ResultFormat}
-        required_params.update(params)
         super(FixedAssetsRequest, self).__init__(**required_params)
