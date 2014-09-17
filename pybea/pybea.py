@@ -81,7 +81,7 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
     if multiple values are permitted. Note that multiple values for a parameter
     are submitted as a comma-separated string.
     - AllValue: the special value for a parameter that means all valid values
-    are used without supplying them individually
+    are used without supplying them individually.
 
     """
     tmp_request = api.ParameterListRequest(UserID=UserID,
@@ -125,7 +125,7 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
     """
     tmp_request = api.ParameterValuesRequest(UserID=UserID,
                                              DataSetName=DataSetName,
-                                             ParameterName=DataSetName,
+                                             ParameterName=ParameterName,
                                              ResultFormat=ResultFormat,
                                              )
     param_values = pd.DataFrame(tmp_request.parameter_values, dtype=np.int64)
