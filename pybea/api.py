@@ -311,7 +311,7 @@ class NIPARequest(DataRequest):
             The Frequency parameter is a string that refers to the time series
             for the requested NIPA table. Multiple frequencies are requested by
             specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
-            is requested for frequencies that don’t exist for a particular NIPA
+            is requested for frequencies that don't exist for a particular NIPA
             table, only data that exists is returned.
         Year : str or list(str) (default='ALL')
             A string representation of the year for which data is being
@@ -336,9 +336,9 @@ class NIPARequest(DataRequest):
         ShowMillions : str
             The ShowMillions parameter is a string indicating whether the data
             for the requested NIPA table should be returned in million-dollar
-            units. Million-dollar estimate data doesn’t exist for all tables,
+            units. Million-dollar estimate data doesn't exist for all tables,
             and data is returned in million-dollar units only if available.
-            When million-dollar data doesn’t exist for a table, data is
+            When million-dollar data doesn't exist for a table, data is
             returned as if million-dollar data was not requested.
 
         """
@@ -371,7 +371,7 @@ class NIUnderlyingDetailRequest(DataRequest):
             The Frequency parameter is a string that refers to the time series
             for the requested NIPA table. Multiple frequencies are requested by
             specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
-            is requested for frequencies that don’t exist for a particular NIPA
+            is requested for frequencies that don't exist for a particular NIPA
             table, only data that exists is returned.
         Year : str or list(str) (default='ALL')
             A string representation of the year for which data is being
