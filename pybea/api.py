@@ -228,7 +228,23 @@ class DataRequest(Request):
         return self.results['Data']
 
     @property
+    def _json_dimensions(self):
+        return self.results['Dimensions']
+
+    @property
+    def _json_notes(self):
+        return self.results['Notes']
+
+    @property
     def _xml_data(self):
+        raise NotImplementedError
+
+    @property
+    def _xml_dimensions(self):
+        raise NotImplementedError
+
+    @property
+    def _xml_notes(self):
         raise NotImplementedError
 
     @property
@@ -238,6 +254,22 @@ class DataRequest(Request):
         else:
             tmp_data = self._xml_data
         return tmp_data
+
+    @property
+    def dimensions(self):
+        if self['ResultFormat'] == 'JSON':
+            tmp_dimensions = self._json_dimensions
+        else:
+            tmp_dimensions = self._xml_dimensions
+        return tmp_dimensions
+
+    @property
+    def notes(self):
+        if self['ResultFormat'] == 'JSON':
+            tmp_notes = self._json_notes
+        else:
+            tmp_notes = self._xml_notes
+        return tmp_notes
 
 
 class RegionalDataRequest(DataRequest):
