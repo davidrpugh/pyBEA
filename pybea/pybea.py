@@ -148,7 +148,7 @@ def get_data(DataSetName, ResultFormat='JSON', **params):
     As noted above the additional required and optional parameters that can be
     passed as parameters is data set specific.
 
-    The following parameters With DataSetName='RegionalData':
+    The following parameters may be passed with DataSetName='RegionalData':
 
     KeyCodes : list(str), required
         List of valid KeyCode parameters indicating the variables of interest.
@@ -204,13 +204,13 @@ def _get_RegionalData(ResultFormat, KeyCodes, **params):
     return combined_df
 
 
-def _get_NIPA(UserID, ResultFormat, **params):
+def _get_NIPA(ResultFormat, **params):
     raise NotImplementedError
 
 
-def _get_NIUnderlyingDetail(UserID, ResultFormat, **params):
+def _get_NIUnderlyingDetail(ResultFormat, **params):
     raise NotImplementedError
 
 
-def _get_FixedAssets(UserID, ResultFormat, **params):
+def _get_FixedAssets(ResultFormat, **params):
     raise NotImplementedError
