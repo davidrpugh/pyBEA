@@ -188,12 +188,11 @@ def get_data(DataSetName, ResultFormat='JSON', **params):
     return data
 
 
-def _get_RegionalData(UserID, ResultFormat, KeyCodes, **params):
+def _get_RegionalData(ResultFormat, KeyCodes, **params):
     """Combines data on multiple KeyCodes into a single Pandas DataFrame."""
     dfs = []
     for KeyCode in KeyCodes:
-        tmp_request = api.RegionalDataRequest(UserID=UserID,
-                                              Method='GetData',
+        tmp_request = api.RegionalDataRequest(Method='GetData',
                                               ResultFormat=ResultFormat,
                                               KeyCode=KeyCode,
                                               **params)
