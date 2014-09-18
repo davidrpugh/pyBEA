@@ -1,6 +1,6 @@
 """
 @author : David R. Pugh
-@date : 2014-09-09
+@date : 2014-09-18
 
 
 TODO
@@ -19,10 +19,12 @@ class Request(dict):
 
     _response = None
 
+    _user_id = '98A0A0A7-21DF-4B75-96DE-1410D47AB280'
+
     base_url = 'http://www.bea.gov/api/data'
 
-    def __init__(self, UserID, Method, ResultFormat='JSON', **params):
-        required_params = {'UserID': UserID,
+    def __init__(self, Method, ResultFormat='JSON', **params):
+        required_params = {'UserID': self._user_id,
                            'Method': Method,
                            'ResultFormat': ResultFormat}
         required_params.update(params)
@@ -85,15 +87,12 @@ class Request(dict):
 
 class DataSetListRequest(Request):
 
-    def __init__(self, UserID, ResultFormat='JSON'):
+    def __init__(self, ResultFormat='JSON'):
         """
         Create an instance of the DataSetListRequest class.
 
         Parameters
         ----------
-        UserID : str
-            Before using the API, users must obtain a unique 36-character
-            UserID by registering at http://www.bea.gov/api/signup/.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
@@ -103,8 +102,7 @@ class DataSetListRequest(Request):
             `JSON' and 'XML'.
 
         """
-        required_params = {'UserID': UserID,
-                           'Method': 'GetDataSetList',
+        required_params = {'Method': 'GetDataSetList',
                            'ResultFormat': ResultFormat}
         super(DataSetListRequest, self).__init__(**required_params)
 
@@ -127,15 +125,12 @@ class DataSetListRequest(Request):
 
 class ParameterListRequest(Request):
 
-    def __init__(self, UserID, DataSetName, ResultFormat='JSON'):
+    def __init__(self, DataSetName, ResultFormat='JSON'):
         """
         Create an instance of the ParameterListRequest class.
 
         Parameters
         ----------
-        UserID : str
-            Before using the API, users must obtain a unique 36-character
-            UserID by registering at http://www.bea.gov/api/signup/.
         DataSetName : str
             A valid name of an available BEA data set.
         ResultFormat : str (default='JSON')
@@ -147,8 +142,7 @@ class ParameterListRequest(Request):
             'JSON' and 'XML'.
 
         """
-        required_params = {'UserID': UserID,
-                           'Method': 'GetParameterList',
+        required_params = {'Method': 'GetParameterList',
                            'DataSetName': DataSetName,
                            'ResultFormat': ResultFormat}
         super(ParameterListRequest, self).__init__(**required_params)
@@ -172,15 +166,12 @@ class ParameterListRequest(Request):
 
 class ParameterValuesRequest(Request):
 
-    def __init__(self, UserID, DataSetName, ParameterName, ResultFormat='JSON'):
+    def __init__(self, DataSetName, ParameterName, ResultFormat='JSON'):
         """
         Create an instance of the ParameterValuesRequest class.
 
         Parameters
         ----------
-        UserID : str
-            Before using the API, users must obtain a unique 36-character
-            UserID by registering at http://www.bea.gov/api/signup/.
         DataSetName : str
             A valid name of an available BEA data set.
         ParameterName : str
@@ -196,8 +187,7 @@ class ParameterValuesRequest(Request):
             'JSON' and 'XML'.
 
         """
-        required_params = {'UserID': UserID,
-                           'Method': 'GetParameterValues',
+        required_params = {'Method': 'GetParameterValues',
                            'DataSetName': DataSetName,
                            'ParameterName': ParameterName,
                            'ResultFormat': ResultFormat}
@@ -274,15 +264,12 @@ class DataRequest(Request):
 
 class RegionalDataRequest(DataRequest):
 
-    def __init__(self, UserID, KeyCode, ResultFormat='JSON', **params):
+    def __init__(self, KeyCode, ResultFormat='JSON', **params):
         r"""
         Create an instance of the RegionalDataRequest class.
 
         Parameters
         ----------
-        UserID : str
-            Before using the API, users must obtain a unique 36-character
-            UserID by registering at http://www.bea.gov/api/signup/.
         DataSetName : str
             A valid name of an available BEA data set.
         ResultFormat : str (default='JSON')
@@ -314,8 +301,7 @@ class RegionalDataRequest(DataRequest):
         .. _`BEA website`: http://www.bea.gov/regional/docs/msalist.cfm
 
         """
-        required_params = {'UserID': UserID,
-                           'Method': 'GetData',
+        required_params = {'Method': 'GetData',
                            'DataSetName': 'RegionalData',
                            'KeyCode': KeyCode,
                            'ResultFormat': ResultFormat}
@@ -325,16 +311,12 @@ class RegionalDataRequest(DataRequest):
 
 class NIPARequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON',
-                 **params):
+    def __init__(self, TableID, Frequency, Year, ResultFormat='JSON', **params):
         """
         Create an instance of the NIPARequest class.
 
         Parameters
         ----------
-        UserID : str
-            Before using the API, users must obtain a unique 36-character
-            UserID by registering at http://www.bea.gov/api/signup/.
         TableID : str
             The TableID parameter is an integer that refers to a specific NIPA
             table. Note that the list of valid TableIDs may change depending on
@@ -374,8 +356,7 @@ class NIPARequest(DataRequest):
             returned as if million-dollar data was not requested.
 
         """
-        required_params = {'UserID': UserID,
-                           'Method': 'GetData',
+        required_params = {'Method': 'GetData',
                            'DataSetName': 'NIPA',
                            'TableID': TableID,
                            'Frequency': Frequency,
@@ -387,15 +368,12 @@ class NIPARequest(DataRequest):
 
 class NIUnderlyingDetailRequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON'):
+    def __init__(self, TableID, Frequency, Year, ResultFormat='JSON'):
         """
         Create an instance of the NIUnderlyingDetailRequest class.
 
         Parameters
         ----------
-        UserID : str
-            Before using the API, users must obtain a unique 36-character
-            UserID by registering at http://www.bea.gov/api/signup/.
         TableID : str
             The TableID parameter is an integer that refers to a specific NIPA
             table.
@@ -419,8 +397,7 @@ class NIUnderlyingDetailRequest(DataRequest):
             'JSON' and 'XML'.
 
         """
-        required_params = {'UserID': UserID,
-                           'Method': 'GetData',
+        required_params = {'Method': 'GetData',
                            'DataSetName': 'NIUnderlyingDetail',
                            'TableID': TableID,
                            'Frequency': Frequency,
@@ -431,15 +408,12 @@ class NIUnderlyingDetailRequest(DataRequest):
 
 class FixedAssetsRequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Year, ResultFormat='JSON'):
+    def __init__(self, TableID, Year, ResultFormat='JSON'):
         """
         Create an instance of the FixedAssetsRequest class.
 
         Parameters
         ----------
-        UserID : str
-            Before using the API, users must obtain a unique 36-character
-            UserID by registering at http://www.bea.gov/api/signup/.
         TableID : str
             The TableID parameter is an integer that refers to a specific
             FixedAssets table.
@@ -457,8 +431,7 @@ class FixedAssetsRequest(DataRequest):
             'JSON' and 'XML'.
 
         """
-        required_params = {'UserID': UserID,
-                           'Method': 'GetData',
+        required_params = {'Method': 'GetData',
                            'DataSetName': 'FixedAssets',
                            'TableID': TableID,
                            'Year': Year,

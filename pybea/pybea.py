@@ -1,6 +1,6 @@
 """
 @author : David R. Pugh
-@date : 2014-09-09
+@date : 2014-09-18
 
 """
 import numpy as np
@@ -9,15 +9,12 @@ import pandas as pd
 import api
 
 
-def get_data_set_list(UserID, ResultFormat='JSON'):
+def get_data_set_list(ResultFormat='JSON'):
     """
     Retrieve list of currently available data sets.
 
     Parameters
     ----------
-    UserID : str
-        Before using the API, users must obtain a unique 36-character UserID by
-        registering at http://www.bea.gov/api/signup/.
     ResultFormat : str (default='JSON')
         The API returns data in one of two formats: JSON or XML. The
         ResultFormat parameter can be included on any request to specify the
@@ -32,22 +29,17 @@ def get_data_set_list(UserID, ResultFormat='JSON'):
         attributes for all available data sets.
 
     """
-    tmp_request = api.DataSetListRequest(UserID=UserID,
-                                         ResultFormat=ResultFormat,
-                                         )
+    tmp_request = api.DataSetListRequest(ResultFormat=ResultFormat)
     data_set_list = pd.DataFrame(tmp_request.data_set, dtype=np.int64)
     return data_set_list
 
 
-def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
+def get_parameter_list(DataSetName, ResultFormat='JSON'):
     """
     Retrieve list of required and optional parameters for a given data set.
 
     Parameters
     ----------
-    UserID : str
-        Before using the API, users must obtain a unique 36-character UserID by
-        registering at http://www.bea.gov/api/signup/.
     DataSetName : str
         A valid name of an available BEA data set. The get_data_set_list
         function returns a complete listing of available data sets and the
@@ -84,23 +76,19 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
     are used without supplying them individually.
 
     """
-    tmp_request = api.ParameterListRequest(UserID=UserID,
-                                           DataSetName=DataSetName,
+    tmp_request = api.ParameterListRequest(DataSetName=DataSetName,
                                            ResultFormat=ResultFormat,
                                            )
     parameter_list = pd.DataFrame(tmp_request.parameter_list, dtype=np.int64)
     return parameter_list
 
 
-def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'):
+def get_parameter_values(DataSetName, ParameterName, ResultFormat='JSON'):
     """
     Retrieve list of valid parameter values for a given data set.
 
     Parameters
     ----------
-    UserID : str
-        Before using the API, users must obtain a unique 36-character UserID by
-        registering at http://www.bea.gov/api/signup/.
     DataSetName : str
         A valid name of an available BEA data set. Note that the
         get_data_set_list function returns a complete listing of available data
@@ -123,8 +111,7 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
         the given data set.
 
     """
-    tmp_request = api.ParameterValuesRequest(UserID=UserID,
-                                             DataSetName=DataSetName,
+    tmp_request = api.ParameterValuesRequest(DataSetName=DataSetName,
                                              ParameterName=ParameterName,
                                              ResultFormat=ResultFormat,
                                              )
@@ -132,15 +119,12 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
     return param_values
 
 
-def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
+def get_data(DataSetName, ResultFormat='JSON', **params):
     r"""
     Retrieve data from the Bureau of Economic Analysis (BEA) data api.
 
     Parameters
     ----------
-    UserID : str
-        Before using the API, users must obtain a unique 36-character UserID by
-        registering at http://www.bea.gov/api/signup/.
     DataSetName : str
         A valid name of an available BEA data set. The get_data_set_list
         function returns a complete listing of available data sets and the
@@ -170,23 +154,19 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
 
     """
     if DataSetName == 'RegionalData':
-        tmp_request = api.RegionalDataRequest(UserID=UserID,
-                                              Method='GetData',
+        tmp_request = api.RegionalDataRequest(Method='GetData',
                                               ResultFormat=ResultFormat,
                                               **params)
     elif DataSetName == 'NIPA':
-        tmp_request = api.NIPARequest(UserID=UserID,
-                                      Method='GetData',
+        tmp_request = api.NIPARequest(Method='GetData',
                                       ResultFormat=ResultFormat,
                                       **params)
     elif DataSetName == 'NIUnderlyingDetail':
-        tmp_request = api.NIPARequest(UserID=UserID,
-                                      Method='GetData',
+        tmp_request = api.NIPARequest(Method='GetData',
                                       ResultFormat=ResultFormat,
                                       **params)
     elif DataSetName == 'FixedAssets':
-        tmp_request = api.NIPARequest(UserID=UserID,
-                                      Method='GetData',
+        tmp_request = api.NIPARequest(Method='GetData',
                                       ResultFormat=ResultFormat,
                                       **params)
     else:
