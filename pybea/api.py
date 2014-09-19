@@ -84,6 +84,14 @@ class Request(dict):
     def _load_xml_content(self):
         raise NotImplementedError
 
+    def _validate_method(self):
+        """Validate the Method keyword argument."""
+        raise NotImplementedError
+
+    def _validate_result_format(self):
+        """Validate the ResultFormat keyword argument."""
+        raise NotImplementedError
+
 
 class DataSetListRequest(Request):
 
