@@ -23,6 +23,14 @@ class Request(dict):
 
     base_url = 'http://www.bea.gov/api/data'
 
+    valid_formats = ['JSON', 'XML']
+
+    valid_methods = ['GetDataSetList',
+                     'GetParameterList',
+                     'GetParameterValues',
+                     'GetData',
+                     ]
+
     def __init__(self, Method, ResultFormat='JSON', **params):
         required_params = {'UserID': self._user_id,
                            'Method': Method,
@@ -84,13 +92,27 @@ class Request(dict):
     def _load_xml_content(self):
         raise NotImplementedError
 
-    def _validate_method(self):
+    def _validate_method(self, method):
         """Validate the Method keyword argument."""
-        raise NotImplementedError
+        if not isinstance(method, str):
+            mesg = "Method keyword argument must be a string, not a {}."
+            raise AttributeError(mesg.format(method.__class__))
+        elif method not in self.valid_methods:
+            mesg = "Method keyword argument must be one of {}"
+            raise AttributeError(mesg.format(str(self.valid_methods)))
+        else:
+            return method
 
-    def _validate_result_format(self):
+    def _validate_result_format(self, fmt):
         """Validate the ResultFormat keyword argument."""
-        raise NotImplementedError
+        if not isinstance(fmt, str):
+            mesg = "ResultFormat keyword argument must be a string, not a {}."
+            raise AttributeError(mesg.format(fmt.__class__))
+        elif fmt not in self.valid_formats:
+            mesg = "ResultFormat keyword argument must be one of {}"
+            raise AttributeError(mesg.format(str(self.valid_formats)))
+        else:
+            return fmt
 
 
 class DataSetListRequest(Request):
