@@ -32,10 +32,15 @@ class Request(dict):
                      ]
 
     def __init__(self, Method, ResultFormat='JSON', **params):
+        # validate required keyword args
+        valid_method = self._validate_method(Method)
+        valid_format = self._validate_result_format(ResultFormat)
+
         required_params = {'UserID': self._user_id,
-                           'Method': Method,
-                           'ResultFormat': ResultFormat}
+                           'Method': valid_method,
+                           'ResultFormat': valid_format}
         required_params.update(params)
+
         super(Request, self).__init__(**required_params)
 
     def __setitem__(self, item, value):
