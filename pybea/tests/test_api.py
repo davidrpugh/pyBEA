@@ -114,3 +114,87 @@ class DataSetListRequest(unittest.TestCase):
         """Testing initiation of a DataSetListRequest."""
         valid_request = api.DataSetListRequest(ResultFormat=valid_formats[0])
         nose.tools.assert_true(valid_request.response.ok)
+
+    def test_data_set_attribute(self):
+        """Testing the return type of the data_set attribute."""
+        valid_request = api.DataSetListRequest(ResultFormat=valid_formats[0])
+        nose.tools.assert_true(valid_request.response.ok)
+
+        # check return type
+        nose.tools.assert_is_instance(valid_request.data_set, list)
+
+        # XML not yet implemented
+        with nose.tools.assert_raises(NotImplementedError):
+            valid_request['ResultFormat'] = 'XML'
+            valid_request.data_set
+
+
+class ParameterListRequest(unittest.TestCase):
+    """Testing suite for the ParameterListRequest."""
+
+    def test_initiate_parameter_list_request(self):
+        """Testing initiation of a ParameterListRequest."""
+        valid_request = api.ParameterListRequest(DataSetName='NIPA',
+                                                 ResultFormat=valid_formats[0])
+        nose.tools.assert_true(valid_request.response.ok)
+
+    def test_parameter_list_attribute(self):
+        """Testing the return type of the parameter list attribute."""
+        valid_request = api.ParameterListRequest(DataSetName='NIPA',
+                                                 ResultFormat=valid_formats[0])
+        nose.tools.assert_true(valid_request.response.ok)
+
+        # check return type
+        nose.tools.assert_is_instance(valid_request.parameter_list, list)
+
+        # XML not yet implemented
+        with nose.tools.assert_raises(NotImplementedError):
+            valid_request['ResultFormat'] = 'XML'
+            valid_request.parameter_list
+
+
+class ParameterValuesRequest(unittest.TestCase):
+    """Testing suite for the ParameterValuesRequest."""
+
+    def test_initiate_parameter_list_request(self):
+        """Testing initiation of a ParameterValuesRequest."""
+        valid_request = api.ParameterValuesRequest(DataSetName='NIPA',
+                                                   ParameterName='TableID',
+                                                   ResultFormat=valid_formats[0])
+        nose.tools.assert_true(valid_request.response.ok)
+
+    def test_parameter_list_attribute(self):
+        """Testing the return type of the parameter list attribute."""
+        valid_request = api.ParameterValuesRequest(DataSetName='NIPA',
+                                                   ParameterName='TableID',
+                                                   ResultFormat=valid_formats[0])
+        nose.tools.assert_true(valid_request.response.ok)
+
+        # check return type
+        nose.tools.assert_is_instance(valid_request.parameter_values, list)
+
+        # XML not yet implemented
+        with nose.tools.assert_raises(NotImplementedError):
+            valid_request['ResultFormat'] = 'XML'
+            valid_request.parameter_values
+
+
+class DataRequest(unittest.TestCase):
+    """Testing suite for the DataRequest."""
+
+    def test_data_attribute(self):
+        """Testing the return type of the data attribute."""
+        valid_request = api.DataRequest(DataSetName='RegionalData',
+                                        KeyCode='POP_MI',
+                                        Year=['1990'],
+                                        GeoFips='MSA',
+                                        ResultFormat=valid_formats[0])
+        nose.tools.assert_true(valid_request.response.ok)
+
+        # check return type
+        nose.tools.assert_is_instance(valid_request.data, list)
+
+        # XML not yet implemented
+        with nose.tools.assert_raises(NotImplementedError):
+            valid_request['ResultFormat'] = 'XML'
+            valid_request.data

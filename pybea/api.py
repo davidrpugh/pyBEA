@@ -248,6 +248,28 @@ class ParameterValuesRequest(Request):
 class DataRequest(Request):
     """Base class for a DataRequest."""
 
+    def __init__(self, DataSetName, ResultFormat='JSON', **params):
+        """
+        Create an instance of the DataRequest class.
+
+        Parameters
+        ----------
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. If ResultFormat is not supplied on the
+            request, or an invalid ResultFormat is specified, the default
+            format returned is JSON. The valid values for ResultFormat are
+            `JSON' and 'XML'.
+
+        """
+        required_params = {'Method': 'GetData',
+                           'DataSetName': DataSetName,
+                           'ResultFormat': ResultFormat}
+        required_params.update(params)
+
+        super(DataRequest, self).__init__(**required_params)
+
     @property
     def _json_data(self):
         return self.results['Data']
