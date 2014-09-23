@@ -134,10 +134,9 @@ def get_data(DataSetName, ResultFormat='JSON', **params):
         or an invalid ResultFormat is specified, the default format returned is
         JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
     params : dict
-        Dictionary of optional parameters. Note that the list of valid optional
-        parameters is data set specific. The get_parameter_list function will
-        return a complete listing of all required and optional parameters for
-        a given data set.
+        Dictionary of optional parameters. The list of valid optional
+        parameters is data set specific. See the notes section below for more
+        information.
 
     Returns
     -------
@@ -146,29 +145,73 @@ def get_data(DataSetName, ResultFormat='JSON', **params):
 
     Notes
     -----
+    As noted above the additional required and optional parameters that can be
+    passed as parameters is data set specific.
+
+    The following parameters With DataSetName='RegionalData':
+
+    KeyCodes : list(str), required
+        List of valid KeyCode parameters indicating the variables of interest.
+    GeoFips : str or list(str), optional (default='STATE')
+        List of valid FIPS codes for the geographical locations of interest.
+        State, county, and metropolitan statistical area FIPS codes can be
+        obtained from the `Census Bureau`_. A comprehensive list of MSAs
+        and their component counties is available on the `BEA website`_.
+    Year : str or list(str), optional (default='ALL')
+        A string representation of the year for which data is being
+        requested. Multiple years are requested by passing them as a list
+        as follows: `Year=['2000', '2005' , '2010']`. Note that Year will
+        default to all available years if the parameter is not specified.
+
     For additional information see the BEA data API `user guide`_.
 
+    .. _`Census Bureau`: http://www.census.gov/geo/www/ansi/ansi.html
+    .. _`BEA website`: http://www.bea.gov/regional/docs/msalist.cfm
     .. _`user guide`: http://www.bea.gov/api/_pdf/bea_web_service_api_user_guide.pdf
 
     """
     if DataSetName == 'RegionalData':
-        tmp_request = api.RegionalDataRequest(Method='GetData',
-                                              ResultFormat=ResultFormat,
-                                              **params)
+        data = _get_RegionalData(ResultFormat=ResultFormat,
+                                 **params)
     elif DataSetName == 'NIPA':
-        tmp_request = api.NIPARequest(Method='GetData',
-                                      ResultFormat=ResultFormat,
-                                      **params)
+        data = _get_NIPA(ResultFormat=ResultFormat,
+                         **params)
     elif DataSetName == 'NIUnderlyingDetail':
-        tmp_request = api.NIUnderlyingDetailRequest(Method='GetData',
-                                                    ResultFormat=ResultFormat,
-                                                    **params)
+        data = _get_NIUnderlyingDetail(ResultFormat=ResultFormat,
+                                       **params)
     elif DataSetName == 'FixedAssets':
-        tmp_request = api.FixedAssetsRequest(Method='GetData',
-                                             ResultFormat=ResultFormat,
-                                             **params)
+        data = _get_FixedAssets(ResultFormat=ResultFormat,
+                                **params)
     else:
         raise ValueError("Invalid DataSetName requested.")
 
-    data = pd.DataFrame(tmp_request.data, dtype=np.int64)
     return data
+
+
+def _get_RegionalData(UserID, ResultFormat, KeyCodes, **params):
+    """Combines data on multiple KeyCodes into a single Pandas DataFrame."""
+    dfs = []
+    for KeyCode in KeyCodes:
+        tmp_request = api.RegionalDataRequest(UserID=UserID,
+                                              Method='GetData',
+                                              ResultFormat=ResultFormat,
+                                              KeyCode=KeyCode,
+                                              **params)
+        tmp_df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+        dfs.append(tmp_df)
+
+    combined_df = pd.concat(dfs)
+
+    return combined_df
+
+
+def _get_NIPA(UserID, ResultFormat, **params):
+    raise NotImplementedError
+
+
+def _get_NIUnderlyingDetail(UserID, ResultFormat, **params):
+    raise NotImplementedError
+
+
+def _get_FixedAssets(UserID, ResultFormat, **params):
+    raise NotImplementedError
