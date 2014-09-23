@@ -1,8 +1,8 @@
 """
-Tests for apy.py module.
+Tests for api.py module.
 
 @author : David R. Pugh
-@date : 2014-09-19
+@date : 2014-09-22
 
 """
 import nose
