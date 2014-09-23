@@ -6,7 +6,7 @@
 import numpy as np
 import pandas as pd
 
-import api
+from . import api
 
 
 def get_data_set_list(ResultFormat='JSON'):
