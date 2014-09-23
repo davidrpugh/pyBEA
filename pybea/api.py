@@ -131,9 +131,7 @@ class DataSetListRequest(Request):
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
-            the format of the results. If ResultFormat is not supplied on the
-            request, or an invalid ResultFormat is specified, the default
-            format returned is JSON. The valid values for ResultFormat are
+            the format of the results. The valid values for ResultFormat are
             `JSON' and 'XML'.
 
         """
@@ -171,9 +169,7 @@ class ParameterListRequest(Request):
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
-            the format of the results. If ResultFormat is not supplied on the
-            request, or an invalid ResultFormat is specified, the default
-            format returned is JSON. The valid values for ResultFormat are
+            the format of the results. The valid values for ResultFormat are
             'JSON' and 'XML'.
 
         """
@@ -216,9 +212,7 @@ class ParameterValuesRequest(Request):
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
-            the format of the results. If ResultFormat is not supplied on the
-            request, or an invalid ResultFormat is specified, the default
-            format returned is JSON. The valid values for ResultFormat are
+            the format of the results. The valid values for ResultFormat are
             'JSON' and 'XML'.
 
         """
@@ -254,12 +248,12 @@ class DataRequest(Request):
 
         Parameters
         ----------
+        DataSetName : str
+            A valid name of an available BEA data set.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
-            the format of the results. If ResultFormat is not supplied on the
-            request, or an invalid ResultFormat is specified, the default
-            format returned is JSON. The valid values for ResultFormat are
+            the format of the results. The valid values for ResultFormat are
             `JSON' and 'XML'.
 
         """
@@ -332,9 +326,7 @@ class RegionalDataRequest(DataRequest):
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
-            the format of the results. If ResultFormat is not supplied on the
-            request, or an invalid ResultFormat is specified, the default
-            format returned is JSON. The valid values for ResultFormat are
+            the format of the results. The valid values for ResultFormat are
             'JSON' and 'XML'.
         params : dict
             Dictionary of optional parameters.
@@ -392,9 +384,7 @@ class NIPARequest(DataRequest):
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
-            the format of the results. If ResultFormat is not supplied on the
-            request, or an invalid ResultFormat is specified, the default
-            format returned is JSON. The valid values for ResultFormat are
+            the format of the results. The valid values for ResultFormat are
             'JSON' and 'XML'.
         params : dict
             Dictionary of optional parameters. Note that the list of valid
@@ -448,9 +438,7 @@ class NIUnderlyingDetailRequest(DataRequest):
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
-            the format of the results. If ResultFormat is not supplied on the
-            request, or an invalid ResultFormat is specified, the default
-            format returned is JSON. The valid values for ResultFormat are
+            the format of the results. The valid values for ResultFormat are
             'JSON' and 'XML'.
 
         """
@@ -482,9 +470,7 @@ class FixedAssetsRequest(DataRequest):
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
-            the format of the results. If ResultFormat is not supplied on the
-            request, or an invalid ResultFormat is specified, the default
-            format returned is JSON. The valid values for ResultFormat are
+            the format of the results. The valid values for ResultFormat are
             'JSON' and 'XML'.
 
         """
