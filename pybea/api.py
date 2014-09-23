@@ -92,7 +92,7 @@ class Request(dict):
         return tmp_results
 
     def _load_json_content(self):
-        return json.loads(self.response.content)
+        return json.loads(self.response.content.decode())
 
     def _load_xml_content(self):
         raise NotImplementedError
