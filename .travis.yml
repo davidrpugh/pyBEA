@@ -17,3 +17,7 @@ install:
 
 # command to run tests
 script: nosetests --with-coverage --cover-package=pybea
+
+# command to run coveralls
+after_success:
+  - coveralls
