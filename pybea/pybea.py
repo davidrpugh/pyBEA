@@ -77,8 +77,7 @@ def get_parameter_list(DataSetName, ResultFormat='JSON'):
 
     """
     tmp_request = api.ParameterListRequest(DataSetName=DataSetName,
-                                           ResultFormat=ResultFormat,
-                                           )
+                                           ResultFormat=ResultFormat)
     parameter_list = pd.DataFrame(tmp_request.parameter_list, dtype=np.int64)
     return parameter_list
 
@@ -113,8 +112,7 @@ def get_parameter_values(DataSetName, ParameterName, ResultFormat='JSON'):
     """
     tmp_request = api.ParameterValuesRequest(DataSetName=DataSetName,
                                              ParameterName=ParameterName,
-                                             ResultFormat=ResultFormat,
-                                             )
+                                             ResultFormat=ResultFormat)
     param_values = pd.DataFrame(tmp_request.parameter_values, dtype=np.int64)
     return param_values
 
@@ -162,13 +160,13 @@ def get_data(DataSetName, ResultFormat='JSON', **params):
                                       ResultFormat=ResultFormat,
                                       **params)
     elif DataSetName == 'NIUnderlyingDetail':
-        tmp_request = api.NIPARequest(Method='GetData',
-                                      ResultFormat=ResultFormat,
-                                      **params)
+        tmp_request = api.NIUnderlyingDetailRequest(Method='GetData',
+                                                    ResultFormat=ResultFormat,
+                                                    **params)
     elif DataSetName == 'FixedAssets':
-        tmp_request = api.NIPARequest(Method='GetData',
-                                      ResultFormat=ResultFormat,
-                                      **params)
+        tmp_request = api.FixedAssetsRequest(Method='GetData',
+                                             ResultFormat=ResultFormat,
+                                             **params)
     else:
         raise ValueError("Invalid DataSetName requested.")
 
