@@ -10,10 +10,6 @@ import unittest
 
 from .. import api
 
-valid_formats = ['JSON', 'XML']
-valid_methods = ['GetDataSetList', 'GetParameterList', 'GetParameterValues',
-                 'GetData']
-
 
 class TestRequest(unittest.TestCase):
     """Testing suite for the base Request class."""
@@ -23,7 +19,7 @@ class TestRequest(unittest.TestCase):
         valid_request = api.RegionalDataRequest(KeyCode='POP_CI',
                                                 Year=['1995'],
                                                 GeoFips='MSA',
-                                                ResultFormat=valid_formats[0])
+                                                ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
         # confirm that dictionary has been updated
@@ -35,8 +31,8 @@ class TestRequest(unittest.TestCase):
 
     def test__init__(self):
         """Testing initiation of a Request."""
-        valid_request = api.Request(Method=valid_methods[0],
-                                    ResultFormat=valid_formats[0])
+        valid_request = api.Request(Method='GetDataSetList',
+                                    ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
     def test__setitem__(self):
@@ -44,7 +40,7 @@ class TestRequest(unittest.TestCase):
         valid_request = api.RegionalDataRequest(KeyCode='POP_CI',
                                                 Year=['2009'],
                                                 GeoFips='STATE',
-                                                ResultFormat=valid_formats[0])
+                                                ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
         # confirm that dictionary has been updated
@@ -59,7 +55,7 @@ class TestRequest(unittest.TestCase):
         valid_request = api.RegionalDataRequest(KeyCode='GDP_MP',
                                                 Year=['1990'],
                                                 GeoFips='MSA',
-                                                ResultFormat=valid_formats[0])
+                                                ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
         # check return type
@@ -75,7 +71,7 @@ class TestRequest(unittest.TestCase):
         valid_request = api.RegionalDataRequest(KeyCode='GDP_MP',
                                                 Year=['1990'],
                                                 GeoFips='MSA',
-                                                ResultFormat=valid_formats[0])
+                                                ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
         # check return type
@@ -90,21 +86,21 @@ class TestRequest(unittest.TestCase):
         """Testing validation of ResultFormat keyword arg."""
         # ResultFormat must be a string
         with nose.tools.assert_raises(AttributeError):
-            api.Request(Method=valid_methods[0], ResultFormat=3)
+            api.Request(Method='GetDataSetList', ResultFormat=3)
 
         # Result format must be valid
         with nose.tools.assert_raises(AttributeError):
-            api.Request(Method=valid_methods[-1], ResultFormat='InvalidFormat')
+            api.Request(Method='GetData', ResultFormat='InvalidFormat')
 
     def test_validate_method(self):
         """Testing validation of Method keyword arg."""
         # ResultFormat must be a string
         with nose.tools.assert_raises(AttributeError):
-            api.Request(Method=0, ResultFormat=valid_formats[0])
+            api.Request(Method=0, ResultFormat='JSON')
 
         # Method must be valid
         with nose.tools.assert_raises(AttributeError):
-            api.Request(Method='GetParameters', ResultFormat=valid_formats[1])
+            api.Request(Method='GetParameters', ResultFormat='InvalidFormat')
 
 
 class DataSetListRequest(unittest.TestCase):
@@ -112,12 +108,12 @@ class DataSetListRequest(unittest.TestCase):
 
     def test_initiate_data_set_list_request(self):
         """Testing initiation of a DataSetListRequest."""
-        valid_request = api.DataSetListRequest(ResultFormat=valid_formats[0])
+        valid_request = api.DataSetListRequest(ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
     def test_data_set_attribute(self):
         """Testing the return type of the data_set attribute."""
-        valid_request = api.DataSetListRequest(ResultFormat=valid_formats[0])
+        valid_request = api.DataSetListRequest(ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
         # check return type
@@ -135,13 +131,13 @@ class ParameterListRequest(unittest.TestCase):
     def test_initiate_parameter_list_request(self):
         """Testing initiation of a ParameterListRequest."""
         valid_request = api.ParameterListRequest(DataSetName='NIPA',
-                                                 ResultFormat=valid_formats[0])
+                                                 ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
     def test_parameter_list_attribute(self):
         """Testing the return type of the parameter list attribute."""
         valid_request = api.ParameterListRequest(DataSetName='NIPA',
-                                                 ResultFormat=valid_formats[0])
+                                                 ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
         # check return type
@@ -160,14 +156,14 @@ class ParameterValuesRequest(unittest.TestCase):
         """Testing initiation of a ParameterValuesRequest."""
         valid_request = api.ParameterValuesRequest(DataSetName='NIPA',
                                                    ParameterName='TableID',
-                                                   ResultFormat=valid_formats[0])
+                                                   ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
     def test_parameter_list_attribute(self):
         """Testing the return type of the parameter list attribute."""
         valid_request = api.ParameterValuesRequest(DataSetName='NIPA',
                                                    ParameterName='TableID',
-                                                   ResultFormat=valid_formats[0])
+                                                   ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
         # check return type
@@ -188,7 +184,7 @@ class DataRequest(unittest.TestCase):
                                         KeyCode='POP_MI',
                                         Year=['1990'],
                                         GeoFips='MSA',
-                                        ResultFormat=valid_formats[0])
+                                        ResultFormat='JSON')
         nose.tools.assert_true(valid_request.response.ok)
 
         # check return type
@@ -198,3 +194,72 @@ class DataRequest(unittest.TestCase):
         with nose.tools.assert_raises(NotImplementedError):
             valid_request['ResultFormat'] = 'XML'
             valid_request.data
+
+    def test_dimensions_attribute(self):
+        """Testing the return type of the dimensions attribute."""
+        valid_request = api.DataRequest(DataSetName='RegionalData',
+                                        KeyCode='POP_MI',
+                                        Year=['1990'],
+                                        GeoFips='MSA',
+                                        ResultFormat='JSON')
+        nose.tools.assert_true(valid_request.response.ok)
+
+        # check return type
+        nose.tools.assert_is_instance(valid_request.dimensions, list)
+
+        # XML not yet implemented
+        with nose.tools.assert_raises(NotImplementedError):
+            valid_request['ResultFormat'] = 'XML'
+            valid_request.dimensions
+
+    def test_notes_attribute(self):
+        """Testing the return type of the dimensions attribute."""
+        valid_request = api.DataRequest(DataSetName='RegionalData',
+                                        KeyCode='DIR_SI',
+                                        Year=['1985'],
+                                        GeoFips='STATE',
+                                        ResultFormat='JSON')
+        nose.tools.assert_true(valid_request.response.ok)
+
+        # check return type
+        nose.tools.assert_is_instance(valid_request.notes, list)
+
+        # XML not yet implemented
+        with nose.tools.assert_raises(NotImplementedError):
+            valid_request['ResultFormat'] = 'XML'
+            valid_request.notes
+
+
+class NIPARequest(unittest.TestCase):
+    """Testing suite for the NIPARequest class."""
+
+    def test_initiate_nipa_request(self):
+        """Testing initiation of a NIPARequest."""
+        valid_request = api.NIPARequest(TableID='25',
+                                        Frequency='Q',
+                                        Year=['2000', '2005'],
+                                        ResultFormat='JSON')
+        nose.tools.assert_true(valid_request.response.ok)
+
+
+class NIUnderlyingDetailRequest(unittest.TestCase):
+    """Testing suite for the NIUnderlyingDetailRequest class."""
+
+    def test_initiate_ni_underlying_detail_request(self):
+        """Testing initiation of a NIUnderlyingDetailRequest."""
+        valid_request = api.NIUnderlyingDetailRequest(TableID='25',
+                                                      Frequency='Q',
+                                                      Year=['2000', '2005'],
+                                                      ResultFormat='JSON')
+        nose.tools.assert_true(valid_request.response.ok)
+
+
+class FixedAssetsRequest(unittest.TestCase):
+    """Testing suite for the FixedAssetsRequest class."""
+
+    def test_initiate_fixed_assets_request(self):
+        """Testing initiation of a FixedAssetsRequest."""
+        valid_request = api.FixedAssetsRequest(TableID='23',
+                                               Year=['2000', '2010'],
+                                               ResultFormat='JSON')
+        nose.tools.assert_true(valid_request.response.ok)
