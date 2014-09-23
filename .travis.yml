@@ -12,7 +12,7 @@ branches:
 
 # command to install dependencies
 install:
-  - "pip install coverage"
+  - "pip install coverage coveralls"
   - "pip install numpy pandas requests"
 
 # command to run tests
