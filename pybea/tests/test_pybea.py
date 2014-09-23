@@ -2,7 +2,7 @@
 Tests for pybea.py module.
 
 @author : David R. Pugh
-@date : 2014-09-22
+@date : 2014-09-23
 
 """
 import nose
@@ -36,7 +36,7 @@ def test_get_parameter_values():
 def test_get_data_set():
     """Testinf function for grabbing data."""
     df = pybea.get_data(DataSetName='RegionalData',
-                        KeyCode='POP_MI',
+                        KeyCodes=['POP_MI'],
                         GeoFips='MSA',
                         Year=['2000', '2005', '2010'])
     nose.tools.assert_is_instance(df, pd.DataFrame)
