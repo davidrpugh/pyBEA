@@ -18,9 +18,7 @@ def get_data_set_list(ResultFormat='JSON'):
     ResultFormat : str (default='JSON')
         The API returns data in one of two formats: JSON or XML. The
         ResultFormat parameter can be included on any request to specify the
-        format of the results. If ResultFormat is not supplied on the request,
-        or an invalid ResultFormat is specified, the default format returned is
-        JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
+        format of the results.
 
     Returns
     -------
@@ -47,9 +45,7 @@ def get_parameter_list(DataSetName, ResultFormat='JSON'):
     ResultFormat : str (default='JSON')
         The API returns data in one of two formats: JSON or XML. The
         ResultFormat parameter can be included on any request to specify the
-        format of the results. If ResultFormat is not supplied on the request,
-        or an invalid ResultFormat is specified, the default format returned is
-        JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
+        format of the results.
 
     Returns
     -------
@@ -99,9 +95,7 @@ def get_parameter_values(DataSetName, ParameterName, ResultFormat='JSON'):
     ResultFormat : str (default='JSON')
         The API returns data in one of two formats: JSON or XML. The
         ResultFormat parameter can be included on any request to specify the
-        format of the results. If ResultFormat is not supplied on the request,
-        or an invalid ResultFormat is specified, the default format returned is
-        JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
+        format of the results.
 
     Returns
     -------
@@ -130,9 +124,7 @@ def get_data(DataSetName, ResultFormat='JSON', **params):
     ResultFormat : str (default='JSON')
         The API returns data in one of two formats: JSON or XML. The
         ResultFormat parameter can be included on any request to specify the
-        format of the results. If ResultFormat is not supplied on the request,
-        or an invalid ResultFormat is specified, the default format returned is
-        JSON. The valid values for ResultFormat are 'JSON' and 'XML'.
+        format of the results.
     params : dict
         Dictionary of optional parameters. The list of valid optional
         parameters is data set specific. See the notes section below for more
