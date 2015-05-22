@@ -1,6 +1,6 @@
 """
 @author : David R. Pugh
-@date : 2014-09-18
+@date : 2015-05-19
 
 
 TODO
@@ -19,8 +19,6 @@ class Request(dict):
 
     _response = None
 
-    _user_id = '98A0A0A7-21DF-4B75-96DE-1410D47AB280'
-
     base_url = 'http://www.bea.gov/api/data'
 
     valid_formats = ['JSON', 'XML']
@@ -31,12 +29,13 @@ class Request(dict):
                      'GetData',
                      ]
 
-    def __init__(self, Method, ResultFormat='JSON', **params):
+    def __init__(self, UserID, Method, ResultFormat='JSON', **params):
         # validate required keyword args
+        valid_user_id = self._validate_user_id(UserID)
         valid_method = self._validate_method(Method)
         valid_format = self._validate_result_format(ResultFormat)
 
-        required_params = {'UserID': self._user_id,
+        required_params = {'UserID': valid_user_id,
                            'Method': valid_method,
                            'ResultFormat': valid_format}
         required_params.update(params)
@@ -119,15 +118,25 @@ class Request(dict):
         else:
             return fmt
 
+    def _validate_user_id(self, user_id):
+        """Validate the UserID keyword argument."""
+        if not isinstance(user_id, str):
+            mesg = "UserID keyword argument must be a string, not a {}."
+            raise AttributeError(mesg.format(user_id.__class__))
+        else:
+            return user_id
+
 
 class DataSetListRequest(Request):
 
-    def __init__(self, ResultFormat='JSON'):
+    def __init__(self, UserID, ResultFormat='JSON'):
         """
         Create an instance of the DataSetListRequest class.
 
         Parameters
         ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
@@ -135,7 +144,8 @@ class DataSetListRequest(Request):
             `JSON' and 'XML'.
 
         """
-        required_params = {'Method': 'GetDataSetList',
+        required_params = {'UserID': UserID,
+                           'Method': 'GetDataSetList',
                            'ResultFormat': ResultFormat}
         super(DataSetListRequest, self).__init__(**required_params)
 
@@ -158,12 +168,14 @@ class DataSetListRequest(Request):
 
 class ParameterListRequest(Request):
 
-    def __init__(self, DataSetName, ResultFormat='JSON'):
+    def __init__(self, UserID, DataSetName, ResultFormat='JSON'):
         """
         Create an instance of the ParameterListRequest class.
 
         Parameters
         ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
         DataSetName : str
             A valid name of an available BEA data set.
         ResultFormat : str (default='JSON')
@@ -173,7 +185,8 @@ class ParameterListRequest(Request):
             'JSON' and 'XML'.
 
         """
-        required_params = {'Method': 'GetParameterList',
+        required_params = {'UserID': UserID,
+                           'Method': 'GetParameterList',
                            'DataSetName': DataSetName,
                            'ResultFormat': ResultFormat}
         super(ParameterListRequest, self).__init__(**required_params)
@@ -197,12 +210,14 @@ class ParameterListRequest(Request):
 
 class ParameterValuesRequest(Request):
 
-    def __init__(self, DataSetName, ParameterName, ResultFormat='JSON'):
+    def __init__(self, UserID, DataSetName, ParameterName, ResultFormat='JSON'):
         """
         Create an instance of the ParameterValuesRequest class.
 
         Parameters
         ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
         DataSetName : str
             A valid name of an available BEA data set.
         ParameterName : str
@@ -216,7 +231,8 @@ class ParameterValuesRequest(Request):
             'JSON' and 'XML'.
 
         """
-        required_params = {'Method': 'GetParameterValues',
+        required_params = {'UserID': UserID,
+                           'Method': 'GetParameterValues',
                            'DataSetName': DataSetName,
                            'ParameterName': ParameterName,
                            'ResultFormat': ResultFormat}
@@ -242,12 +258,14 @@ class ParameterValuesRequest(Request):
 class DataRequest(Request):
     """Base class for a DataRequest."""
 
-    def __init__(self, DataSetName, ResultFormat='JSON', **params):
+    def __init__(self, UserID, DataSetName, ResultFormat='JSON', **params):
         """
         Create an instance of the DataRequest class.
 
         Parameters
         ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
         DataSetName : str
             A valid name of an available BEA data set.
         ResultFormat : str (default='JSON')
@@ -257,7 +275,8 @@ class DataRequest(Request):
             `JSON' and 'XML'.
 
         """
-        required_params = {'Method': 'GetData',
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
                            'DataSetName': DataSetName,
                            'ResultFormat': ResultFormat}
         required_params.update(params)
@@ -315,12 +334,14 @@ class DataRequest(Request):
 
 class RegionalDataRequest(DataRequest):
 
-    def __init__(self, KeyCode, ResultFormat='JSON', **params):
+    def __init__(self, UserID, KeyCode, ResultFormat='JSON', **params):
         r"""
         Create an instance of the RegionalDataRequest class.
 
         Parameters
         ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
         DataSetName : str
             A valid name of an available BEA data set.
         ResultFormat : str (default='JSON')
@@ -350,7 +371,8 @@ class RegionalDataRequest(DataRequest):
         .. _`BEA website`: http://www.bea.gov/regional/docs/msalist.cfm
 
         """
-        required_params = {'Method': 'GetData',
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
                            'DataSetName': 'RegionalData',
                            'KeyCode': KeyCode,
                            'ResultFormat': ResultFormat}
@@ -360,12 +382,14 @@ class RegionalDataRequest(DataRequest):
 
 class NIPARequest(DataRequest):
 
-    def __init__(self, TableID, Frequency, Year, ResultFormat='JSON', **params):
+    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON', **params):
         """
         Create an instance of the NIPARequest class.
 
         Parameters
         ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
         TableID : str
             The TableID parameter is an integer that refers to a specific NIPA
             table. Note that the list of valid TableIDs may change depending on
@@ -403,7 +427,8 @@ class NIPARequest(DataRequest):
             returned as if million-dollar data was not requested.
 
         """
-        required_params = {'Method': 'GetData',
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
                            'DataSetName': 'NIPA',
                            'TableID': TableID,
                            'Frequency': Frequency,
@@ -415,12 +440,14 @@ class NIPARequest(DataRequest):
 
 class NIUnderlyingDetailRequest(DataRequest):
 
-    def __init__(self, TableID, Frequency, Year, ResultFormat='JSON'):
+    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON'):
         """
         Create an instance of the NIUnderlyingDetailRequest class.
 
         Parameters
         ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
         TableID : str
             The TableID parameter is an integer that refers to a specific NIPA
             table.
@@ -442,7 +469,8 @@ class NIUnderlyingDetailRequest(DataRequest):
             'JSON' and 'XML'.
 
         """
-        required_params = {'Method': 'GetData',
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
                            'DataSetName': 'NIUnderlyingDetail',
                            'TableID': TableID,
                            'Frequency': Frequency,
@@ -453,12 +481,14 @@ class NIUnderlyingDetailRequest(DataRequest):
 
 class FixedAssetsRequest(DataRequest):
 
-    def __init__(self, TableID, Year, ResultFormat='JSON'):
+    def __init__(self, UserID, TableID, Year, ResultFormat='JSON'):
         """
         Create an instance of the FixedAssetsRequest class.
 
         Parameters
         ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
         TableID : str
             The TableID parameter is an integer that refers to a specific
             FixedAssets table.
@@ -474,7 +504,8 @@ class FixedAssetsRequest(DataRequest):
             'JSON' and 'XML'.
 
         """
-        required_params = {'Method': 'GetData',
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
                            'DataSetName': 'FixedAssets',
                            'TableID': TableID,
                            'Year': Year,
