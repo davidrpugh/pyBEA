@@ -1,7 +1,12 @@
+sudo: false
+
 language: python
+
 python:
-  - "2.7"
-  - "3.3"
+  - 2.7
+  - 3.3
+  - 3.4
+  - 3.5
 
 notifications:
   email: false
@@ -9,11 +14,13 @@ notifications:
 branches:
   only:
     - master
+    - develop
 
 # command to install dependencies
 install:
-  - "pip install coverage coveralls"
-  - "pip install numpy pandas requests"
+  - pip install coverage coveralls
+  - pip install numpy pandas requests
+  - python setup.py install
 
 # command to run tests
 script: nosetests --with-coverage --cover-package=pybea
