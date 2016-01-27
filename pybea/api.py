@@ -1,6 +1,6 @@
 """
 @author : David R. Pugh
-@date : 2015-05-19
+@date : 2016-01-27
 
 
 TODO
@@ -11,6 +11,7 @@ verbatim from the BEA user guide.
 
 """
 import json
+
 import requests
 
 

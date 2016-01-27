@@ -2,7 +2,7 @@
 Functions for fetching data from the Bureau of Economic Analysis (BEA) data api.
 
 @author : David R. Pugh
-@date : 2014-09-23
+@date : 2016-01-27
 
 """
 import numpy as np
@@ -11,12 +11,14 @@ import pandas as pd
 from . import api
 
 
-def get_data_set_list(ResultFormat='JSON'):
+def get_data_set_list(UserID, ResultFormat='JSON'):
     """
     Retrieve list of currently available data sets.
 
     Parameters
     ----------
+    UserID: str
+            A valid UserID necessary for accessing the BEA data API.
     ResultFormat : str (default='JSON')
         The API returns data in one of two formats: JSON or XML. The
         ResultFormat parameter can be included on any request to specify the
@@ -29,17 +31,19 @@ def get_data_set_list(ResultFormat='JSON'):
         attributes for all available data sets.
 
     """
-    tmp_request = api.DataSetListRequest(ResultFormat=ResultFormat)
+    tmp_request = api.DataSetListRequest(UserID=UserID, ResultFormat=ResultFormat)
     data_set_list = pd.DataFrame(tmp_request.data_set, dtype=np.int64)
     return data_set_list
 
 
-def get_parameter_list(DataSetName, ResultFormat='JSON'):
+def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
     """
     Retrieve list of required and optional parameters for a given data set.
 
     Parameters
     ----------
+    UserID: str
+            A valid UserID necessary for accessing the BEA data API.
     DataSetName : str
         A valid name of an available BEA data set. The get_data_set_list
         function returns a complete listing of available data sets and the
@@ -74,18 +78,21 @@ def get_parameter_list(DataSetName, ResultFormat='JSON'):
     are used without supplying them individually.
 
     """
-    tmp_request = api.ParameterListRequest(DataSetName=DataSetName,
+    tmp_request = api.ParameterListRequest(UserID=UserID,
+                                           DataSetName=DataSetName,
                                            ResultFormat=ResultFormat)
     parameter_list = pd.DataFrame(tmp_request.parameter_list, dtype=np.int64)
     return parameter_list
 
 
-def get_parameter_values(DataSetName, ParameterName, ResultFormat='JSON'):
+def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'):
     """
     Retrieve list of valid parameter values for a given data set.
 
     Parameters
     ----------
+    UserID: str
+            A valid UserID necessary for accessing the BEA data API.
     DataSetName : str
         A valid name of an available BEA data set. Note that the
         get_data_set_list function returns a complete listing of available data
@@ -106,19 +113,22 @@ def get_parameter_values(DataSetName, ParameterName, ResultFormat='JSON'):
         the given data set.
 
     """
-    tmp_request = api.ParameterValuesRequest(DataSetName=DataSetName,
+    tmp_request = api.ParameterValuesRequest(UserID=UserID,
+                                             DataSetName=DataSetName,
                                              ParameterName=ParameterName,
                                              ResultFormat=ResultFormat)
     param_values = pd.DataFrame(tmp_request.parameter_values, dtype=np.int64)
     return param_values
 
 
-def get_data(DataSetName, ResultFormat='JSON', **params):
+def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     r"""
     Retrieve data from the Bureau of Economic Analysis (BEA) data api.
 
     Parameters
     ----------
+    UserID: str
+            A valid UserID necessary for accessing the BEA data API.
     DataSetName : str
         A valid name of an available BEA data set. The get_data_set_list
         function returns a complete listing of available data sets and the
@@ -165,16 +175,16 @@ def get_data(DataSetName, ResultFormat='JSON', **params):
 
     """
     if DataSetName == 'RegionalData':
-        data = _get_RegionalData(ResultFormat=ResultFormat,
+        data = _get_RegionalData(UserID=UserID, ResultFormat=ResultFormat,
                                  **params)
     elif DataSetName == 'NIPA':
-        data = _get_NIPA(ResultFormat=ResultFormat,
+        data = _get_NIPA(UserID=UserID, ResultFormat=ResultFormat,
                          **params)
     elif DataSetName == 'NIUnderlyingDetail':
-        data = _get_NIUnderlyingDetail(ResultFormat=ResultFormat,
+        data = _get_NIUnderlyingDetail(UserID=UserID, ResultFormat=ResultFormat,
                                        **params)
     elif DataSetName == 'FixedAssets':
-        data = _get_FixedAssets(ResultFormat=ResultFormat,
+        data = _get_FixedAssets(UserID=UserID, ResultFormat=ResultFormat,
                                 **params)
     else:
         raise ValueError("Invalid DataSetName requested.")
@@ -182,11 +192,12 @@ def get_data(DataSetName, ResultFormat='JSON', **params):
     return data
 
 
-def _get_RegionalData(ResultFormat, KeyCodes, **params):
+def _get_RegionalData(UserID, ResultFormat, KeyCodes, **params):
     """Combines data on multiple KeyCodes into a single Pandas DataFrame."""
     dfs = []
     for KeyCode in KeyCodes:
-        tmp_request = api.RegionalDataRequest(Method='GetData',
+        tmp_request = api.RegionalDataRequest(UserID=UserID,
+                                              Method='GetData',
                                               ResultFormat=ResultFormat,
                                               KeyCode=KeyCode,
                                               **params)
@@ -198,13 +209,13 @@ def _get_RegionalData(ResultFormat, KeyCodes, **params):
     return combined_df
 
 
-def _get_NIPA(ResultFormat, **params):
+def _get_NIPA(UserID, ResultFormat, **params):
     raise NotImplementedError
 
 
-def _get_NIUnderlyingDetail(ResultFormat, **params):
+def _get_NIUnderlyingDetail(UserID, ResultFormat, **params):
     raise NotImplementedError
 
 
-def _get_FixedAssets(ResultFormat, **params):
+def _get_FixedAssets(UserID, ResultFormat, **params):
     raise NotImplementedError
