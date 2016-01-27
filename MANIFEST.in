@@ -1,2 +1,4 @@
+include LICENSE
+include CITATION
 include *.rst
 recursive-include docs *.rst
