@@ -1,0 +1,8 @@
+@Manual{pyCollocation,
+        title = {\pkg{pyBEA}: a \proglang{Python} wrapper for the BEA data API},
+        author = {David R. Pugh},
+        organization = {Insitute for New Economic Thinking (INET), University of Oxford},
+        year = {2016},
+        doi = {???},
+        url = {https://github.com/davidrpugh/pyBEA}
+        }
