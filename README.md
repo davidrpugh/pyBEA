@@ -1,8 +1,15 @@
 pyBEA
-=====
+=============
 
-#### Current Build and Coverage Status:
-[![Build Status](https://travis-ci.org/davidrpugh/pyBEA.svg?branch=master)](https://travis-ci.org/davidrpugh/pyBEA)
-[![Coverage Status](https://coveralls.io/repos/davidrpugh/pyBEA/badge.png)](https://coveralls.io/r/davidrpugh/pyBEA)
+|Build Status| |Coverage Status| |Latest Version| |Downloads|
 
-Python package for downloading data from the Bureau of Economic Analysis (BEA) data API.
+.. |Build Status| image:: https://travis-ci.org/davidrpugh/pyBEA.svg?branch=master
+   :target: https://travis-ci.org/davidrpugh/pyBEA
+.. |Coverage Status| image:: https://coveralls.io/repos/davidrpugh/pyBEA/badge.svg?branch=master
+   :target: https://coveralls.io/r/davidrpugh/pyBEA?branch=master
+.. |Latest Version| image:: https://img.shields.io/pypi/v/pyBEA.svg
+   :target: https://pypi.python.org/pypi/pyBEA/
+.. |Downloads| image:: https://img.shields.io/pypi/dm/pyBEA.svg
+   :target: https://pypi.python.org/pypi/pyBEA/
+
+Python package for accessing data from the U.S. Bureau of Economic Analysis (BEA) API.  The pyBEA package allows users to extract relevant data from the BEA data API into a Pandas DataFrame for further analysis.
