@@ -35,6 +35,5 @@ setup(name='pybea',
       author_email='david.pugh@maths.ox.ac.uk',
       url='https://github.com/davidrpugh/pyBEA',
       license='LICENSE.rst',
-      install_requires=['numpy', 'pandas', 'requests'],
       classifiers=CLASSIFIERS
       )
