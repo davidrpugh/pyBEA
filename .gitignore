@@ -9,3 +9,6 @@
 
 # IPython checkpoints
 examples/.ipynb_checkpoints/
+
+# Code coverage stats
+.coverage
