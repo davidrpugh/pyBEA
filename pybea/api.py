@@ -644,8 +644,8 @@ class DirectInvestmentMNEsRequest(DataRequest):
         -----
         The optional parameters for DirectInvestmentMNEsRequest are:
 
-        SeriesID : str, int, or list(int)
-
+        SeriesID : int, or list(int)
+            Refer to the GetParameterValuesRequest API call above for the list of SeriesID values and their descriptions. Note that not all series are available for all classes of ownership and years. A value of 0 will return data for all available series given the other parameters. Separate multiple values with a comma.
         Country : str, int, or list(int)
             Refer to the GetParameterValuesRequest API call above for the list of three-digit country and region identification values. Use ‘000’ for the total of all countries and ‘all’ for all available countries and regions. Separate multiple values with a comma.
         Industry : str, int, or list(int)
