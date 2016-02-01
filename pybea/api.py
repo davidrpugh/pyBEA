@@ -332,6 +332,12 @@ class DataRequest(Request):
 
 
 class RegionalDataRequest(DataRequest):
+    """
+    The new datasets RegionalIncome and RegionalProduct have more statistics and industry detail than the RegionalData dataset. See Appendices I and J. Although RegionalData is still valid, we encourage users to switch to the more comprenhensive datasets RegionalIncome and RegionalProduct.
+
+    The RegionalData dataset contains estimates from the Regional Economic Accounts. These include estimates of GDP by state and metropolitan area; estimates of personal income and employment by state, metropolitan area, and county; and regional price parities by state and MSA.
+
+    """
 
     def __init__(self, UserID, KeyCode, ResultFormat='JSON', **params):
         r"""
@@ -341,8 +347,8 @@ class RegionalDataRequest(DataRequest):
         ----------
         UserID: str
             A valid UserID necessary for accessing the BEA data API.
-        DataSetName : str
-            A valid name of an available BEA data set.
+        KeyCode : str
+            KeyCode specifies a statistic drawn from the regional income and product accounts public tables. Exactly one KeyCode must be provided.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
@@ -355,16 +361,23 @@ class RegionalDataRequest(DataRequest):
         -----
         The optional parameters for RegionalDataRequest are:
 
-        GeoFips : str
-            GeoFips will default to returning all available areas unless
-            specified. State, county, and metropolitan statistical area FIPS
-            codes can be obtained from `Census`_. A comprehensive list of MSAs
-            and their component counties is available on the `BEA website`_.
-        Year : int or list(int) (default='ALL')
+        GeoFips : str, int or list(int)
+            GeoFips specifies geography. It can be all states ("STATE"), all counties ("COUNTY"), or all MSAs ("MSA"). It can also be a list of ANSI state-county codes or metropolitan statistical area codes. For example, the counties in Connecticut:
+
+            .. code-block:: python
+
+                GeoFips=list(09001,09003,09005,09007,09009,09011,09013,09015)
+
+            GeoFips will default to all states, counties, or MSAs, if not specified. State, county, and metropolitan statistical area FIPS codes can be obtained from the `Census`_. A comprehensive list of MSAs and their component counties can be accessed on the `BEA website`_.
+        Year : str, int or list(int)
             A string representation of the year for which data is being
             requested. Multiple years are requested by specifying them as a
-            list: `Year=[2000, 2005, 2010]`. Note that Year will default to all
-            available years if the parameter is not specified.
+            list:
+
+            .. code-block:: python
+                Year=[2000, 2005, 2010]
+
+            Note that Year will default to all available years if the parameter is not specified.
 
         .. _`Census`: http://www.census.gov/geo/www/ansi/ansi.html
         .. _`BEA website`: http://www.bea.gov/regional/docs/msalist.cfm
@@ -375,14 +388,19 @@ class RegionalDataRequest(DataRequest):
                            'DataSetName': 'RegionalData',
                            'KeyCode': KeyCode,
                            'ResultFormat': ResultFormat}
-        required_params.update(params)
-        super(RegionalDataRequest, self).__init__(**required_params)
+        query_params = required_params.update(params)
+        super(RegionalDataRequest, self).__init__(**query_params)
 
 
 class NIPARequest(DataRequest):
+    """
+    The NIPA dataset contains data from the standard set of NIPA tables as published in the Survey of Current Business. Availability of updated NIPA data follows the BEA News Release schedule as posted on the BEA web site. The NIPA dataset may be unavailable for a few minutes preceding the monthly GDP release while data is being updated (as it is for all other methods of acquiring newly released data).
 
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON', **params):
-        """
+    """
+
+    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON',
+                 **params):
+        r"""
         Create an instance of the NIPARequest class.
 
         Parameters
@@ -396,14 +414,22 @@ class NIPARequest(DataRequest):
         Frequency : str or list(str)
             The Frequency parameter is a string that refers to the time series
             for the requested NIPA table. Multiple frequencies are requested by
-            specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
-            is requested for frequencies that don't exist for a particular NIPA
-            table, only data that exists is returned.
-        Year : int or list(int) (default='ALL')
+            specifying them as a list:
+
+            .. code-block :: python
+
+                Frequency=['A', 'Q' , 'M']
+
+            When data is requested for frequencies that don't exist for a particular NIPA table, only data that exists is returned.
+        Year : str, int or list(int)
             A string representation of the year for which data is being
             requested. Multiple years are requested by specifying them as a
-            list: `Year=[2000, 2005, 2010]`. Note that Year will default to all
-            available years if the parameter is not specified.
+            list:
+
+            .. code-block:: python
+                Year=[2000, 2005, 2010]
+
+            Note that Year will default to all available years if the parameter is not specified.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
@@ -433,14 +459,18 @@ class NIPARequest(DataRequest):
                            'Frequency': Frequency,
                            'Year': Year,
                            'ResultFormat': ResultFormat}
-        required_params.update(params)
-        super(NIPARequest, self).__init__(**required_params)
+        query_params = required_params.update(params)
+        super(NIPARequest, self).__init__(**query_params)
 
 
 class NIUnderlyingDetailRequest(DataRequest):
+    """
+    The NIUnderlyingDetail dataset contains detailed estimate data from underlying NIPA series that appear in the national income and product account (NIPA) tables as published in the Survey of Current Business.
+
+    """
 
     def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON'):
-        """
+        r"""
         Create an instance of the NIUnderlyingDetailRequest class.
 
         Parameters
@@ -449,18 +479,27 @@ class NIUnderlyingDetailRequest(DataRequest):
             A valid UserID necessary for accessing the BEA data API.
         TableID : str
             The TableID parameter is an integer that refers to a specific NIPA
-            table.
+            table. Note that the list of valid TableIDs may change depending on
+            the monthly news release cycles.
         Frequency : str or list(str)
             The Frequency parameter is a string that refers to the time series
             for the requested NIPA table. Multiple frequencies are requested by
-            specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
-            is requested for frequencies that don't exist for a particular NIPA
-            table, only data that exists is returned.
-        Year : int or list(int) (default='ALL')
+            specifying them as a list:
+
+            .. code-block :: python
+
+                Frequency=['A', 'Q' , 'M']
+
+            When data is requested for frequencies that don't exist for a particular NIPA table, only data that exists is returned.
+        Year : str, int or list(int)
             A string representation of the year for which data is being
             requested. Multiple years are requested by specifying them as a
-            list: `Year=[2000, 2005, 2010]`. Note that Year will default to all
-            available years if the parameter is not specified.
+            list:
+
+            .. code-block:: python
+                Year=[2000, 2005, 2010]
+
+            Note that Year will default to all available years if the parameter is not specified.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
@@ -479,9 +518,13 @@ class NIUnderlyingDetailRequest(DataRequest):
 
 
 class FixedAssetsRequest(DataRequest):
+    """
+    The FixedAssets dataset contains data from the standard set of Fixed Assets tables as published online.
+
+    """
 
     def __init__(self, UserID, TableID, Year, ResultFormat='JSON'):
-        """
+        r"""
         Create an instance of the FixedAssetsRequest class.
 
         Parameters
@@ -491,11 +534,15 @@ class FixedAssetsRequest(DataRequest):
         TableID : str
             The TableID parameter is an integer that refers to a specific
             FixedAssets table.
-        Year : int or list(int) (default='ALL')
+        Year : str, int or list(int)
             A string representation of the year for which data is being
             requested. Multiple years are requested by specifying them as a
-            list: `Year=[2000, 2005, 2010]`. Note that Year will default to all
-            available years if the parameter is not specified.
+            list:
+
+            .. code-block:: python
+                Year=[2000, 2005, 2010]
+
+            Note that Year will default to all available years if the parameter is not specified.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
@@ -512,106 +559,11 @@ class FixedAssetsRequest(DataRequest):
         super(FixedAssetsRequest, self).__init__(**required_params)
 
 
-class NIPARequest(DataRequest):
-
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON', **params):
-        """
-        Create an instance of the NIPARequest class.
-
-        Parameters
-        ----------
-        UserID: str
-            A valid UserID necessary for accessing the BEA data API.
-        TableID : str
-            The TableID parameter is an integer that refers to a specific NIPA
-            table. Note that the list of valid TableIDs may change depending on
-            the monthly news release cycles.
-        Frequency : str or list(str)
-            The Frequency parameter is a string that refers to the time series
-            for the requested NIPA table. Multiple frequencies are requested by
-            specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
-            is requested for frequencies that don't exist for a particular NIPA
-            table, only data that exists is returned.
-        Year : int or list(int) (default='ALL')
-            A string representation of the year for which data is being
-            requested. Multiple years are requested by specifying them as a
-            list: `Year=[2000, 2005, 2010]`. Note that Year will default to all
-            available years if the parameter is not specified.
-        ResultFormat : str (default='JSON')
-            The API returns data in one of two formats: JSON or XML. The
-            ResultFormat parameter can be included on any request to specify
-            the format of the results. The valid values for ResultFormat are
-            'JSON' and 'XML'.
-        params : dict
-            Dictionary of optional parameters. Note that the list of valid
-            optional parameters is data set specific.
-
-        Notes
-        -----
-        The optional parameters for NIPADataRequest are:
-
-        ShowMillions : str
-            The ShowMillions parameter is a string indicating whether the data
-            for the requested NIPA table should be returned in million-dollar
-            units. Million-dollar estimate data doesn't exist for all tables,
-            and data is returned in million-dollar units only if available.
-            When million-dollar data doesn't exist for a table, data is
-            returned as if million-dollar data was not requested.
-
-        """
-        required_params = {'UserID': UserID,
-                           'Method': 'GetData',
-                           'DataSetName': 'NIPA',
-                           'TableID': TableID,
-                           'Frequency': Frequency,
-                           'Year': Year,
-                           'ResultFormat': ResultFormat}
-        required_params.update(params)
-        super(NIPARequest, self).__init__(**required_params)
-
-
-class NIUnderlyingDetailRequest(DataRequest):
-
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON'):
-        """
-        Create an instance of the NIUnderlyingDetailRequest class.
-
-        Parameters
-        ----------
-        UserID: str
-            A valid UserID necessary for accessing the BEA data API.
-        TableID : str
-            The TableID parameter is an integer that refers to a specific NIPA
-            table.
-        Frequency : str or list(str)
-            The Frequency parameter is a string that refers to the time series
-            for the requested NIPA table. Multiple frequencies are requested by
-            specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
-            is requested for frequencies that don't exist for a particular NIPA
-            table, only data that exists is returned.
-        Year : int or list(int) (default='ALL')
-            A string representation of the year for which data is being
-            requested. Multiple years are requested by specifying them as a
-            list: `Year=[2000, 2005, 2010]`. Note that Year will default to all
-            available years if the parameter is not specified.
-        ResultFormat : str (default='JSON')
-            The API returns data in one of two formats: JSON or XML. The
-            ResultFormat parameter can be included on any request to specify
-            the format of the results. The valid values for ResultFormat are
-            'JSON' and 'XML'.
-
-        """
-        required_params = {'UserID': UserID,
-                           'Method': 'GetData',
-                           'DataSetName': 'NIUnderlyingDetail',
-                           'TableID': TableID,
-                           'Frequency': Frequency,
-                           'Year': Year,
-                           'ResultFormat': ResultFormat}
-        super(NIUnderlyingDetailRequest, self).__init__(**required_params)
-
-
 class InputOutputRequest(DataRequest):
+    """
+    The Input-Output Statistics are contained within a dataset called InputOutput. BEA's industry accounts are used extensively by policymakers and businesses to understand industry interactions, productivity trends, and the changing structure of the U.S. economy. The input-output accounts provide a detailed view of the interrelationships between U.S. producers and users. The Input-Output dataset contains Make Tables, Use Tables, and Direct and Total Requirements tables.
+
+    """
 
     def __init__(self, UserID, TableID, Year='ALL', ResultFormat='JSON'):
         r"""
@@ -621,14 +573,23 @@ class InputOutputRequest(DataRequest):
         ----------
         UserID: str
             A valid UserID necessary for accessing the BEA data API.
-        TableID : str
+        TableID : str, int or list(int)
             The TableID parameter is an integer that refers to a specific
-            InputOutput table. Multiple years are requested by specifying them as a list: `TableID=[2, 3, 5]`.
-        Year : int or list(int) (default='ALL')
+            InputOutput table. Multiple years are requested by specifying them as a list as follows:
+
+            .. code-block :: python
+
+                TableID=[47, 48, 49]
+
+        Year : str, int or list(int)
             A string representation of the year for which data is being
             requested. Multiple years are requested by specifying them as a
-            list: `Year=[2000, 2005, 2010]`. Note that Year will default to all
-            available years if the parameter is not specified.
+            list:
+
+            .. code-block:: python
+                Year=[2000, 2005, 2010]
+
+            Note that Year will default to all available years if the parameter is not specified.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
