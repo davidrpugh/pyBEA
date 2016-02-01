@@ -604,3 +604,66 @@ class InputOutputRequest(DataRequest):
                            'Year': Year,
                            'ResultFormat': ResultFormat}
         super(InputOutputRequest, self).__init__(**required_params)
+
+
+class DirectInvestmentMNEsRequest(DataRequest):
+    """
+    This data set contains statistics on income and financial transactions in direct investment that underlie the U.S. balance of payments statistics, and direct investment positions that underlie the U.S. international investment positions.
+
+    """
+
+    def __init__(self, UserID, DirectionOfInvestment, Classification,
+                 Year='ALL', ResultFormat='JSON', **params):
+        r"""
+        Create an instance of the DirectInvestmentMNEsRequest class.
+
+        Parameters
+        ----------
+        UserID : str
+            A valid UserID necessary for accessing the BEA data API.
+        DirectionOfInvestment : str
+            DirectionOfInvestment can take on two values: "Outward" for data on transactions and positions between foreign affiliates and their U.S. parent enterprises; "Inward" for data on transactions and positions between U.S. affiliates and their foreign parent groups.
+        Classification : str
+            Classification can take on four values: "Country" for a total value by country only; "Industry" for a total value by industry only; "CountryByIndustry" for a country broken out by industry (where available); "IndustryByCountry" for an industry broken out by country (where available);
+        Year : str, int or list(int) (default="ALL")
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list:
+
+            .. code-block:: python
+                Year=[2000, 2005, 2010]
+
+            Note that Year will default to all available years if the parameter is not specified.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+
+        Notes
+        -----
+        The optional parameters for DirectInvestmentMNEsRequest are:
+
+        SeriesID : str, int, or list(int)
+
+        Country : str, int, or list(int)
+            Refer to the GetParameterValuesRequest API call above for the list of three-digit country and region identification values. Use ‘000’ for the total of all countries and ‘all’ for all available countries and regions. Separate multiple values with a comma.
+        Industry : str, int, or list(int)
+            Refer to the GetParameterValuesRequest API call abovefor the list of four-digit industry identification values. These generally follow the North American Industry Classification System (NAICS). Use ‘0000’ for the all- industries total and ‘all’ for all available industries. Separate multiple values with a comma.
+        State : str, int, or list(int)
+            At the state level data are only available on employment and (for 2007 and earlier years), property, plant, and equipment.
+
+            Refer to the GetParameterValuesRequest API call above for the list of the two-digit Federal Information Processing Standards (FIPS) codes, or the FIPS codes found at this `link`_: . Use ‘70’ for “Other U.S. Areas”, ‘75’ for “Foreign”, ‘00’ for total U.S., and ‘all’ for all states and areas. Separate multiple values with a comma.
+
+        .. _`link`: http://www.epa.gov/envirofw/html/codes/state.html
+
+        """
+        required_params = {'UserID': UserID,
+                           'DirectionOfInvestment': DirectionOfInvestment,
+                           'Classification': Classification,
+                           'Method': 'GetData',
+                           'DataSetName': 'MNE',
+                           'Year': Year,
+                           'ResultFormat': ResultFormat}
+        query_params = required_params.update(params)
+        super(DirectInvestmentMNEsRequest, self).__init__(**query_params)
