@@ -134,7 +134,7 @@ class DataSetListRequest(Request):
 
         Parameters
         ----------
-        UserID: str
+        UserID : str
             A valid UserID necessary for accessing the BEA data API.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
@@ -173,7 +173,7 @@ class ParameterListRequest(Request):
 
         Parameters
         ----------
-        UserID: str
+        UserID : str
             A valid UserID necessary for accessing the BEA data API.
         DataSetName : str
             A valid name of an available BEA data set.
@@ -215,7 +215,7 @@ class ParameterValuesRequest(Request):
 
         Parameters
         ----------
-        UserID: str
+        UserID : str
             A valid UserID necessary for accessing the BEA data API.
         DataSetName : str
             A valid name of an available BEA data set.
@@ -263,7 +263,7 @@ class DataRequest(Request):
 
         Parameters
         ----------
-        UserID: str
+        UserID : str
             A valid UserID necessary for accessing the BEA data API.
         DataSetName : str
             A valid name of an available BEA data set.
@@ -345,7 +345,7 @@ class RegionalDataRequest(DataRequest):
 
         Parameters
         ----------
-        UserID: str
+        UserID : str
             A valid UserID necessary for accessing the BEA data API.
         KeyCode : str
             KeyCode specifies a statistic drawn from the regional income and product accounts public tables. Exactly one KeyCode must be provided.
@@ -392,6 +392,67 @@ class RegionalDataRequest(DataRequest):
         super(RegionalDataRequest, self).__init__(**query_params)
 
 
+class RegionalIncomeRequest(DataRequest):
+    """
+    The Regional Income dataset contains income and employment estimates from the Regional Economic Accounts by state, county, and metropolitan area. All data accessible through the Regional Interactive Tables on bea.gov are also available through this data set and the Regional Product data set.
+
+    """
+
+    def __init__(self, UserID, TableName, LineCode, ResultFormat='JSON',
+                 **params):
+        r"""
+        Create an instance of the RegionalDataRequest class.
+
+        Parameters
+        ----------
+        UserID : str
+            A valid UserID necessary for accessing the BEA data API.
+        TableName : str
+            TableName specifies a published table from the regional income accounts. Exactly one TableName must be provided.
+        LineCode : int
+        GeoFips : str, int or list(int)
+            It can be all states ("STATE"), all counties ("COUNTY"), all Metropolitan Statistical Areas ("MSA"), all Micropolitan Statistical Areas ("MIC"), all Metropolitan Divisions ("DIV"), all Combined Statistical Areas ("CSA"), or all metropolitan/nonmetropolitan portions (PORT). It can also be a list of ANSI state-county codes or metropolitan area codes. For example, the counties in Connecticut:
+
+            .. code-block:: python
+
+                GeoFips=list(09001,09003,09005,09007,09009,09011,09013,09015)
+
+            GeoFips will default to all states, counties, or MSAs, if not specified. State, county, and metropolitan statistical area FIPS codes can be obtained from the `Census`_. A comprehensive list of MSAs and their component counties can be accessed on the `BEA website`_.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+        params : dict
+            Dictionary of optional parameters.
+
+        Notes
+        -----
+        The optional parameters for RegionalIncomeRequest are:
+
+        Year : str, int or list(int)
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list:
+
+            .. code-block:: python
+                Year=[2000, 2005, 2010]
+
+            Note that Year will default to all available years if the parameter is not specified.
+
+        .. _`Census`: http://www.census.gov/geo/www/ansi/ansi.html
+        .. _`BEA website`: http://www.bea.gov/regional/docs/msalist.cfm
+
+        """
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
+                           'DataSetName': 'RegionalData',
+                           'KeyCode': KeyCode,
+                           'ResultFormat': ResultFormat}
+        query_params = required_params.update(params)
+        super(RegionalIncomeRequest, self).__init__(**query_params)
+
+
 class NIPARequest(DataRequest):
     """
     The NIPA dataset contains data from the standard set of NIPA tables as published in the Survey of Current Business. Availability of updated NIPA data follows the BEA News Release schedule as posted on the BEA web site. The NIPA dataset may be unavailable for a few minutes preceding the monthly GDP release while data is being updated (as it is for all other methods of acquiring newly released data).
@@ -405,7 +466,7 @@ class NIPARequest(DataRequest):
 
         Parameters
         ----------
-        UserID: str
+        UserID : str
             A valid UserID necessary for accessing the BEA data API.
         TableID : str
             The TableID parameter is an integer that refers to a specific NIPA
@@ -475,7 +536,7 @@ class NIUnderlyingDetailRequest(DataRequest):
 
         Parameters
         ----------
-        UserID: str
+        UserID : str
             A valid UserID necessary for accessing the BEA data API.
         TableID : str
             The TableID parameter is an integer that refers to a specific NIPA
@@ -529,7 +590,7 @@ class FixedAssetsRequest(DataRequest):
 
         Parameters
         ----------
-        UserID: str
+        UserID : str
             A valid UserID necessary for accessing the BEA data API.
         TableID : str
             The TableID parameter is an integer that refers to a specific
@@ -571,7 +632,7 @@ class InputOutputRequest(DataRequest):
 
         Parameters
         ----------
-        UserID: str
+        UserID : str
             A valid UserID necessary for accessing the BEA data API.
         TableID : str, int or list(int)
             The TableID parameter is an integer that refers to a specific
@@ -651,9 +712,7 @@ class DirectInvestmentMNEsRequest(DataRequest):
         Industry : str, int, or list(int)
             Refer to the GetParameterValuesRequest API call abovefor the list of four-digit industry identification values. These generally follow the North American Industry Classification System (NAICS). Use ‘0000’ for the all- industries total and ‘all’ for all available industries. Separate multiple values with a comma.
         State : str, int, or list(int)
-            At the state level data are only available on employment and (for 2007 and earlier years), property, plant, and equipment.
-
-            Refer to the GetParameterValuesRequest API call above for the list of the two-digit Federal Information Processing Standards (FIPS) codes, or the FIPS codes found at this `link`_: . Use ‘70’ for “Other U.S. Areas”, ‘75’ for “Foreign”, ‘00’ for total U.S., and ‘all’ for all states and areas. Separate multiple values with a comma.
+            At the state level data are only available on employment and (for 2007 and earlier years), property, plant, and equipment. Refer to the GetParameterValuesRequest API call above for the list of the two-digit Federal Information Processing Standards (FIPS) codes, or the FIPS codes found at this `link`_: . Use ‘70’ for “Other U.S. Areas”, ‘75’ for “Foreign”, ‘00’ for total U.S., and ‘all’ for all states and areas. Separate multiple values with a comma.
 
         .. _`link`: http://www.epa.gov/envirofw/html/codes/state.html
 
