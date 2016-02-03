@@ -333,7 +333,7 @@ class DataRequest(Request):
 
 class RegionalDataRequest(DataRequest):
     """
-    The new datasets RegionalIncome and RegionalProduct have more statistics and industry detail than the RegionalData dataset. See Appendices I and J. Although RegionalData is still valid, we encourage users to switch to the more comprenhensive datasets RegionalIncome and RegionalProduct.
+    The new datasets RegionalIncome and RegionalProduct have more statistics and industry detail than the RegionalData dataset. Although RegionalData is still valid, we encourage users to switch to the more comprenhensive datasets RegionalIncome and RegionalProduct.
 
     The RegionalData dataset contains estimates from the Regional Economic Accounts. These include estimates of GDP by state and metropolitan area; estimates of personal income and employment by state, metropolitan area, and county; and regional price parities by state and MSA.
 
@@ -398,10 +398,10 @@ class RegionalIncomeRequest(DataRequest):
 
     """
 
-    def __init__(self, UserID, TableName, LineCode, ResultFormat='JSON',
-                 **params):
+    def __init__(self, UserID, TableName, LineCode, GeoFips,
+                 ResultFormat='JSON', **params):
         r"""
-        Create an instance of the RegionalDataRequest class.
+        Create an instance of the RegionalIncomeRequest class.
 
         Parameters
         ----------
@@ -410,6 +410,7 @@ class RegionalIncomeRequest(DataRequest):
         TableName : str
             TableName specifies a published table from the regional income accounts. Exactly one TableName must be provided.
         LineCode : int
+            ???
         GeoFips : str, int or list(int)
             It can be all states ("STATE"), all counties ("COUNTY"), all Metropolitan Statistical Areas ("MSA"), all Micropolitan Statistical Areas ("MIC"), all Metropolitan Divisions ("DIV"), all Combined Statistical Areas ("CSA"), or all metropolitan/nonmetropolitan portions (PORT). It can also be a list of ANSI state-county codes or metropolitan area codes. For example, the counties in Connecticut:
 
@@ -446,11 +447,67 @@ class RegionalIncomeRequest(DataRequest):
         """
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
-                           'DataSetName': 'RegionalData',
-                           'KeyCode': KeyCode,
+                           'DataSetName': 'RegionalIncome',
+                           'TableName': TableName,
+                           'LineCode': LineCode,
+                           'GeoFips': GeoFips,
                            'ResultFormat': ResultFormat}
         query_params = required_params.update(params)
         super(RegionalIncomeRequest, self).__init__(**query_params)
+
+
+class RegionalProductRequest(DataRequest):
+    """
+    The Regional Product dataset contains Gross Domestic Product (GDP) estimates from the Regional Economic Accounts by state and metropolitan area. All data accessible through the Regional Interactive Tables on bea.gov are also available through this data set and the Regional Income data set.
+
+    """
+
+    def __init__(self, UserID, Component, IndustryId, GeoFips,
+                ResultFormat='JSON', **params):
+        r"""
+        Create an instance of the RegionalDataRequest class.
+
+        Parameters
+        ----------
+        UserID : str
+            A valid UserID necessary for accessing the BEA data API.
+        Component : str
+            TableName specifies a published table from the regional income accounts. Exactly one TableName must be provided.
+        IndustryId : int
+            ???
+        GeoFips : str, int or list(int)
+            GeoFips specifies geography. It can be all states (STATE) or all Metropolitan Statistical Areas (MSA). It can also be a list of ANSI state-county codes or metropolitan area codes. State, and metropolitan statistical area FIPS codes can be obtained from the `Census`_. A comprehensive list of MSAs and their component counties can be accessed on the `BEA website`_.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+        params : dict
+            Dictionary of optional parameters.
+
+        Notes
+        -----
+        The optional parameters for RegionalProductRequest are:
+
+        Year : str, int or list(int)
+            Year is either a list of years, LAST5, LAST10, or ALL. Year will default to all available years if the parameter is not specified. Multiple years are requested by specifying them as a
+            list:
+
+            .. code-block:: python
+                Year=[2000, 2005, 2010]
+
+        .. _`Census`: http://www.census.gov/geo/www/ansi/ansi.html
+        .. _`BEA website`: http://www.bea.gov/regional/docs/msalist.cfm
+
+        """
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
+                           'DataSetName': 'RegionalProduct',
+                           'Component': Component,
+                           'IndustryId': IndustryId,
+                           'ResultFormat': ResultFormat}
+        query_params = required_params.update(params)
+        super(RegionalProductRequest, self).__init__(**query_params)
 
 
 class NIPARequest(DataRequest):
