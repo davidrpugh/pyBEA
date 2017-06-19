@@ -2,7 +2,7 @@
 Functions for fetching data from the Bureau of Economic Analysis (BEA) data api.
 
 @author : David R. Pugh
-@date : 2016-01-27
+@date : 2017-06-19
 
 """
 import numpy as np
@@ -121,6 +121,46 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
     return param_values
 
 
+def get_parameter_values_filtered(UserID, DataSetName, ParameterName, ResultFormat='JSON', **kwargs):
+    """
+    Retrieves a list of the valid values for a particular parameter based on
+    other provided parameters .
+
+    Parameters
+    ----------
+    UserID: str
+            A valid UserID necessary for accessing the BEA data API.
+    DataSetName : str
+        A valid name of an available BEA data set. Note that the
+        get_data_set_list function returns a complete listing of available data
+        sets and their associated DataSetName attributes.
+    ParameterName : str
+        A valid parameter name for a given data set. Note that the
+        get_parameter_list function returns a complete listing of valid
+        parameters names for a given data set.
+    ResultFormat : str (default='JSON')
+        The API returns data in one of two formats: JSON or XML. The
+        ResultFormat parameter can be included on any request to specify the
+        format of the results.
+    kwargs : dict
+        Additional, optional, keyword arguments.
+
+    Returns
+    -------
+    param_values : Pandas.DataFrame
+        A Pandas DataFrame containing the list of valid parameter values for
+        the given data set.
+
+    """
+    tmp_request = api.ParameterValuesRequest(UserID=UserID,
+                                             DataSetName=DataSetName,
+                                             ParameterName=ParameterName,
+                                             ResultFormat=ResultFormat,
+                                             **kwargs)
+    param_values = pd.DataFrame(tmp_request.parameter_values, dtype=np.int64)
+    return param_values
+
+
 def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     r"""
     Retrieve data from the Bureau of Economic Analysis (BEA) data api.
@@ -128,7 +168,7 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     Parameters
     ----------
     UserID: str
-            A valid UserID necessary for accessing the BEA data API.
+        A valid UserID necessary for accessing the BEA data API.
     DataSetName : str
         A valid name of an available BEA data set. The get_data_set_list
         function returns a complete listing of available data sets and the
@@ -152,31 +192,14 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     As noted above the additional required and optional parameters that can be
     passed as parameters is data set specific.
 
-    The following parameters may be passed with DataSetName='RegionalData':
-
-    KeyCodes : list(str), required
-        List of valid KeyCode parameters indicating the variables of interest.
-    GeoFips : str or list(str), optional (default='STATE')
-        List of valid FIPS codes for the geographical locations of interest.
-        State, county, and metropolitan statistical area FIPS codes can be
-        obtained from the `Census Bureau`_. A comprehensive list of MSAs
-        and their component counties is available on the `BEA website`_.
-    Year : str or list(str), optional (default='ALL')
-        A string representation of the year for which data is being
-        requested. Multiple years are requested by passing them as a list
-        as follows: `Year=['2000', '2005' , '2010']`. Note that Year will
-        default to all available years if the parameter is not specified.
-
     For additional information see the BEA data API `user guide`_.
 
-    .. _`Census Bureau`: http://www.census.gov/geo/www/ansi/ansi.html
-    .. _`BEA website`: http://www.bea.gov/regional/docs/msalist.cfm
     .. _`user guide`: http://www.bea.gov/api/_pdf/bea_web_service_api_user_guide.pdf
 
     """
-    if DataSetName == 'RegionalData':
-        data = _get_RegionalData(UserID=UserID, ResultFormat=ResultFormat,
-                                 **params)
+    if DataSetName == 'RegionalIncome':
+        data = _get_regional_income(UserID=UserID, ResultFormat=ResultFormat,
+                                    **params)
     elif DataSetName == 'NIPA':
         data = _get_NIPA(UserID=UserID, ResultFormat=ResultFormat,
                          **params)
@@ -192,21 +215,18 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     return data
 
 
-def _get_RegionalData(UserID, ResultFormat, KeyCodes, **params):
-    """Combines data on multiple KeyCodes into a single Pandas DataFrame."""
-    dfs = []
-    for KeyCode in KeyCodes:
-        tmp_request = api.RegionalDataRequest(UserID=UserID,
-                                              Method='GetData',
-                                              ResultFormat=ResultFormat,
-                                              KeyCode=KeyCode,
-                                              **params)
-        tmp_df = pd.DataFrame(tmp_request.data, dtype=np.int64)
-        dfs.append(tmp_df)
+def _get_regional_income(UserID, TableName, LineCode, GeoFips, ResultFormat,  **params):
+    """Extracts a subset of the RegionalIncome dataset via the BEA API."""
+    tmp_request = api.RegionalIncomeRequest(UserID=UserID,
+                                            Method='GetData',
+                                            TableName=TableName,
+                                            LineCode=LineCode,
+                                            GeoFips=GeoFips,
+                                            ResultFormat=ResultFormat,
+                                            **params)
+    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
 
-    combined_df = pd.concat(dfs)
-
-    return combined_df
+    return df
 
 
 def _get_NIPA(UserID, ResultFormat, **params):
