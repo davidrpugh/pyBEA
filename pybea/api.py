@@ -368,11 +368,59 @@ class DataRequest(Request):
         return tmp_notes
 
 
+class RegionalProductRequest(DataRequest):
+
+    def __init__(self, UserID, Component, IndustryId, GeoFips, ResultFormat='JSON', **params):
+        r"""
+        Create an instance of the RegionalProductRequest class.
+
+        Parameters
+        ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
+        Component : str
+            Component name.
+        IndustryId: int
+            Industry code of the Component.
+        GeoFips : str or list(str)
+            Comma-delimited list of state or MSA codes. Other values are 'STATE'
+            for all states, and 'MSA' for all Metropolitan Statistical Areas.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+        params : dict
+            Dictionary of optional parameters.
+
+        Notes
+        -----
+        The optional parameters for RegionalIncomeRequest are:
+
+        Year : str or list(str) (default='LAST5')
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list: `Year=['2000', '2005' , '2010']`. Note that Year will default
+            to last five available years, 'LAST5', if the parameter is not
+            specified. Additional options are `LAST10` and `ALL`.
+
+        """
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
+                           'DataSetName': 'RegionalProduct',
+                           'Component': Component,
+                           'IndustryId': IndustryId,
+                           'GeoFips': GeoFips,
+                           'ResultFormat': ResultFormat}
+        required_params.update(params)
+        super(RegionalProductRequest, self).__init__(**required_params)
+
+
 class RegionalIncomeRequest(DataRequest):
 
     def __init__(self, UserID, TableName, LineCode, GeoFips, ResultFormat='JSON', **params):
         r"""
-        Create an instance of the RegionalDataRequest class.
+        Create an instance of the RegionalIncomeRequest class.
 
         Parameters
         ----------
