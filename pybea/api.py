@@ -27,6 +27,7 @@ class Request(dict):
     valid_methods = ['GetDataSetList',
                      'GetParameterList',
                      'GetParameterValues',
+                     'GetParameterValuesFiltered',
                      'GetData',
                      ]
 
@@ -254,6 +255,38 @@ class ParameterValuesRequest(Request):
         else:
             tmp_parameter_values = self._xml_parameter_values
         return tmp_parameter_values
+
+
+class ParameterValuesFilteredRequest(ParameterValuesRequest):
+
+    def __init__(self, UserID, DataSetName, ParameterName, ResultFormat='JSON'):
+        """
+        Create an instance of the ParameterValuesRequest class.
+
+        Parameters
+        ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
+        DataSetName : str
+            A valid name of an available BEA data set.
+        ParameterName : str
+            A valid parameter name for a given data set. Note that the
+            get_parameter_list function returns a complete listing of valid
+            parameters names for a given data set.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+
+        """
+        required_params = {'UserID': UserID,
+                           'Method': 'GetParameterValuesFiltered',
+                           'DataSetName': DataSetName,
+                           'ParameterName': ParameterName,
+                           'ResultFormat': ResultFormat}
+        super(ParameterValuesRequestFiltered, self).__init__(**required_params)
+
 
 
 class DataRequest(Request):
