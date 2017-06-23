@@ -471,7 +471,7 @@ class RegionalIncomeRequest(DataRequest):
 
 class NIPARequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON', **params):
+    def __init__(self, UserID, TableID, Frequency, Year="X", ResultFormat='JSON', **params):
         """
         Create an instance of the NIPARequest class.
 
@@ -489,7 +489,7 @@ class NIPARequest(DataRequest):
             specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
             is requested for frequencies that don't exist for a particular NIPA
             table, only data that exists is returned.
-        Year : str or list(str) (default='ALL')
+        Year : str or list(str) (default='X' for all available years)
             A string representation of the year for which data is being
             requested. Multiple years are requested by specifying them as a
             list: `Year=['2000', '2005' , '2010']`. Note that Year will default

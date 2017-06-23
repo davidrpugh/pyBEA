@@ -238,8 +238,16 @@ def _get_regional_product(UserID, Component, IndustryId, GeoFips, ResultFormat, 
     df = pd.DataFrame(tmp_request.data, dtype=np.int64)
     return df
 
-def _get_NIPA(UserID, ResultFormat, **params):
-    raise NotImplementedError
+def _get_NIPA(UserID, TableID, Frequency, Year, ResultFormat, **params):
+    tmp_request = api.NIPARequest(UserID=UserID,
+                                  Method='GetData',
+                                  TableID=TableID,
+                                  Frequency=Frequency,
+                                  Year=Year,
+                                  ResultFormat=ResultFormat,
+                                  **params)
+    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+    return df
 
 
 def _get_NIUnderlyingDetail(UserID, ResultFormat, **params):
