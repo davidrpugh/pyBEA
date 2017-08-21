@@ -239,6 +239,7 @@ def _get_regional_product(UserID, Component, IndustryId, GeoFips, ResultFormat, 
     return df
 
 def _get_NIPA(UserID, TableID, Frequency, Year, ResultFormat, **params):
+    """Extracts a subset of the NIPA dataset via the BEA API."""
     tmp_request = api.NIPARequest(UserID=UserID,
                                   Method='GetData',
                                   TableID=TableID,
@@ -250,9 +251,24 @@ def _get_NIPA(UserID, TableID, Frequency, Year, ResultFormat, **params):
     return df
 
 
-def _get_NIUnderlyingDetail(UserID, ResultFormat, **params):
-    raise NotImplementedError
+def _get_NIUnderlyingDetail(UserID, TableID, Frequency, Year, ResultFormat, **params):
+    """Extracts a subset of the NIUnderlyingDetail dataset via the BEA API."""
+    tmp_request = api.NIUnderlyingDetailRequest(UserID=UserID,
+                                  TableID=TableID,
+                                  Frequency=Frequency,
+                                  Year=Year,
+                                  ResultFormat=ResultFormat,
+                                  **params)
+    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+    return df
 
 
-def _get_FixedAssets(UserID, ResultFormat, **params):
-    raise NotImplementedError
+def _get_FixedAssets(UserID, TableID, Year, ResultFormat, **params):
+    """Extracts a subset of the FixedAssets dataset via the BEA API."""
+    tmp_request = api.FixedAssetsRequest(UserID=UserID,
+                                  TableID=TableID,
+                                  Year=Year,
+                                  ResultFormat=ResultFormat,
+                                  **params)
+    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+    return df
