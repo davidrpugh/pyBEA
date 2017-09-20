@@ -207,6 +207,8 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         data = _get_NIUnderlyingDetail(UserID=UserID, ResultFormat=ResultFormat, **params)
     elif DataSetName == 'FixedAssets':
         data = _get_FixedAssets(UserID=UserID, ResultFormat=ResultFormat, **params)
+    elif DataSetName == 'GDPbyIndustry':
+        data = _get_GDPbyIndustry(UserID=UserID, ResultFormat=ResultFormat, **params)
     else:
         raise ValueError("Invalid DataSetName requested.")
 
@@ -268,6 +270,19 @@ def _get_FixedAssets(UserID, TableID, Year, ResultFormat, **params):
     tmp_request = api.FixedAssetsRequest(UserID=UserID,
                                   TableID=TableID,
                                   Year=Year,
+                                  ResultFormat=ResultFormat,
+                                  **params)
+    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+    return df
+
+
+def _get_GDPbyIndustry(UserID, TableID, Frequency, Year, Industry, ResultFormat, **params):
+    """Extracts a subset of the GDPbyIndustry dataset via the BEA API."""
+    tmp_request = api.GDPbyIndustryRequest(UserID=UserID,
+                                  TableID=TableID,
+                                  Frequency=Frequency,
+                                  Year=Year,
+                                  Industry=Industry,
                                   ResultFormat=ResultFormat,
                                   **params)
     df = pd.DataFrame(tmp_request.data, dtype=np.int64)

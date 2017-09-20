@@ -31,7 +31,7 @@ def test_get_parameter_list():
 def test_get_parameter_values():
     """Testing function for grabbing list of values for a parameter."""
     df = pybea.get_parameter_values(UserID=USER_ID,
-                                    DataSetName='RegionalData',
+                                    DataSetName='RegionalIncome',
                                     ParameterName='Year')
     nose.tools.assert_is_instance(df, pd.DataFrame)
     nose.tools.assert_equals(df.shape, (117, 2))
@@ -40,8 +40,9 @@ def test_get_parameter_values():
 def test_get_data_set():
     """Testinf function for grabbing data."""
     df = pybea.get_data(UserID=USER_ID,
-                        DataSetName='RegionalData',
-                        KeyCodes=['POP_MI'],
+                        DataSetName='RegionalIncome',
+                        TableName='POP_MI',
+                        LineCode=1,
                         GeoFips='MSA',
                         Year=['2000', '2005', '2010'])
     nose.tools.assert_is_instance(df, pd.DataFrame)

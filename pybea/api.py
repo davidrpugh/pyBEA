@@ -600,3 +600,41 @@ class FixedAssetsRequest(DataRequest):
                            'Year': Year,
                            'ResultFormat': ResultFormat}
         super(FixedAssetsRequest, self).__init__(**required_params)
+
+
+class GDPbyIndustryRequest(DataRequest):
+
+    def __init__(self, UserID, TableID, Frequency, Year, Industry, ResultFormat='JSON'):
+        """
+        Create an instance of the FixedAssetsRequest class.
+
+        Parameters
+        ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
+        TableID : str
+            The TableID parameter is an integer that refers to a specific
+            FixedAssets table.
+        Frequency : str or list(str)
+        Year : str or list(str) (default='ALL')
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list: `Year=['2000', '2005' , '2010']`. Note that Year will default
+            to all available years if the parameter is not specified.
+        Industry : str or list(str)
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+
+        """
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
+                           'DataSetName': 'GDPbyIndustry',
+                           'TableID': TableID,
+                           'Frequency' : Frequency,
+                           'Year': Year,
+                           'Industry' : Industry,
+                           'ResultFormat': ResultFormat}
+        super(GDPbyIndustryRequest, self).__init__(**required_params)
