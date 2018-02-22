@@ -60,7 +60,6 @@ class Request(dict):
     @property
     def _json_results(self):
         raw_json = self._load_json_content()
-        print(raw_json['BEAAPI'])
         return raw_json['BEAAPI']['Results']
 
     @property
