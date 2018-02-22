@@ -240,11 +240,11 @@ def _get_regional_product(UserID, Component, IndustryId, GeoFips, ResultFormat, 
     df = pd.DataFrame(tmp_request.data, dtype=np.int64)
     return df
 
-def _get_NIPA(UserID, TableID, Frequency, Year, ResultFormat, **params):
+def _get_NIPA(UserID, TableName, Frequency, Year, ResultFormat, **params):
     """Extracts a subset of the NIPA dataset via the BEA API."""
     tmp_request = api.NIPARequest(UserID=UserID,
                                   Method='GetData',
-                                  TableID=TableID,
+                                  TableName=TableName,
                                   Frequency=Frequency,
                                   Year=Year,
                                   ResultFormat=ResultFormat,
@@ -253,10 +253,10 @@ def _get_NIPA(UserID, TableID, Frequency, Year, ResultFormat, **params):
     return df
 
 
-def _get_NIUnderlyingDetail(UserID, TableID, Frequency, Year, ResultFormat, **params):
+def _get_NIUnderlyingDetail(UserID, TableName, Frequency, Year, ResultFormat, **params):
     """Extracts a subset of the NIUnderlyingDetail dataset via the BEA API."""
     tmp_request = api.NIUnderlyingDetailRequest(UserID=UserID,
-                                  TableID=TableID,
+                                  TableName=TableName,
                                   Frequency=Frequency,
                                   Year=Year,
                                   ResultFormat=ResultFormat,

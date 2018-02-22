@@ -60,6 +60,7 @@ class Request(dict):
     @property
     def _json_results(self):
         raw_json = self._load_json_content()
+        print(raw_json['BEAAPI'])
         return raw_json['BEAAPI']['Results']
 
     @property
@@ -471,7 +472,7 @@ class RegionalIncomeRequest(DataRequest):
 
 class NIPARequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year="X", ResultFormat='JSON', **params):
+    def __init__(self, UserID, TableName, Frequency, Year="X", ResultFormat='JSON', **params):
         """
         Create an instance of the NIPARequest class.
 
@@ -519,7 +520,7 @@ class NIPARequest(DataRequest):
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'NIPA',
-                           'TableID': TableID,
+                           'TableName': TableName,
                            'Frequency': Frequency,
                            'Year': Year,
                            'ResultFormat': ResultFormat}
@@ -529,7 +530,7 @@ class NIPARequest(DataRequest):
 
 class NIUnderlyingDetailRequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON'):
+    def __init__(self, UserID, TableName, Frequency, Year, ResultFormat='JSON'):
         """
         Create an instance of the NIUnderlyingDetailRequest class.
 
@@ -561,7 +562,7 @@ class NIUnderlyingDetailRequest(DataRequest):
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'NIUnderlyingDetail',
-                           'TableID': TableID,
+                           'TableName': TableName,
                            'Frequency': Frequency,
                            'Year': Year,
                            'ResultFormat': ResultFormat}
