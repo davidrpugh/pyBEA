@@ -27,6 +27,7 @@ class Request(dict):
     valid_methods = ['GetDataSetList',
                      'GetParameterList',
                      'GetParameterValues',
+                     'GetParameterValuesFiltered',
                      'GetData',
                      ]
 
@@ -92,7 +93,7 @@ class Request(dict):
         return tmp_results
 
     def _load_json_content(self):
-        return json.loads(self.response.content.decode())
+        return self.response.json()
 
     def _load_xml_content(self):
         raise NotImplementedError
@@ -256,6 +257,40 @@ class ParameterValuesRequest(Request):
         return tmp_parameter_values
 
 
+class ParameterValuesFilteredRequest(ParameterValuesRequest):
+
+    def __init__(self, UserID, DataSetName, ParameterName, ResultFormat='JSON', **kwargs):
+        """
+        Create an instance of the ParameterValuesRequest class.
+
+        Parameters
+        ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
+        DataSetName : str
+            A valid name of an available BEA data set.
+        ParameterName : str
+            A valid parameter name for a given data set. Note that the
+            get_parameter_list function returns a complete listing of valid
+            parameters names for a given data set.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+        kwargs : dict
+            Additional, optional, keyword arguments.
+
+        """
+        required_params = {'UserID': UserID,
+                           'Method': 'GetParameterValuesFiltered',
+                           'DataSetName': DataSetName,
+                           'ParameterName': ParameterName,
+                           'ResultFormat': ResultFormat}
+        super(ParameterValuesRequestFiltered, self).__init__(**required_params)
+
+
+
 class DataRequest(Request):
     """Base class for a DataRequest."""
 
@@ -333,18 +368,23 @@ class DataRequest(Request):
         return tmp_notes
 
 
-class RegionalDataRequest(DataRequest):
+class RegionalProductRequest(DataRequest):
 
-    def __init__(self, UserID, KeyCode, ResultFormat='JSON', **params):
+    def __init__(self, UserID, Component, IndustryId, GeoFips, ResultFormat='JSON', **params):
         r"""
-        Create an instance of the RegionalDataRequest class.
+        Create an instance of the RegionalProductRequest class.
 
         Parameters
         ----------
         UserID: str
             A valid UserID necessary for accessing the BEA data API.
-        DataSetName : str
-            A valid name of an available BEA data set.
+        Component : str
+            Component name.
+        IndustryId: int
+            Industry code of the Component.
+        GeoFips : str or list(str)
+            Comma-delimited list of state or MSA codes. Other values are 'STATE'
+            for all states, and 'MSA' for all Metropolitan Statistical Areas.
         ResultFormat : str (default='JSON')
             The API returns data in one of two formats: JSON or XML. The
             ResultFormat parameter can be included on any request to specify
@@ -355,35 +395,83 @@ class RegionalDataRequest(DataRequest):
 
         Notes
         -----
-        The optional parameters for RegionalDataRequest are:
+        The optional parameters for RegionalIncomeRequest are:
 
-        GeoFips : str
-            GeoFips will default to returning all available areas unless
-            specified. State, county, and metropolitan statistical area FIPS
-            codes can be obtained from `Census`_. A comprehensive list of MSAs
-            and their component counties is available on the `BEA website`_.
-        Year : str or list(str) (default='ALL')
+        Year : str or list(str) (default='LAST5')
             A string representation of the year for which data is being
             requested. Multiple years are requested by specifying them as a
             list: `Year=['2000', '2005' , '2010']`. Note that Year will default
-            to all available years if the parameter is not specified.
-
-        .. _`Census`: http://www.census.gov/geo/www/ansi/ansi.html
-        .. _`BEA website`: http://www.bea.gov/regional/docs/msalist.cfm
+            to last five available years, 'LAST5', if the parameter is not
+            specified. Additional options are `LAST10` and `ALL`.
 
         """
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
-                           'DataSetName': 'RegionalData',
-                           'KeyCode': KeyCode,
+                           'DataSetName': 'RegionalProduct',
+                           'Component': Component,
+                           'IndustryId': IndustryId,
+                           'GeoFips': GeoFips,
                            'ResultFormat': ResultFormat}
         required_params.update(params)
-        super(RegionalDataRequest, self).__init__(**required_params)
+        super(RegionalProductRequest, self).__init__(**required_params)
+
+
+class RegionalIncomeRequest(DataRequest):
+
+    def __init__(self, UserID, TableName, LineCode, GeoFips, ResultFormat='JSON', **params):
+        r"""
+        Create an instance of the RegionalIncomeRequest class.
+
+        Parameters
+        ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
+        TableName : str
+            Published table name.
+        LineCode : int
+            Line code in table.
+        GeoFips : str or list(str)
+            Comma-delimited list of 5-character geographic codes; 'COUNTY' for
+            all counties, 'STATE' for all states, 'MSA' for all Metropolitan
+            Statistical Areas, 'MIC' for all Micropolitan Areas, 'PORT' for all
+            state metropolitan/nonmetropolitan portions, 'DIV' for all
+            Metropolitan Divisions, 'CSA' for all Combined Statistical Areas,
+            state post office abbreviation for all counties in one state
+            (e.g. 'NY').
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+        params : dict
+            Dictionary of optional parameters.
+
+        Notes
+        -----
+        The optional parameters for RegionalIncomeRequest are:
+
+        Year : str or list(str) (default='LAST5')
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list: `Year=['2000', '2005' , '2010']`. Note that Year will default
+            to last five available years, 'LAST5', if the parameter is not
+            specified. Additional options are `LAST10` and `ALL`.
+
+        """
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
+                           'DataSetName': 'RegionalIncome',
+                           'TableName': TableName,
+                           'LineCode': LineCode,
+                           'GeoFips': GeoFips,
+                           'ResultFormat': ResultFormat}
+        required_params.update(params)
+        super(RegionalIncomeRequest, self).__init__(**required_params)
 
 
 class NIPARequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON', **params):
+    def __init__(self, UserID, TableName, Frequency, Year="X", ResultFormat='JSON', **params):
         """
         Create an instance of the NIPARequest class.
 
@@ -401,7 +489,7 @@ class NIPARequest(DataRequest):
             specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
             is requested for frequencies that don't exist for a particular NIPA
             table, only data that exists is returned.
-        Year : str or list(str) (default='ALL')
+        Year : str or list(str) (default='X' for all available years)
             A string representation of the year for which data is being
             requested. Multiple years are requested by specifying them as a
             list: `Year=['2000', '2005' , '2010']`. Note that Year will default
@@ -431,7 +519,7 @@ class NIPARequest(DataRequest):
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'NIPA',
-                           'TableID': TableID,
+                           'TableName': TableName,
                            'Frequency': Frequency,
                            'Year': Year,
                            'ResultFormat': ResultFormat}
@@ -441,7 +529,7 @@ class NIPARequest(DataRequest):
 
 class NIUnderlyingDetailRequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON'):
+    def __init__(self, UserID, TableName, Frequency, Year, ResultFormat='JSON'):
         """
         Create an instance of the NIUnderlyingDetailRequest class.
 
@@ -473,7 +561,7 @@ class NIUnderlyingDetailRequest(DataRequest):
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'NIUnderlyingDetail',
-                           'TableID': TableID,
+                           'TableName': TableName,
                            'Frequency': Frequency,
                            'Year': Year,
                            'ResultFormat': ResultFormat}
@@ -512,3 +600,41 @@ class FixedAssetsRequest(DataRequest):
                            'Year': Year,
                            'ResultFormat': ResultFormat}
         super(FixedAssetsRequest, self).__init__(**required_params)
+
+
+class GDPbyIndustryRequest(DataRequest):
+
+    def __init__(self, UserID, TableID, Frequency, Year, Industry, ResultFormat='JSON'):
+        """
+        Create an instance of the FixedAssetsRequest class.
+
+        Parameters
+        ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
+        TableID : str
+            The TableID parameter is an integer that refers to a specific
+            FixedAssets table.
+        Frequency : str or list(str)
+        Year : str or list(str) (default='ALL')
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list: `Year=['2000', '2005' , '2010']`. Note that Year will default
+            to all available years if the parameter is not specified.
+        Industry : str or list(str)
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+
+        """
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
+                           'DataSetName': 'GDPbyIndustry',
+                           'TableID': TableID,
+                           'Frequency' : Frequency,
+                           'Year': Year,
+                           'Industry' : Industry,
+                           'ResultFormat': ResultFormat}
+        super(GDPbyIndustryRequest, self).__init__(**required_params)

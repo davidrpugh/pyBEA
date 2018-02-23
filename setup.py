@@ -29,7 +29,7 @@ PACKAGES = ['pybea', 'pybea.tests']
 
 setup(name='pybea',
       packages=PACKAGES,
-      version='0.2.0-alpha',
+      version='0.2.0alpha1',
       description=DESCRIPTION,
       author='David R. Pugh',
       author_email='david.pugh@maths.ox.ac.uk',
