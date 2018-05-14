@@ -25,7 +25,7 @@ CLASSIFIERS = ['Development Status :: 3 - Alpha',
 
 DESCRIPTION = "Python package for accessing data from the BEA data API"
 
-PACKAGES = ['pybea', 'pybea.tests']
+PACKAGES = ['pybea']
 
 setup(name='pybea',
       packages=PACKAGES,
