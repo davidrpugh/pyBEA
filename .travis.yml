@@ -15,7 +15,7 @@ notifications:
 env:
   global:
     - secure: "Eq7T9I/6s+z9ESn2XXvMK25VdjR3URXZw/rPh4gF1OfDu3cbXbSzXgbv28A0SHh6OQUQeK6MMFUo+EhJXmDK3Waw3f0e1DAHFN99SgRMld8Atv/7/xUDfiobYjC3XMLlX4kJHL1I/mcDm960mzwKOCu/O3sc1ql/AyNsuFRCqoU="
-    - secure: "cCyabcfsv8Lt1Vk4JmfdI71rhT1Dx8RFp1IK/4FjXItMLwgCUCn6U9T0RA24QNG9F3szGSF+5f5f2ycKsDkq0WpCJ8leclm8wnRbFdjfPMvqBHc6aeVJcysVFyKEXTe37TKNJj1qoqqqCvBDZUxRZaiYji5SWV9f+UZHzyD4x28="
+    - secure: "cHX6Q2iRE01i7w27ZdnMPXHpTsKSAD2hiIE1CR7vaMlZWwdryAmT0TG3/fncOikSVzEAcO22u92pXPnBEfsyFP3U4HsMdjF6ooFktzj6o9Mf3iKmwRgXhex3fgqA6mHamNMMkNGYu9VuvYMry7H61qONu6DJREKf30oSvNQCay4="
 
 branches:
   only:
