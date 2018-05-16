@@ -1,12 +1,4 @@
-import os
-
 from distutils.core import setup
-
-
-def read(*paths):
-    """Build a file path from *paths* and return the contents."""
-    with open(os.path.join(*paths), 'r') as f:
-        return f.read()
 
 CLASSIFIERS = ['Development Status :: 3 - Alpha',
                'Intended Audience :: Education',
@@ -27,12 +19,14 @@ DESCRIPTION = "Python package for accessing data from the BEA data API"
 
 PACKAGES = ['pybea']
 
+VERSION = "0.2.1-alpha"
+
 setup(name='pybea',
       packages=PACKAGES,
-      version='0.2.0-alpha',
+      version=VERSION,
       description=DESCRIPTION,
       author='David R. Pugh',
-      author_email='david.pugh@maths.ox.ac.uk',
+      author_email='drpugh@protonmail.com',
       url='https://github.com/davidrpugh/pyBEA',
       license='LICENSE.rst',
       classifiers=CLASSIFIERS
