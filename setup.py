@@ -1,4 +1,6 @@
+import setuptools
 from distutils.core import setup
+
 
 CLASSIFIERS = ['Development Status :: 3 - Alpha',
                'Intended Audience :: Education',
