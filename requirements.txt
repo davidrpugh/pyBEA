@@ -1,5 +1,3 @@
 numpy
 pandas
 requests
-twine
-wheel
