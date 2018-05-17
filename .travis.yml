@@ -3,13 +3,11 @@ sudo: false
 language: python
 
 python:
-  - 2.7
-  - 3.5
   - 3.6
 
 notifications:
   email: false
-  
+
 env:
   global:
     - secure: "Eq7T9I/6s+z9ESn2XXvMK25VdjR3URXZw/rPh4gF1OfDu3cbXbSzXgbv28A0SHh6OQUQeK6MMFUo+EhJXmDK3Waw3f0e1DAHFN99SgRMld8Atv/7/xUDfiobYjC3XMLlX4kJHL1I/mcDm960mzwKOCu/O3sc1ql/AyNsuFRCqoU="
@@ -33,4 +31,3 @@ script: nosetests --with-coverage --cover-package=pybea
 after_success:
   - coveralls
   - scripts/publish.sh
-
