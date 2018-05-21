@@ -396,12 +396,12 @@ class RegionalProductRequest(DataRequest):
         -----
         The optional parameters for RegionalIncomeRequest are:
 
-        Year : str or list(str) (default='LAST5')
+        Year : str or list(str) (default='ALL')
             A string representation of the year for which data is being
             requested. Multiple years are requested by specifying them as a
             list: `Year=['2000', '2005' , '2010']`. Note that Year will default
-            to last five available years, 'LAST5', if the parameter is not
-            specified. Additional options are `LAST10` and `ALL`.
+            to all available years, 'ALL', if the parameter is not specified.
+            Additional options are `LAST5` and `LAST10`.
 
         """
         required_params = {'UserID': UserID,
