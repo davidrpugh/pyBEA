@@ -198,24 +198,22 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
 
     """
     if DataSetName == 'RegionalIncome':
-        data = _get_regional_income(UserID=UserID, ResultFormat=ResultFormat,
-                                    **params)
+        data = _get_regional_income(UserID=UserID, ResultFormat=ResultFormat, **params)
+    elif DataSetName == 'RegionalProduct':
+        data = _get_regional_product(UserID=UserID, ResultFormat=ResultFormat, **params)
     elif DataSetName == 'NIPA':
-        data = _get_NIPA(UserID=UserID, ResultFormat=ResultFormat,
-                         **params)
+        data = _get_NIPA(UserID=UserID, ResultFormat=ResultFormat, **params)
     elif DataSetName == 'NIUnderlyingDetail':
-        data = _get_NIUnderlyingDetail(UserID=UserID, ResultFormat=ResultFormat,
-                                       **params)
+        data = _get_NIUnderlyingDetail(UserID=UserID, ResultFormat=ResultFormat, **params)
     elif DataSetName == 'FixedAssets':
-        data = _get_FixedAssets(UserID=UserID, ResultFormat=ResultFormat,
-                                **params)
+        data = _get_FixedAssets(UserID=UserID, ResultFormat=ResultFormat, **params)
     else:
         raise ValueError("Invalid DataSetName requested.")
 
     return data
 
 
-def _get_regional_income(UserID, TableName, LineCode, GeoFips, ResultFormat,  **params):
+def _get_regional_income(UserID, TableName, LineCode, GeoFips, ResultFormat, **params):
     """Extracts a subset of the RegionalIncome dataset via the BEA API."""
     tmp_request = api.RegionalIncomeRequest(UserID=UserID,
                                             Method='GetData',
@@ -225,12 +223,31 @@ def _get_regional_income(UserID, TableName, LineCode, GeoFips, ResultFormat,  **
                                             ResultFormat=ResultFormat,
                                             **params)
     df = pd.DataFrame(tmp_request.data, dtype=np.int64)
-
     return df
 
 
-def _get_NIPA(UserID, ResultFormat, **params):
-    raise NotImplementedError
+def _get_regional_product(UserID, Component, IndustryId, GeoFips, ResultFormat, **params):
+    """Extracts a subset of the RegionalProduct dataset via the BEA API."""
+    tmp_request = api.RegionalProductRequest(UserID=UserID,
+                                             Method='GetData',
+                                             Component=Component,
+                                             IndustryId=IndustryId,
+                                             GeoFips=GeoFips,
+                                             ResultFormat=ResultFormat,
+                                             **params)
+    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+    return df
+
+def _get_NIPA(UserID, TableID, Frequency, Year, ResultFormat, **params):
+    tmp_request = api.NIPARequest(UserID=UserID,
+                                  Method='GetData',
+                                  TableID=TableID,
+                                  Frequency=Frequency,
+                                  Year=Year,
+                                  ResultFormat=ResultFormat,
+                                  **params)
+    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+    return df
 
 
 def _get_NIUnderlyingDetail(UserID, ResultFormat, **params):
