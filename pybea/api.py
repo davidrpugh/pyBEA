@@ -290,7 +290,6 @@ class ParameterValuesFilteredRequest(ParameterValuesRequest):
         super(ParameterValuesRequestFiltered, self).__init__(**required_params)
 
 
-
 class DataRequest(Request):
     """Base class for a DataRequest."""
 

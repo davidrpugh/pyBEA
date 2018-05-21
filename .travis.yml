@@ -3,13 +3,15 @@ sudo: false
 language: python
 
 python:
-  - 2.7
-  - 3.3
-  - 3.4
-  - 3.5
+  - 3.6
 
 notifications:
   email: false
+
+env:
+  global:
+    - secure: "Eq7T9I/6s+z9ESn2XXvMK25VdjR3URXZw/rPh4gF1OfDu3cbXbSzXgbv28A0SHh6OQUQeK6MMFUo+EhJXmDK3Waw3f0e1DAHFN99SgRMld8Atv/7/xUDfiobYjC3XMLlX4kJHL1I/mcDm960mzwKOCu/O3sc1ql/AyNsuFRCqoU="
+    - secure: "R1vVXMDSWchzQ/ABgyjv2PpUq9kDSMRP+lFv7w9bdnrygdOZpekQatvbMXIhsxu27FzoVSCX1uJ0SUCcCHCs2AVMtTay6ym6Vmw2ccy68++wr4GI4HN6VQs8nqaOysw/EtBlTCdpsxUtglkaoJlSv/RvtW3Sou4a8RqmRpfNR8A="
 
 branches:
   only:
@@ -18,8 +20,9 @@ branches:
 
 # command to install dependencies
 install:
-  - pip install coverage coveralls
-  - pip install numpy pandas requests
+  - pip install --upgrade pip setuptools
+  - pip install coverage coveralls twine wheel
+  - pip install -r requirements.txt
   - python setup.py install
 
 # command to run tests
@@ -28,3 +31,4 @@ script: nosetests --with-coverage --cover-package=pybea
 # command to run coveralls
 after_success:
   - coveralls
+  - scripts/publish.sh
