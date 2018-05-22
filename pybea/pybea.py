@@ -1,9 +1,6 @@
 """
 Functions for fetching data from the Bureau of Economic Analysis (BEA) data api.
 
-@author : David R. Pugh
-@date : 2017-06-19
-
 """
 import numpy as np
 import pandas as pd
