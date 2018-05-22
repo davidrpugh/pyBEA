@@ -367,6 +367,68 @@ class DataRequest(Request):
         return tmp_notes
 
 
+class ITARequest(DataRequest):
+
+    def __init__(self, UserID, Indicator, AreaOrCountry, Frequency, Year,
+                 ResultFormat='JSON', **params):
+        r"""
+        Create an instance of the ITARequest class.
+
+        Parameters
+        ----------
+        UserID: str
+            A valid UserID necessary for accessing the BEA data API.
+        Indicator : str
+            The `Indicator` parameter specifies the type of transaction. The
+            `Indicator` parameter values correspond to lines in `ITA tables`_.
+            Exactly one `Indicator` parameter value must be provided in all
+            data requests unless exactly one `AreaOrCountry` parameter value
+            other than “ALL” and “AllCountries” is requested. That is, multiple
+            Indicators can only be specified if a single `AreaOrCountry` is
+            specified.
+        AreaOrCountry : str or list(str)
+            The AreaOrCountry parameter specifies the counterparty area or
+            country of the transactions. The default parameter value
+            (“AllCountries”) returns the total for all countries, while “All”
+            returns all data available by area and country. Exactly one
+            `AreaOrCountry` parameter value must be provided in all data
+            requests unless exactly one `Indicator` parameter value is
+            requested. This single parameter value may not be either “ALL” or
+            “AllCountries.” That is, a list of countries or the grand total for
+            all countries can only be specified if a single Indicator is
+            specified. For information on geographic area definitions, see the
+            definitions on the `BEA website`_.
+        Frequency : str
+            One of `A` for annual; `QSA` for quarterly seasonally adjusted, or
+            `QNSA` for quarterly not seasonally adjusted, depending.
+        Year : str or list(str)
+            A string representation of the year for which data is being
+            requested. Multiple years are requested by specifying them as a
+            list: `Year=['2000', '2005' , '2010']`. Data for all available
+            years can be requested by passing 'ALL'.
+        ResultFormat : str (default='JSON')
+            The API returns data in one of two formats: JSON or XML. The
+            ResultFormat parameter can be included on any request to specify
+            the format of the results. The valid values for ResultFormat are
+            'JSON' and 'XML'.
+
+        .. _`ITA tables`: https://www.bea.gov/iTable/iTable.cfm?reqid=62&step=2&isuri=1&6210=1#reqid=62&step=2&isuri=1&6210=1
+        .. _`BEA website`: https://www.bea.gov/international/bp_web/geographic_area_definitions.cfm
+
+
+        """
+        required_params = {'UserID': UserID,
+                           'Method': 'GetData',
+                           'DataSetName': 'ITA',
+                           'Indicator': Indicator,
+                           'AreaOrCountry': AreaOrCountry,
+                           'Frequency': Frequency,
+                           'Year': Year,
+                           'ResultFormat': ResultFormat}
+        required_params.update(params)
+        super(ITARequest, self).__init__(**required_params)
+
+
 class RegionalProductRequest(DataRequest):
 
     def __init__(self, UserID, Component, IndustryId, GeoFips, ResultFormat='JSON', **params):
@@ -394,7 +456,7 @@ class RegionalProductRequest(DataRequest):
 
         Notes
         -----
-        The optional parameters for RegionalIncomeRequest are:
+        The optional parameters for RegionalProductRequest are:
 
         Year : str or list(str) (default='ALL')
             A string representation of the year for which data is being
@@ -504,7 +566,7 @@ class NIPARequest(DataRequest):
 
         Notes
         -----
-        The optional parameters for NIPADataRequest are:
+        The optional parameters for NIPARequest are:
 
         ShowMillions : str
             The ShowMillions parameter is a string indicating whether the data

@@ -1,9 +1,6 @@
 """
 Functions for fetching data from the Bureau of Economic Analysis (BEA) data api.
 
-@author : David R. Pugh
-@date : 2017-06-19
-
 """
 import numpy as np
 import pandas as pd
@@ -18,7 +15,7 @@ def get_data_set_list(UserID, ResultFormat='JSON'):
     Parameters
     ----------
     UserID: str
-            A valid UserID necessary for accessing the BEA data API.
+        A valid UserID necessary for accessing the BEA data API.
     ResultFormat : str (default='JSON')
         The API returns data in one of two formats: JSON or XML. The
         ResultFormat parameter can be included on any request to specify the
@@ -43,7 +40,7 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
     Parameters
     ----------
     UserID: str
-            A valid UserID necessary for accessing the BEA data API.
+        A valid UserID necessary for accessing the BEA data API.
     DataSetName : str
         A valid name of an available BEA data set. The get_data_set_list
         function returns a complete listing of available data sets and the
@@ -92,7 +89,7 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
     Parameters
     ----------
     UserID: str
-            A valid UserID necessary for accessing the BEA data API.
+        A valid UserID necessary for accessing the BEA data API.
     DataSetName : str
         A valid name of an available BEA data set. Note that the
         get_data_set_list function returns a complete listing of available data
@@ -121,7 +118,8 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
     return param_values
 
 
-def get_parameter_values_filtered(UserID, DataSetName, ParameterName, ResultFormat='JSON', **kwargs):
+def get_parameter_values_filtered(UserID, DataSetName, ParameterName,
+                                  ResultFormat='JSON', **kwargs):
     """
     Retrieves a list of the valid values for a particular parameter based on
     other provided parameters .
@@ -129,7 +127,7 @@ def get_parameter_values_filtered(UserID, DataSetName, ParameterName, ResultForm
     Parameters
     ----------
     UserID: str
-            A valid UserID necessary for accessing the BEA data API.
+        A valid UserID necessary for accessing the BEA data API.
     DataSetName : str
         A valid name of an available BEA data set. Note that the
         get_data_set_list function returns a complete listing of available data
@@ -194,23 +192,39 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
 
     For additional information see the BEA data API `user guide`_.
 
-    .. _`user guide`: http://www.bea.gov/api/_pdf/bea_web_service_api_user_guide.pdf
+    .. _`user guide`: https://www.bea.gov/API/bea_web_service_api_user_guide.htm
 
     """
-    if DataSetName == 'RegionalIncome':
-        data = _get_regional_income(UserID=UserID, ResultFormat=ResultFormat, **params)
-    elif DataSetName == 'RegionalProduct':
-        data = _get_regional_product(UserID=UserID, ResultFormat=ResultFormat, **params)
-    elif DataSetName == 'NIPA':
+    if DataSetName == 'NIPA':
         data = _get_NIPA(UserID=UserID, ResultFormat=ResultFormat, **params)
     elif DataSetName == 'NIUnderlyingDetail':
         data = _get_NIUnderlyingDetail(UserID=UserID, ResultFormat=ResultFormat, **params)
     elif DataSetName == 'FixedAssets':
         data = _get_FixedAssets(UserID=UserID, ResultFormat=ResultFormat, **params)
+    elif DataSetName =='ITA':
+        data = _get_ITA(UserID=UserID, ResultFormat=ResultFormat, **params)
+    elif DataSetName == 'RegionalIncome':
+        data = _get_regional_income(UserID=UserID, ResultFormat=ResultFormat, **params)
+    elif DataSetName == 'RegionalProduct':
+        data = _get_regional_product(UserID=UserID, ResultFormat=ResultFormat, **params)
     else:
         raise ValueError("Invalid DataSetName requested.")
 
     return data
+
+
+def _get_ITA(UserID, Indicator, AreaOrCountry, Frequency, Year, ResultFormat, **params):
+    """Extracts a subset of the ITA dataset via the BEA API."""
+    tmp_request = api.ITARequest(UserID=UserID,
+                                 Method='GetData',
+                                 Indicator=Indicator,
+                                 AreaOrCountry=AreaOrCountry,
+                                 Frequency=Frequency,
+                                 Year=Year,
+                                 ResultFormat=ResultFormat,
+                                 **params)
+    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+    return df
 
 
 def _get_regional_income(UserID, TableName, LineCode, GeoFips, ResultFormat, **params):
