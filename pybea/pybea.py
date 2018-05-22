@@ -207,7 +207,6 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         data = _get_regional_income(UserID=UserID, ResultFormat=ResultFormat, **params)
     elif DataSetName == 'RegionalProduct':
         data = _get_regional_product(UserID=UserID, ResultFormat=ResultFormat, **params)
-
     else:
         raise ValueError("Invalid DataSetName requested.")
 
@@ -218,7 +217,7 @@ def _get_ITA(UserID, Indicator, AreaOrCountry, Frequency, Year, ResultFormat, **
     """Extracts a subset of the ITA dataset via the BEA API."""
     tmp_request = api.ITARequest(UserID=UserID,
                                  Method='GetData',
-                                 Indicator=Indicator
+                                 Indicator=Indicator,
                                  AreaOrCountry=AreaOrCountry,
                                  Frequency=Frequency,
                                  Year=Year,
