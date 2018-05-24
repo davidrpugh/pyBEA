@@ -216,7 +216,6 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
 def _get_ITA(UserID, Indicator, AreaOrCountry, Frequency, Year, ResultFormat, **params):
     """Extracts a subset of the ITA dataset via the BEA API."""
     tmp_request = api.ITARequest(UserID=UserID,
-                                 Method='GetData',
                                  Indicator=Indicator,
                                  AreaOrCountry=AreaOrCountry,
                                  Frequency=Frequency,
@@ -230,7 +229,6 @@ def _get_ITA(UserID, Indicator, AreaOrCountry, Frequency, Year, ResultFormat, **
 def _get_regional_income(UserID, TableName, LineCode, GeoFips, ResultFormat, **params):
     """Extracts a subset of the RegionalIncome dataset via the BEA API."""
     tmp_request = api.RegionalIncomeRequest(UserID=UserID,
-                                            Method='GetData',
                                             TableName=TableName,
                                             LineCode=LineCode,
                                             GeoFips=GeoFips,
@@ -243,7 +241,6 @@ def _get_regional_income(UserID, TableName, LineCode, GeoFips, ResultFormat, **p
 def _get_regional_product(UserID, Component, IndustryId, GeoFips, ResultFormat, **params):
     """Extracts a subset of the RegionalProduct dataset via the BEA API."""
     tmp_request = api.RegionalProductRequest(UserID=UserID,
-                                             Method='GetData',
                                              Component=Component,
                                              IndustryId=IndustryId,
                                              GeoFips=GeoFips,
@@ -254,7 +251,6 @@ def _get_regional_product(UserID, Component, IndustryId, GeoFips, ResultFormat, 
 
 def _get_NIPA(UserID, TableID, Frequency, Year, ResultFormat, **params):
     tmp_request = api.NIPARequest(UserID=UserID,
-                                  Method='GetData',
                                   TableID=TableID,
                                   Frequency=Frequency,
                                   Year=Year,
@@ -268,5 +264,11 @@ def _get_NIUnderlyingDetail(UserID, ResultFormat, **params):
     raise NotImplementedError
 
 
-def _get_FixedAssets(UserID, ResultFormat, **params):
-    raise NotImplementedError
+def _get_FixedAssets(UserID, TableID, Year, ResultFormat, **params):
+    tmp_request = api.FixedAssetsRequest(UserID=UserID,
+                                         TableID=TableID,
+                                         Year=Year,
+                                         ResultFormat=ResultFormat,
+                                         **params)
+    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+    return df

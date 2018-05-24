@@ -642,7 +642,7 @@ class FixedAssetsRequest(DataRequest):
         TableID : str
             The TableID parameter is an integer that refers to a specific
             FixedAssets table.
-        Year : str or list(str) (default='ALL')
+        Year : str or list(str) (default='X')
             A string representation of the year for which data is being
             requested. Multiple years are requested by specifying them as a
             list: `Year=['2000', '2005' , '2010']`. Note that Year will default
