@@ -195,11 +195,7 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     .. _`user guide`: https://www.bea.gov/API/bea_web_service_api_user_guide.htm
 
     """
-    valid_dataset_names = ['NIPA', 'NIUnderlyingDetail', 'FixedAssets', 'MNE',
-                           'GDPbyIndustry', 'ITA', 'IIP', 'RegionalIncome',
-                           'RegionalProduct', 'InputOutput',
-                           'UnderlyingGDPbyIndustry', 'IntlServTrade']
-    if DataSetName in valid_dataset_names:
+    if DataSetName in api.VALID_DATASET_NAMES:
         tmp_request = api.DataRequest(UserID, DataSetName, ResultFormat, **params)
         df = pd.DataFrame(tmp_request.data, dtype=np.int64)
     else:

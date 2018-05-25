@@ -15,6 +15,12 @@ import json
 import requests
 
 
+VALID_DATASET_NAMES = ['NIPA', 'NIUnderlyingDetail', 'FixedAssets', 'MNE',
+                       'GDPbyIndustry', 'ITA', 'IIP', 'RegionalIncome',
+                       'RegionalProduct', 'InputOutput',
+                       'UnderlyingGDPbyIndustry', 'IntlServTrade']
+
+
 class Request(dict):
     """Base class for a Request."""
 
