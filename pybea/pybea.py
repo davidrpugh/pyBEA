@@ -207,6 +207,8 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         data = _get_regional_income(UserID=UserID, ResultFormat=ResultFormat, **params)
     elif DataSetName == 'RegionalProduct':
         data = _get_regional_product(UserID=UserID, ResultFormat=ResultFormat, **params)
+    elif DataSetName == 'InputOutput':
+        data = _get_data(UserID=UserID, ResultFormat=ResultFormat, DataSetName=DataSetName, **params)
     else:
         raise ValueError("Invalid DataSetName requested.")
 
@@ -249,9 +251,9 @@ def _get_regional_product(UserID, Component, IndustryId, GeoFips, ResultFormat, 
     df = pd.DataFrame(tmp_request.data, dtype=np.int64)
     return df
 
-def _get_NIPA(UserID, TableID, Frequency, Year, ResultFormat, **params):
+def _get_NIPA(UserID, TableName, Frequency, Year, ResultFormat, **params):
     tmp_request = api.NIPARequest(UserID=UserID,
-                                  TableID=TableID,
+                                  TableName=TableName,
                                   Frequency=Frequency,
                                   Year=Year,
                                   ResultFormat=ResultFormat,
@@ -270,5 +272,11 @@ def _get_FixedAssets(UserID, TableID, Year, ResultFormat, **params):
                                          Year=Year,
                                          ResultFormat=ResultFormat,
                                          **params)
+    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+    return df
+
+
+def _get_data(UserID, DataSetName, ResultFormat, **params):
+    tmp_request = api.DataRequest(UserID, DataSetName, ResultFormat)
     df = pd.DataFrame(tmp_request.data, dtype=np.int64)
     return df

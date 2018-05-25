@@ -532,7 +532,7 @@ class RegionalIncomeRequest(DataRequest):
 
 class NIPARequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year="X", ResultFormat='JSON', **params):
+    def __init__(self, UserID, TableName, Frequency, Year="X", ResultFormat='JSON', **params):
         """
         Create an instance of the NIPARequest class.
 
@@ -540,7 +540,7 @@ class NIPARequest(DataRequest):
         ----------
         UserID: str
             A valid UserID necessary for accessing the BEA data API.
-        TableID : str
+        TableName : str
             The TableID parameter is an integer that refers to a specific NIPA
             table. Note that the list of valid TableIDs may change depending on
             the monthly news release cycles.
@@ -580,7 +580,7 @@ class NIPARequest(DataRequest):
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'NIPA',
-                           'TableID': TableID,
+                           'TableName': TableName,
                            'Frequency': Frequency,
                            'Year': Year,
                            'ResultFormat': ResultFormat}
