@@ -8,12 +8,8 @@ CLASSIFIERS = ['Development Status :: 3 - Alpha',
                'License :: OSI Approved :: MIT License',
                'Operating System :: OS Independent',
                'Programming Language :: Python',
-               'Programming Language :: Python :: 2',
                'Programming Language :: Python :: 3',
-               'Programming Language :: Python :: 2.7',
-               'Programming Language :: Python :: 3.3',
-               'Programming Language :: Python :: 3.4',
-               'Programming Language :: Python :: 3.5',
+               'Programming Language :: Python :: 3.6',
                'Topic :: Scientific/Engineering',
                ]
 
@@ -21,7 +17,7 @@ DESCRIPTION = "Python package for accessing data from the BEA data API"
 
 PACKAGES = ['pybea']
 
-VERSION = "0.5.0-alpha"
+VERSION = "0.6.0-alpha"
 
 setup(name='pybea',
       packages=PACKAGES,

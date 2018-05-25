@@ -195,80 +195,14 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     .. _`user guide`: https://www.bea.gov/API/bea_web_service_api_user_guide.htm
 
     """
-    if DataSetName == 'NIPA':
-        data = _get_NIPA(UserID=UserID, ResultFormat=ResultFormat, **params)
-    elif DataSetName == 'NIUnderlyingDetail':
-        data = _get_NIUnderlyingDetail(UserID=UserID, ResultFormat=ResultFormat, **params)
-    elif DataSetName == 'FixedAssets':
-        data = _get_FixedAssets(UserID=UserID, ResultFormat=ResultFormat, **params)
-    elif DataSetName =='ITA':
-        data = _get_ITA(UserID=UserID, ResultFormat=ResultFormat, **params)
-    elif DataSetName == 'RegionalIncome':
-        data = _get_regional_income(UserID=UserID, ResultFormat=ResultFormat, **params)
-    elif DataSetName == 'RegionalProduct':
-        data = _get_regional_product(UserID=UserID, ResultFormat=ResultFormat, **params)
+    valid_dataset_names = ['NIPA', 'NIUnderlyingDetail', 'FixedAssets', 'MNE',
+                           'GDPbyIndustry', 'ITA', 'IIP', 'RegionalIncome',
+                           'RegionalProduct', 'InputOutput',
+                           'UnderlyingGDPbyIndustry', 'IntlServTrade']
+    if DataSetName in valid_dataset_names:
+        tmp_request = api.DataRequest(UserID, DataSetName, ResultFormat, **params)
+        df = pd.DataFrame(tmp_request.data, dtype=np.int64)
     else:
         raise ValueError("Invalid DataSetName requested.")
 
-    return data
-
-
-def _get_ITA(UserID, Indicator, AreaOrCountry, Frequency, Year, ResultFormat, **params):
-    """Extracts a subset of the ITA dataset via the BEA API."""
-    tmp_request = api.ITARequest(UserID=UserID,
-                                 Indicator=Indicator,
-                                 AreaOrCountry=AreaOrCountry,
-                                 Frequency=Frequency,
-                                 Year=Year,
-                                 ResultFormat=ResultFormat,
-                                 **params)
-    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
-    return df
-
-
-def _get_regional_income(UserID, TableName, LineCode, GeoFips, ResultFormat, **params):
-    """Extracts a subset of the RegionalIncome dataset via the BEA API."""
-    tmp_request = api.RegionalIncomeRequest(UserID=UserID,
-                                            TableName=TableName,
-                                            LineCode=LineCode,
-                                            GeoFips=GeoFips,
-                                            ResultFormat=ResultFormat,
-                                            **params)
-    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
-    return df
-
-
-def _get_regional_product(UserID, Component, IndustryId, GeoFips, ResultFormat, **params):
-    """Extracts a subset of the RegionalProduct dataset via the BEA API."""
-    tmp_request = api.RegionalProductRequest(UserID=UserID,
-                                             Component=Component,
-                                             IndustryId=IndustryId,
-                                             GeoFips=GeoFips,
-                                             ResultFormat=ResultFormat,
-                                             **params)
-    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
-    return df
-
-def _get_NIPA(UserID, TableID, Frequency, Year, ResultFormat, **params):
-    tmp_request = api.NIPARequest(UserID=UserID,
-                                  TableID=TableID,
-                                  Frequency=Frequency,
-                                  Year=Year,
-                                  ResultFormat=ResultFormat,
-                                  **params)
-    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
-    return df
-
-
-def _get_NIUnderlyingDetail(UserID, ResultFormat, **params):
-    raise NotImplementedError
-
-
-def _get_FixedAssets(UserID, TableID, Year, ResultFormat, **params):
-    tmp_request = api.FixedAssetsRequest(UserID=UserID,
-                                         TableID=TableID,
-                                         Year=Year,
-                                         ResultFormat=ResultFormat,
-                                         **params)
-    df = pd.DataFrame(tmp_request.data, dtype=np.int64)
     return df
