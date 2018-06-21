@@ -371,7 +371,18 @@ class DataRequest(Request):
         else:
             dtypes = self._elements_to_dtypes(self._xml_dimensions)
             df = self._elements_to_dataframe(self._xml_data, dtypes.keys())
-        df.DataValue.replace(",", "", regex=True, inplace=True) # sometimes floats have commas!
+
+        # impose some additional structure on dtypes
+        dtypes['UNIT_MULT'] = np.dtype('int')
+        if "TableID" in dtypes:
+            dtypes["TableID"] = np.dtype("int")
+        if "LineNumber" in dtypes:
+            dtypes["LineNumber"] = np.dtype("int")
+
+        # some ad-hoc cleaning of DataValue column is necessary
+        df.DataValue.replace(",", "", regex=True, inplace=True)
+        df.DataValue.replace("(NA)", "NaN", inplace=True)
+
         result = df.astype(dtypes)
         return result
 
