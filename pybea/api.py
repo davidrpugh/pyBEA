@@ -1,4 +1,5 @@
 import json
+import locale
 import xml.etree.ElementTree as ET
 
 import numpy as np
@@ -367,10 +368,14 @@ class DataRequest(Request):
     def data(self):
         if self['ResultFormat'] == 'JSON':
             df = pd.DataFrame(self._json_data)
+            dtypes = self._json_to_dtypes(self._json_dimensions)
+            result = df.astype(dtypes)
         else:
             dtypes = self._elements_to_dtypes(self._xml_dimensions)
             df = self._elements_to_dataframe(self._xml_data, dtypes.keys())
-        return df.astype(dtypes)
+            df.DataValue.replace(",", "", regex=True, inplace=True)
+            result = df.astype(dtypes)
+        return result
 
     @property
     def notes(self):
@@ -386,6 +391,15 @@ class DataRequest(Request):
         dtypes = {}
         for element in elements:
             k, v = element.attrib.get('Name'), element.attrib.get('DataType')
+            dtypes[k] = cls._dtypes[v]
+        return dtypes
+
+    @classmethod
+    def _json_to_dtypes(cls, objects):
+        """Converts a list of JSON objects into a dtype dictionary."""
+        dtypes = {}
+        for o in objects:
+            k, v = o.get('Name'), o.get('DataType')
             dtypes[k] = cls._dtypes[v]
         return dtypes
 
