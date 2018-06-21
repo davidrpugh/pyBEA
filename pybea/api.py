@@ -1,5 +1,4 @@
 import json
-import locale
 import xml.etree.ElementTree as ET
 
 import numpy as np
@@ -367,14 +366,13 @@ class DataRequest(Request):
     @property
     def data(self):
         if self['ResultFormat'] == 'JSON':
-            df = pd.DataFrame(self._json_data)
             dtypes = self._json_to_dtypes(self._json_dimensions)
-            result = df.astype(dtypes)
+            df = pd.DataFrame(self._json_data)
         else:
             dtypes = self._elements_to_dtypes(self._xml_dimensions)
             df = self._elements_to_dataframe(self._xml_data, dtypes.keys())
-            df.DataValue.replace(",", "", regex=True, inplace=True)
-            result = df.astype(dtypes)
+        df.DataValue.replace(",", "", regex=True, inplace=True) # sometimes floats have commas!
+        result = df.astype(dtypes)
         return result
 
     @property
