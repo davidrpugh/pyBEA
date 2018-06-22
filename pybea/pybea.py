@@ -29,8 +29,7 @@ def get_data_set_list(UserID, ResultFormat='JSON'):
 
     """
     tmp_request = api.DataSetListRequest(UserID=UserID, ResultFormat=ResultFormat)
-    data_set_list = pd.DataFrame(tmp_request.data_set, dtype=np.int64)
-    return data_set_list
+    return tmp_request.data_set_list
 
 
 def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
@@ -78,8 +77,7 @@ def get_parameter_list(UserID, DataSetName, ResultFormat='JSON'):
     tmp_request = api.ParameterListRequest(UserID=UserID,
                                            DataSetName=DataSetName,
                                            ResultFormat=ResultFormat)
-    parameter_list = pd.DataFrame(tmp_request.parameter_list, dtype=np.int64)
-    return parameter_list
+    return tmp_request.parameter_list
 
 
 def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'):
@@ -114,8 +112,7 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
                                              DataSetName=DataSetName,
                                              ParameterName=ParameterName,
                                              ResultFormat=ResultFormat)
-    param_values = pd.DataFrame(tmp_request.parameter_values, dtype=np.int64)
-    return param_values
+    return tmp_request.parameter_values
 
 
 def get_parameter_values_filtered(UserID, DataSetName, ParameterName,
@@ -201,7 +198,7 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
                            'UnderlyingGDPbyIndustry', 'IntlServTrade']
     if DataSetName in valid_dataset_names:
         tmp_request = api.DataRequest(UserID, DataSetName, ResultFormat, **params)
-        df = pd.DataFrame(tmp_request.data, dtype=np.int64)
+        df = tmp_request.data
     else:
         raise ValueError("Invalid DataSetName requested.")
 

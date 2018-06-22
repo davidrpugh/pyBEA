@@ -1,17 +1,8 @@
-"""
-@author : David R. Pugh
-@date : 2016-01-27
-
-
-TODO
------
-1. Use ElementTree to implement XML parsing of BEA data.
-2. Lots of documentation needs to be written! Mostly this can be copied
-verbatim from the BEA user guide.
-
-"""
 import json
+import xml.etree.ElementTree as ET
 
+import numpy as np
+import pandas as pd
 import requests
 
 
@@ -28,8 +19,7 @@ class Request(dict):
                      'GetParameterList',
                      'GetParameterValues',
                      'GetParameterValuesFiltered',
-                     'GetData',
-                     ]
+                     'GetData']
 
     def __init__(self, UserID, Method, ResultFormat='JSON', **params):
         # validate required keyword args
@@ -53,22 +43,32 @@ class Request(dict):
         return super(Request, self).__delitem__(item)
 
     @property
+    def _json_content(self):
+        return self.response.json()
+
+    @property
     def _json_request(self):
-        raw_json = self._load_json_content()
+        raw_json = self._json_content
         return raw_json['BEAAPI']['Request']
 
     @property
     def _json_results(self):
-        raw_json = self._load_json_content()
+        raw_json = self._json_content
         return raw_json['BEAAPI']['Results']
 
     @property
+    def _xml_content(self):
+        return ET.fromstring(self.response.content)
+
+    @property
     def _xml_request(self):
-        raise NotImplementedError
+        root = self._xml_content
+        return root.find('Request')
 
     @property
     def _xml_results(self):
-        raise NotImplementedError
+        root = self._xml_content
+        return root.find('Results')
 
     @property
     def request(self):
@@ -92,11 +92,17 @@ class Request(dict):
             tmp_results = self._xml_results
         return tmp_results
 
-    def _load_json_content(self):
-        return self.response.json()
+    def _element_to_series(self, e, columns):
+        """Convert an `Element` into a `Pandas.Series` instance."""
+        data = [e.attrib.get(col) for col in columns]
+        series = pd.Series(data, index=columns)
+        return series
 
-    def _load_xml_content(self):
-        raise NotImplementedError
+    def _elements_to_dataframe(self, elements, columns):
+        """Convert a list of `Element` instances into a `Pandas.DataFrame`."""
+        series = [self._element_to_series(e, columns) for e in elements]
+        df = pd.concat(series, axis=1).T
+        return df
 
     def _validate_method(self, method):
         """Validate the Method keyword argument."""
@@ -131,6 +137,8 @@ class Request(dict):
 
 class DataSetListRequest(Request):
 
+    _dtypes = {"DatasetDescription": str, "DatasetName": str}
+
     def __init__(self, UserID, ResultFormat='JSON'):
         """
         Create an instance of the DataSetListRequest class.
@@ -157,18 +165,25 @@ class DataSetListRequest(Request):
 
     @property
     def _xml_data_set(self):
-        raise NotImplementedError
+        return self.results.findall('Dataset')
 
     @property
-    def data_set(self):
+    def data_set_list(self):
         if self['ResultFormat'] == 'JSON':
-            tmp_data_set = self._json_data_set
+            df = pd.DataFrame(self._json_data_set)
         else:
-            tmp_data_set = self._xml_data_set
-        return tmp_data_set
+            df = self._elements_to_dataframe(self._xml_data_set, self._dtypes.keys())
+        return df.astype(self._dtypes)
 
 
 class ParameterListRequest(Request):
+
+    _dtypes = {'MultipleAcceptedFlag': np.dtype('int'),
+               'ParameterDataType': np.dtype('O'),
+               'ParameterDefaultValue': np.dtype('O'),
+               'ParameterDescription': np.dtype('O'),
+               'ParameterIsRequiredFlag': np.dtype('int'),
+               'ParameterName': np.dtype('O')}
 
     def __init__(self, UserID, DataSetName, ResultFormat='JSON'):
         """
@@ -199,18 +214,20 @@ class ParameterListRequest(Request):
 
     @property
     def _xml_parameter_list(self):
-        raise NotImplementedError
+        return self.results.findall('Parameter')
 
     @property
     def parameter_list(self):
         if self['ResultFormat'] == 'JSON':
-            tmp_parameter_list = self._json_parameter_list
+            df = pd.DataFrame(self._json_parameter_list)
         else:
-            tmp_parameter_list = self._xml_parameter_list
-        return tmp_parameter_list
+            df = self._elements_to_dataframe(self._xml_parameter_list, self._dtypes.keys())
+        return df.astype(self._dtypes)
 
 
 class ParameterValuesRequest(Request):
+
+    _dtypes = {'Desc': np.dtype('O'), "Key": np.dtype('int')}
 
     def __init__(self, UserID, DataSetName, ParameterName, ResultFormat='JSON'):
         """
@@ -246,20 +263,20 @@ class ParameterValuesRequest(Request):
 
     @property
     def _xml_parameter_values(self):
-        raise NotImplementedError
+        return self.results.findall('ParamValue')
 
     @property
     def parameter_values(self):
         if self['ResultFormat'] == 'JSON':
-            tmp_parameter_values = self._json_parameter_values
+            df = pd.DataFrame(self._json_parameter_values)
         else:
-            tmp_parameter_values = self._xml_parameter_values
-        return tmp_parameter_values
+            df = self._elements_to_dataframe(self._xml_parameter_values, self._dtypes.keys())
+        return df.astype(self._dtypes)
 
 
 class ParameterValuesFilteredRequest(ParameterValuesRequest):
 
-    def __init__(self, UserID, DataSetName, ParameterName, ResultFormat='JSON', **kwargs):
+    def __init__(self, UserID, DataSetName, TargetParameter, ResultFormat='JSON', **params):
         """
         Create an instance of the ParameterValuesRequest class.
 
@@ -269,7 +286,7 @@ class ParameterValuesFilteredRequest(ParameterValuesRequest):
             A valid UserID necessary for accessing the BEA data API.
         DataSetName : str
             A valid name of an available BEA data set.
-        ParameterName : str
+        TargetParameter : str
             A valid parameter name for a given data set. Note that the
             get_parameter_list function returns a complete listing of valid
             parameters names for a given data set.
@@ -278,7 +295,7 @@ class ParameterValuesFilteredRequest(ParameterValuesRequest):
             ResultFormat parameter can be included on any request to specify
             the format of the results. The valid values for ResultFormat are
             'JSON' and 'XML'.
-        kwargs : dict
+        params : dict
             Additional, optional, keyword arguments.
 
         """
@@ -287,11 +304,15 @@ class ParameterValuesFilteredRequest(ParameterValuesRequest):
                            'DataSetName': DataSetName,
                            'ParameterName': ParameterName,
                            'ResultFormat': ResultFormat}
+        required_params.update(params)
         super(ParameterValuesRequestFiltered, self).__init__(**required_params)
 
 
 class DataRequest(Request):
     """Base class for a DataRequest."""
+
+    # 'string' and 'numeric' are the two `DataType` values used by the BEA API
+    _dtypes = {'string': np.dtype('O'), 'numeric': np.dtype('float')}
 
     def __init__(self, UserID, DataSetName, ResultFormat='JSON', **params):
         """
@@ -332,39 +353,66 @@ class DataRequest(Request):
 
     @property
     def _xml_data(self):
-        raise NotImplementedError
+        return self.results.findall('Data')
 
     @property
     def _xml_dimensions(self):
-        raise NotImplementedError
+        return self.results.findall('Dimensions')
 
     @property
     def _xml_notes(self):
-        raise NotImplementedError
+        return self.results.findall('Notes')
 
     @property
     def data(self):
         if self['ResultFormat'] == 'JSON':
-            tmp_data = self._json_data
+            dtypes = self._json_to_dtypes(self._json_dimensions)
+            df = pd.DataFrame(self._json_data)
         else:
-            tmp_data = self._xml_data
-        return tmp_data
+            dtypes = self._elements_to_dtypes(self._xml_dimensions)
+            df = self._elements_to_dataframe(self._xml_data, dtypes.keys())
 
-    @property
-    def dimensions(self):
-        if self['ResultFormat'] == 'JSON':
-            tmp_dimensions = self._json_dimensions
-        else:
-            tmp_dimensions = self._xml_dimensions
-        return tmp_dimensions
+        # impose some additional structure on dtypes
+        if 'UNIT_MULT' in dtypes:
+            dtypes['UNIT_MULT'] = np.dtype('int')
+        if "TableID" in dtypes:
+            dtypes["TableID"] = np.dtype("int")
+        if "LineNumber" in dtypes:
+            dtypes["LineNumber"] = np.dtype("int")
+
+        # some ad-hoc cleaning of DataValue column is necessary
+        df.DataValue.replace(",", "", regex=True, inplace=True)
+        df.DataValue.replace("(NA)", "NaN", inplace=True)
+
+        result = df.astype(dtypes)
+        return result
 
     @property
     def notes(self):
         if self['ResultFormat'] == 'JSON':
-            tmp_notes = self._json_notes
+            df = pd.DataFrame(self._json_notes)
         else:
-            tmp_notes = self._xml_notes
-        return tmp_notes
+            dtypes = self._elements_to_dtypes(self._xml_dimensions)
+            df = self._elements_to_dataframe(self._xml_notes, dtypes.keys())
+        return df
+
+    @classmethod
+    def _elements_to_dtypes(cls, elements):
+        """Converts a list of `Element` instances into a dtype dictionary."""
+        dtypes = {}
+        for element in elements:
+            k, v = element.attrib.get('Name'), element.attrib.get('DataType')
+            dtypes[k] = cls._dtypes[v]
+        return dtypes
+
+    @classmethod
+    def _json_to_dtypes(cls, objects):
+        """Converts a list of JSON objects into a dtype dictionary."""
+        dtypes = {}
+        for o in objects:
+            k, v = o.get('Name'), o.get('DataType')
+            dtypes[k] = cls._dtypes[v]
+        return dtypes
 
 
 class ITARequest(DataRequest):
@@ -590,7 +638,7 @@ class NIPARequest(DataRequest):
 
 class NIUnderlyingDetailRequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON'):
+    def __init__(self, UserID, TableName, Frequency, Year, ResultFormat='JSON'):
         """
         Create an instance of the NIUnderlyingDetailRequest class.
 
@@ -598,13 +646,16 @@ class NIUnderlyingDetailRequest(DataRequest):
         ----------
         UserID: str
             A valid UserID necessary for accessing the BEA data API.
-        TableID : str
-            The TableID parameter is an integer that refers to a specific NIPA
-            table.
+        TableName : str
+            The TableName parameter is a string that identifies a specific NIPA
+            Underlying Detail table. Only one NIPA Underlying Detail table can
+            be requested in each data request. Requests with an invalid
+            combination of TableName, Frequency or Year values will result in
+            an error.
         Frequency : str or list(str)
             The Frequency parameter is a string that refers to the time series
             for the requested NIPA table. Multiple frequencies are requested by
-            specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
+            specifying them as a list: `Frequency=['A', 'Q', 'M']`. When data
             is requested for frequencies that don't exist for a particular NIPA
             table, only data that exists is returned.
         Year : str or list(str) (default='ALL')
@@ -622,7 +673,7 @@ class NIUnderlyingDetailRequest(DataRequest):
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'NIUnderlyingDetail',
-                           'TableID': TableID,
+                           'TableName': TableName,
                            'Frequency': Frequency,
                            'Year': Year,
                            'ResultFormat': ResultFormat}
