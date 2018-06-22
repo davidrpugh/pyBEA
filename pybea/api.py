@@ -373,7 +373,8 @@ class DataRequest(Request):
             df = self._elements_to_dataframe(self._xml_data, dtypes.keys())
 
         # impose some additional structure on dtypes
-        dtypes['UNIT_MULT'] = np.dtype('int')
+        if 'UNIT_MULT' in dtypes:
+            dtypes['UNIT_MULT'] = np.dtype('int')
         if "TableID" in dtypes:
             dtypes["TableID"] = np.dtype("int")
         if "LineNumber" in dtypes:
@@ -636,7 +637,7 @@ class NIPARequest(DataRequest):
 
 class NIUnderlyingDetailRequest(DataRequest):
 
-    def __init__(self, UserID, TableID, Frequency, Year, ResultFormat='JSON'):
+    def __init__(self, UserID, TableName, Frequency, Year, ResultFormat='JSON'):
         """
         Create an instance of the NIUnderlyingDetailRequest class.
 
@@ -644,13 +645,16 @@ class NIUnderlyingDetailRequest(DataRequest):
         ----------
         UserID: str
             A valid UserID necessary for accessing the BEA data API.
-        TableID : str
-            The TableID parameter is an integer that refers to a specific NIPA
-            table.
+        TableName : str
+            The TableName parameter is a string that identifies a specific NIPA
+            Underlying Detail table. Only one NIPA Underlying Detail table can
+            be requested in each data request. Requests with an invalid
+            combination of TableName, Frequency or Year values will result in
+            an error.
         Frequency : str or list(str)
             The Frequency parameter is a string that refers to the time series
             for the requested NIPA table. Multiple frequencies are requested by
-            specifying them as a list: `Frequency=['A', 'Q' , 'M']`. When data
+            specifying them as a list: `Frequency=['A', 'Q', 'M']`. When data
             is requested for frequencies that don't exist for a particular NIPA
             table, only data that exists is returned.
         Year : str or list(str) (default='ALL')
@@ -668,7 +672,7 @@ class NIUnderlyingDetailRequest(DataRequest):
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': 'NIUnderlyingDetail',
-                           'TableID': TableID,
+                           'TableName': TableName,
                            'Frequency': Frequency,
                            'Year': Year,
                            'ResultFormat': ResultFormat}
