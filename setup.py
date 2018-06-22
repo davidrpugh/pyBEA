@@ -17,7 +17,7 @@ DESCRIPTION = "Python package for accessing data from the BEA data API"
 
 PACKAGES = ['pybea']
 
-VERSION = "0.6.0-alpha"
+VERSION = "0.7.0-alpha"
 
 setup(name='pybea',
       packages=PACKAGES,
