@@ -392,7 +392,8 @@ class DataRequest(Request):
         if self['ResultFormat'] == 'JSON':
             df = pd.DataFrame(self._json_notes)
         else:
-            df = self._elements_to_dataframe(self._xml_notes)
+            dtypes = self._elements_to_dtypes(self._xml_dimensions)
+            df = self._elements_to_dataframe(self._xml_notes, dtypes.keys())
         return df
 
     @classmethod
