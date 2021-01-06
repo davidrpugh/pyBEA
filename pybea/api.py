@@ -11,7 +11,7 @@ class Request(dict):
 
     _response = None
 
-    base_url = 'http://www.bea.gov/api/data'
+    base_url = 'https://apps.bea.gov/api/data'
 
     valid_formats = ['JSON', 'XML']
 
