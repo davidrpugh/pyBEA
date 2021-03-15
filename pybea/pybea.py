@@ -5,7 +5,7 @@ Functions for fetching data from the Bureau of Economic Analysis (BEA) data api.
 import numpy as np
 import pandas as pd
 
-from . import api
+import api
 
 
 def get_data_set_list(UserID, ResultFormat='JSON'):
@@ -203,3 +203,6 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         raise ValueError("Invalid DataSetName requested.")
 
     return df
+
+
+
