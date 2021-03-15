@@ -12,7 +12,6 @@ class Request(dict):
     _response = None
 
     base_url = 'https://apps.bea.gov/api/data'
-    #  https://apps.bea.gov
 
     valid_formats = ['JSON', 'XML']
 
@@ -229,6 +228,8 @@ class ParameterListRequest(Request):
 class ParameterValuesRequest(Request):
 
     _dtypes = {'Desc': np.dtype('O'), "Key": np.dtype('int')}
+    _dtypes = {'TableName': np.dtype('O'), "Description": np.dtype('str')}
+
 
     def __init__(self, UserID, DataSetName, ParameterName, ResultFormat='JSON'):
         """
@@ -270,6 +271,7 @@ class ParameterValuesRequest(Request):
     def parameter_values(self):
         if self['ResultFormat'] == 'JSON':
             df = pd.DataFrame(self._json_parameter_values)
+            print(df)
         else:
             df = self._elements_to_dataframe(self._xml_parameter_values, self._dtypes.keys())
         return df.astype(self._dtypes)
@@ -303,10 +305,10 @@ class ParameterValuesFilteredRequest(ParameterValuesRequest):
         required_params = {'UserID': UserID,
                            'Method': 'GetParameterValuesFiltered',
                            'DataSetName': DataSetName,
-                           'ParameterName': ParameterName,
+                           'ParameterName': TargetParameter,
                            'ResultFormat': ResultFormat}
         required_params.update(params)
-        super(ParameterValuesRequestFiltered, self).__init__(**required_params)
+        super(ParameterValuesFilteredRequest, self).__init__(**required_params)
 
 
 class DataRequest(Request):
