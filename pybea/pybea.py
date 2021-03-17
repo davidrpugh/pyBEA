@@ -5,6 +5,7 @@ Functions for fetching data from the Bureau of Economic Analysis (BEA) data api.
 import numpy as np
 import pandas as pd
 import json
+import pprint
 
 import api
 
@@ -116,7 +117,7 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
     abc = tmp_request._json_content
     abc = abc['BEAAPI']['Results']['ParamValue']
     df = pd.DataFrame(abc)
-    df.to_csv('adahjksdfajksd.csv')
+    df.to_csv('paramvalues_response.csv')
     return df
 
 
@@ -212,13 +213,28 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     print(dtypes)
 
     if DataSetName in valid_dataset_names:
+        # Format request for Data
         tmp_request = api.DataRequest(UserID, DataSetName, ResultFormat, **params)
-        abc = tmp_request._json_content
 
-        abc = abc['BEAAPI']['Results']['Data']
+        # This is the API call
+        json_content = tmp_request._json_content
 
-        df = pd.DataFrame(abc)
-        df.to_csv('abcdefg123.csv')
+        print(json_content)
+
+        try:
+            data = json_content['BEAAPI']['Results']['Data']
+        except TypeError:
+            data = json_content['BEAAPI']['Results']
+            pp = pprint.PrettyPrinter()
+            # print('This is the data (list) in prettyprint')
+            # pp.pprint(data)
+
+            print('This is the Data dictionary (from the list) only: ', data[0]['Data'])
+            data = data[0]['Data']
+            df = pd.DataFrame(data)
+
+        df = pd.DataFrame(data)
+        df.to_csv('results_data_response1.csv')
 
         return df
         # df = tmp_request.data
