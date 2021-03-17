@@ -12,17 +12,26 @@ def main():
     # to see required params for each dataset.
     # NIPA_example = pybea.get_data(UserID, 'NIPA', 'JSON', TableName='T10105', Frequency='Q', Year='2017,2018,2019,2020')
     # NIPA_example.to_csv('NIPA_T10105.csv')
+    # print(NIPA_example)
+    #
+    # # pybea.get_parameter_list(UserID, 'GDPbyIndustry').to_csv('gdp_by_industry.csv')
+    # # pybea.get_data(UserID=UserID, DataSetName='GDPbyIndustry', TableID='ALL',
+    # #                Frequency='A', Year='2016', Industry='ALL')
+    # #
+    # print(pybea.get_parameter_list(UserID, 'FixedAssets'))
+    # print(pybea.get_parameter_values(UserID, 'FixedAssets', 'TableName'))
+    # pybea.get_data(UserID, 'FixedAssets', TableID='')
 
-    # pybea.get_parameter_list(UserID, 'GDPbyIndustry').to_csv('gdp_by_industry.csv')
-    # pybea.get_data(UserID=UserID, DataSetName='GDPbyIndustry', TableID='ALL',
-    #                Frequency='A', Year='2016', Industry='ALL')
+    # This works now after changing the dictionary key from 'IndustryDescription to IndustrYDescription'
+    # There is a typo in the header that comes back from the BEA API call
+    print('Get parameter list: \n', pybea.get_parameter_list(UserID, 'GDPbyIndustry'))
+    print('Get parameter values: \n', pybea.get_parameter_values(UserID, 'GDPbyIndustry', 'TableID'))
+    print('Get data: \n', pybea.get_data(UserID, 'GDPbyIndustry', TableID=15, Frequency='A', Year=2015, Industry='ALL'))
 
-    print(pybea.get_parameter_list(UserID, 'FixedAssets'))
-    print(pybea.get_parameter_values(UserID, 'FixedAssets', 'TableName'))
-    # pybea.get_data(UserID, 'FixedAssets')
 
-    # print(pybea.get_parameter_values(UserID, 'GDPbyIndustry', 'TableName'))
 
 
 if __name__ == '__main__':
     main()
+
+

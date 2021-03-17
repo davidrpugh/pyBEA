@@ -157,7 +157,7 @@ def get_parameter_values_filtered(UserID, DataSetName, ParameterName,
 
 
 def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
-    r"""
+    """
     Retrieve data from the Bureau of Economic Analysis (BEA) data api.
 
     Parameters
