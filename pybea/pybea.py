@@ -219,18 +219,22 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         # This is the API call
         json_content = tmp_request._json_content
 
-        print(json_content)
-
+        pp = pprint.PrettyPrinter()
+        pp.pprint(json_content)
         try:
             data = json_content['BEAAPI']['Results']['Data']
         except (TypeError, KeyError):
-            data = json_content['BEAAPI']['Results']
+            if DataSetName == 'IIP':
+                data = json_content['BEAAPI']['Data']
+            else:
+                data = json_content['BEAAPI']['Results']
+                data = data[0]['Data']
+
             pp = pprint.PrettyPrinter()
             print('This is the data in prettyprint')
             pp.pprint(data)
 
             # print('This is the Data dictionary (from the list) only: ', data[0]['Data'])
-            data = data[0]['Data']
 
             df = pd.DataFrame(data)
 
