@@ -4,9 +4,9 @@ Functions for fetching data from the Bureau of Economic Analysis (BEA) data api.
 """
 import numpy as np
 import pandas as pd
+import json
 
 import api
-
 
 def get_data_set_list(UserID, ResultFormat='JSON'):
     """
@@ -112,7 +112,12 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
                                              DataSetName=DataSetName,
                                              ParameterName=ParameterName,
                                              ResultFormat=ResultFormat)
-    return tmp_request.parameter_values
+    # return tmp_request.parameter_values
+    abc = tmp_request._json_content
+    abc = abc['BEAAPI']['Results']['ParamValue']
+    df = pd.DataFrame(abc)
+    df.to_csv('adahjksdfajksd.csv')
+    return df
 
 
 def get_parameter_values_filtered(UserID, DataSetName, ParameterName,
@@ -196,9 +201,28 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
                            'GDPbyIndustry', 'ITA', 'IIP', 'RegionalIncome',
                            'RegionalProduct', 'InputOutput',
                            'UnderlyingGDPbyIndustry', 'IntlServTrade']
+
+    df = get_parameter_list(UserID, DataSetName)
+    print(get_parameter_list(UserID, DataSetName))
+    dtypes = {}
+    for i in df.index:
+        # dtypes[row]['ParameterName'] = row['ParameterDataType']
+        dtypes[df.loc[i]['ParameterName']] = df.loc[i]['ParameterDataType']
+
+    print(dtypes)
+
     if DataSetName in valid_dataset_names:
         tmp_request = api.DataRequest(UserID, DataSetName, ResultFormat, **params)
-        df = tmp_request.data
+        abc = tmp_request._json_content
+
+        abc = abc['BEAAPI']['Results']['Data']
+
+        df = pd.DataFrame(abc)
+        df.to_csv('abcdefg123.csv')
+
+        return df
+        # df = tmp_request.data
+
     else:
         raise ValueError("Invalid DataSetName requested.")
 
