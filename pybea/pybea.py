@@ -223,14 +223,15 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
 
         try:
             data = json_content['BEAAPI']['Results']['Data']
-        except TypeError:
+        except (TypeError, KeyError):
             data = json_content['BEAAPI']['Results']
             pp = pprint.PrettyPrinter()
-            # print('This is the data (list) in prettyprint')
-            # pp.pprint(data)
+            print('This is the data in prettyprint')
+            pp.pprint(data)
 
-            print('This is the Data dictionary (from the list) only: ', data[0]['Data'])
+            # print('This is the Data dictionary (from the list) only: ', data[0]['Data'])
             data = data[0]['Data']
+
             df = pd.DataFrame(data)
 
         df = pd.DataFrame(data)
