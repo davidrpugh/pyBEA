@@ -114,10 +114,9 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
                                              ParameterName=ParameterName,
                                              ResultFormat=ResultFormat)
     # return tmp_request.parameter_values
-    abc = tmp_request._json_content
-    abc = abc['BEAAPI']['Results']['ParamValue']
-    df = pd.DataFrame(abc)
-    df.to_csv('paramvalues_response.csv')
+    temp = tmp_request._json_content
+    temp = temp['BEAAPI']['Results']['ParamValue']
+    df = pd.DataFrame(temp)
     return df
 
 
@@ -199,18 +198,18 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
 
     """
     valid_dataset_names = ['NIPA', 'NIUnderlyingDetail', 'FixedAssets', 'MNE',
-                           'GDPbyIndustry', 'ITA', 'IIP', 'RegionalIncome',
-                           'RegionalProduct', 'InputOutput',
+                           'GDPbyIndustry', 'ITA', 'IIP',
+                           'Regional', 'InputOutput',
                            'UnderlyingGDPbyIndustry', 'IntlServTrade']
 
     df = get_parameter_list(UserID, DataSetName)
-    print(get_parameter_list(UserID, DataSetName))
+    # print(get_parameter_list(UserID, DataSetName))
     dtypes = {}
     for i in df.index:
         # dtypes[row]['ParameterName'] = row['ParameterDataType']
         dtypes[df.loc[i]['ParameterName']] = df.loc[i]['ParameterDataType']
 
-    print(dtypes)
+    # print('Dictionary mapping of ParameterName and dtypes.', dtypes)
 
     if DataSetName in valid_dataset_names:
         # Format request for Data
@@ -219,8 +218,9 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         # This is the API call
         json_content = tmp_request._json_content
 
-        pp = pprint.PrettyPrinter()
-        pp.pprint(json_content)
+        # print('This is the data in the json response: \n')
+        # pp = pprint.PrettyPrinter()
+        # pp.pprint(json_content)
         try:
             data = json_content['BEAAPI']['Results']['Data']
         except (TypeError, KeyError):
@@ -228,18 +228,18 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
                 data = json_content['BEAAPI']['Data']
             else:
                 data = json_content['BEAAPI']['Results']
-                data = data[0]['Data']
+                try:
+                    data = data[0]['Data']
+                except KeyError:
+                    pass
 
-            pp = pprint.PrettyPrinter()
-            print('This is the data in prettyprint')
-            pp.pprint(data)
-
+            # pp = pprint.PrettyPrinter()
+            # print('This is the data in prettyprint')
+            # pp.pprint(data)
             # print('This is the Data dictionary (from the list) only: ', data[0]['Data'])
-
             df = pd.DataFrame(data)
 
         df = pd.DataFrame(data)
-        df.to_csv('results_data_response1.csv')
 
         return df
         # df = tmp_request.data
