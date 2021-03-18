@@ -3,11 +3,12 @@ import pprint
 
 UserID = '1985ECDD-2CF4-4239-8A48-4C1C2FFA9A95'
 
-
-
 """ Testing the pyBEA API """
 
 def main():
+    """
+    Tests all get_parameter_list, get_parameter_values, and get_data API calls
+    """
     dataset_list = pybea.get_data_set_list(UserID)
     print(dataset_list, '\n')
     print(pybea.get_parameter_list(UserID, 'NIPA'))

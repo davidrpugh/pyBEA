@@ -218,9 +218,12 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         # This is the API call
         json_content = tmp_request._json_content
 
+        # Uncomment to see pretty printed json response before modification
         # print('This is the data in the json response: \n')
         # pp = pprint.PrettyPrinter()
         # pp.pprint(json_content)
+
+        # This modifies the json response based on the various ways the return data is structured.
         try:
             data = json_content['BEAAPI']['Results']['Data']
         except (TypeError, KeyError):
@@ -237,12 +240,9 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
             # print('This is the data in prettyprint')
             # pp.pprint(data)
             # print('This is the Data dictionary (from the list) only: ', data[0]['Data'])
-            df = pd.DataFrame(data)
 
         df = pd.DataFrame(data)
-
         return df
-        # df = tmp_request.data
 
     else:
         raise ValueError("Invalid DataSetName requested.")
