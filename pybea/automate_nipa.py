@@ -1,13 +1,15 @@
 import pybea
-import pprint
 import pandas as pd
 import sys
 import time
+import pickle
 
 # If you get temporarily blocked by the BEA (you probably will if you run these scripts), use the other API key.
 UserID = '1985ECDD-2CF4-4239-8A48-4C1C2FFA9A95'
 # UserID = 'AEC7FDB2-4F22-4296-982D-7CA35C0341BA'
 
+
+# Failures: T20200A
 
 def update_all_nipa():
     pass
@@ -15,9 +17,10 @@ def update_all_nipa():
 
 def update_nipa(tablenames):
     """
-    Takes list of tablenames, reutnrs
+    Takes list of tablenames, outputs .csv with their values in NIPA_DATA directory
 
     """
+    failed_list = []
     mb_remaining = 100
     requests_remaining = 100
     for x in tablenames:
@@ -32,14 +35,18 @@ def update_nipa(tablenames):
             print('You have ', mb_remaining, 'more megabytes before throttling and ', requests_remaining,
                   'request/s remaining before throttling.')
             temp.to_csv('../NIPA_DATA/{0}.csv'.format(x))
+            time.sleep(1)
             if mb_remaining < 5:
                 time.sleep(30)
+                mb_remaining = 100
             if requests_remaining < 2:
                 time.sleep(45)
+                requests_remaining = 100
         except KeyError:
+            failed_list.append(x)
             print('Failure')
-            pass
-    return
+            time.sleep(.75)
+    return failed_list
 
 
 def main():
@@ -64,12 +71,24 @@ def main():
     """
     Problem; not all tables accept the same parameters, some break if given different Frequencies, Years, etc.
     """
-    # update_nipa(tablenames)
-    update_nipa(['T11100'])
+    # failed_list = update_nipa(tablenames)
+    # update_nipa(['T11100'])
 
-    # So for each Table, we want to have what?
-    # Options: User passes list of tables (by TableName) that they want to update to a function.
+    pickle_test = ['asd', 'sdfs', 'gdf']
+
+    # with open('failure.pkl', 'wb') as f:
+    #     pickle.dump(failed_list, f)
+
+    with open('failure.pkl', 'rb') as f:
+        failed_list = pickle.load(f)
+        print((failed_list))
+        print(len(failed_list))
+
+    # Options:
+    # (1) User passes list of tables (by TableID) that they want to update to a function.
     # The function then updates each of those tables.
+
+    # (2) User updates all NIPA tables.
     pass
 
 if __name__ == '__main__':

@@ -9,10 +9,10 @@ def main():
     """
     Tests all get_parameter_list, get_parameter_values, and get_data API calls
     """
-    dataset_list = pybea.get_data_set_list(UserID)
-    print(dataset_list, '\n')
-    print(pybea.get_parameter_list(UserID, 'NIPA'))
-    print(pybea.get_parameter_values(UserID, 'NIPA', ParameterName='TableID', ResultFormat='JSON'))
+    # dataset_list = pybea.get_data_set_list(UserID)
+    # print(dataset_list, '\n')
+    # print(pybea.get_parameter_list(UserID, 'NIPA'))
+    # print(pybea.get_parameter_values(UserID, 'NIPA', ParameterName='TableID', ResultFormat='JSON'))
     # See the documentation (https://apps.bea.gov/api/_pdf/bea_web_service_api_user_guide.pdf)
     # to see required params for each dataset.
 
@@ -20,7 +20,9 @@ def main():
     # NIPA_example = pybea.get_data(UserID, 'NIPA', 'JSON', TableName='T10105', Frequency='Q', Year='2017,2018,2019,2020')
     # NIPA_example.to_csv('NIPA_T10105.csv')
     # print('This is NIPA example: \n', NIPA_example)
-    NIPA_example = pybea.get_data(UserID, 'NIPA', 'JSON', TableName='T10112', Frequency='Q', Year='2017,2018,2019,2020')
+    # NIPA_example = pybea.get_data(UserID, 'NIPA', 'JSON', TableName='T20200A', Frequency='A, Q, M', Year='2017,2018,2019,2020')
+    NIPA_example = pybea.get_data(UserID, 'NIPA', 'JSON', TableName='T20200A', Frequency='Q', Year='1950')
+
 
 
 
