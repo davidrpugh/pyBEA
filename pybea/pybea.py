@@ -30,6 +30,7 @@ def get_data_set_list(UserID, ResultFormat='JSON'):
 
     """
     tmp_request = api.DataSetListRequest(UserID=UserID, ResultFormat=ResultFormat)
+
     return tmp_request.data_set_list
 
 
@@ -219,9 +220,9 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         json_content = tmp_request._json_content
 
         # Uncomment to see pretty printed json response before modification
-        print('This is the data in the json response: \n')
-        pp = pprint.PrettyPrinter()
-        pp.pprint(json_content)
+        # print('This is the data in the json response: \n')
+        # pp = pprint.PrettyPrinter()
+        # pp.pprint(json_content)
 
         # This modifies the json response based on the various ways the return data is structured.
         try:
