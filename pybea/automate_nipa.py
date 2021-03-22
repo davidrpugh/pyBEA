@@ -9,7 +9,7 @@ UserID = '1985ECDD-2CF4-4239-8A48-4C1C2FFA9A95'
 # UserID = 'AEC7FDB2-4F22-4296-982D-7CA35C0341BA'
 
 
-# Failures: T20200A
+# Failures: T20200A,
 
 def update_all_nipa():
     pass
@@ -26,7 +26,7 @@ def update_nipa(tablenames):
     for x in tablenames:
         print(x)
         try:
-            temp = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency='A,Q,M', Year='2015')
+            temp = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency='A', Year='2000')
             # Compute how many megabytes each request is
             print('This request was ', sys.getsizeof(temp)/1000000, 'megabytes')
             size = sys.getsizeof(temp) / 1000000
@@ -71,10 +71,8 @@ def main():
     """
     Problem; not all tables accept the same parameters, some break if given different Frequencies, Years, etc.
     """
-    # failed_list = update_nipa(tablenames)
+    failed_list = update_nipa(tablenames)
     # update_nipa(['T11100'])
-
-    pickle_test = ['asd', 'sdfs', 'gdf']
 
     # with open('failure.pkl', 'wb') as f:
     #     pickle.dump(failed_list, f)
