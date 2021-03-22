@@ -4,7 +4,7 @@ import sys
 import time
 import pickle
 
-# If you get temporarily blocked by the BEA (you probably will if you run these scripts), use the other API key.
+# If you get temporarily blocked by the BEA use the other API key.
 UserID = '1985ECDD-2CF4-4239-8A48-4C1C2FFA9A95'
 # UserID = 'AEC7FDB2-4F22-4296-982D-7CA35C0341BA'
 
