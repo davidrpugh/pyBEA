@@ -14,4 +14,5 @@ __all__ = ["get_data_set_list", "get_parameter_list", "get_parameter_values",
 from . pybea import (get_data_set_list,
                      get_parameter_list,
                      get_parameter_values,
-                     get_data)
+                     get_data,
+                     JSON_ERROR)
