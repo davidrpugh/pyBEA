@@ -12,7 +12,6 @@ global JSON_ERROR
 JSON_ERROR = ''
 
 
-
 def get_data_set_list(UserID, ResultFormat='JSON'):
     """
     Retrieve list of currently available data sets.
