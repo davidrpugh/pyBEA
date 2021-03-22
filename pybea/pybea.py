@@ -1,6 +1,5 @@
 """
 Functions for fetching data from the Bureau of Economic Analysis (BEA) data api.
-
 """
 import numpy as np
 import pandas as pd
@@ -8,6 +7,11 @@ import json
 import pprint
 
 import api
+
+global JSON_ERROR
+JSON_ERROR = ''
+
+
 
 def get_data_set_list(UserID, ResultFormat='JSON'):
     """
@@ -207,7 +211,6 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
     # print(get_parameter_list(UserID, DataSetName))
     dtypes = {}
     for i in df.index:
-        # dtypes[row]['ParameterName'] = row['ParameterDataType']
         dtypes[df.loc[i]['ParameterName']] = df.loc[i]['ParameterDataType']
 
     # print('Dictionary mapping of ParameterName and dtypes.', dtypes)
@@ -220,27 +223,40 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         json_content = tmp_request._json_content
 
         # Uncomment to see pretty printed json response before modification
-        # print('This is the data in the json response: \n')
+        # print('This is the data in the json response:')
         # pp = pprint.PrettyPrinter()
         # pp.pprint(json_content)
 
+
+        data = {}
         # This modifies the json response based on the various ways the return data is structured.
+        global JSON_ERROR
+        JSON_ERROR = ''
+
         try:
             data = json_content['BEAAPI']['Results']['Data']
         except (TypeError, KeyError):
             if DataSetName == 'IIP':
-                data = json_content['BEAAPI']['Data']
-            else:
-                data = json_content['BEAAPI']['Results']
                 try:
-                    data = data[0]['Data']
-                except KeyError:
+                    data = json_content['BEAAPI']['Data']
+                except (KeyError, TypeError):
                     pass
+            else:
+                try:
+                    data = json_content['BEAAPI']['Results']
+                    data = data[0]['Data']
+                except (KeyError, TypeError):
+                    pass
+        try:
+            JSON_ERROR = json_content['BEAAPI']['Error']['ErrorDetail']['Description']
+            # print('this is the json error: ', JSON_ERROR)
+        except:
+            pass
 
-            # pp = pprint.PrettyPrinter()
-            # print('This is the data in prettyprint')
-            # pp.pprint(data)
-            # print('This is the Data dictionary (from the list) only: ', data[0]['Data'])
+        # pp = pprint.PrettyPrinter()
+        # print('This is the data in prettyprint')
+        # pp.pprint(data)
+        # print('This is the Data dictionary (from the list) only: ', data[0]['Data'])
 
         df = pd.DataFrame(data)
         return df

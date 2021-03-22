@@ -8,48 +8,95 @@ import pickle
 UserID = '1985ECDD-2CF4-4239-8A48-4C1C2FFA9A95'
 # UserID = 'AEC7FDB2-4F22-4296-982D-7CA35C0341BA'
 
-
-# Failures: T20200A,
-
 def update_all_nipa():
-    pass
-
-
-def update_nipa(tablenames):
     """
-    Takes list of tablenames, outputs .csv with their values in NIPA_DATA directory
+    Updates all NIPA data (in NIPA_DATA directory) for year 2000 (default, can be changed below)
+
+    Parameters
+    ----------
+    Returns: dictionary of failed tables
+    -------
 
     """
-    failed_list = []
+    failed_dict = {}
+    mb_remaining = 100
+    requests_remaining = 100
+
+    nipa_table_ids = pybea.get_parameter_values(UserID, 'NIPA', ParameterName='TableID', ResultFormat='JSON')
+    tablenames = nipa_table_ids['TableName'].values
+
+    for x in tablenames:
+        print(x)
+        temp = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency='A', Year='2000')
+        # Compute how many megabytes each request is
+        print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
+        size = sys.getsizeof(temp) / 1000000
+        mb_remaining -= size
+        requests_remaining -= 1
+        print('You have ', mb_remaining, 'more megabytes before throttling and ', requests_remaining,
+              'request/s remaining before throttling.')
+        temp.to_csv('../NIPA_DATA/{0}.csv'.format(x))
+        time.sleep(1)
+        if mb_remaining < 5:
+            time.sleep(30)
+            mb_remaining = 100
+        if requests_remaining < 2:
+            time.sleep(45)
+            requests_remaining = 100
+        if pybea.JSON_ERROR:
+            failed_dict[x] = pybea.JSON_ERROR
+            time.sleep(.75)
+    return failed_dict
+
+
+def update_nipa(tablenames, frequency, year):
+    """
+    Updates NIPA data (in NIPA_DATA directory) based on specified list and params
+
+    Parameters
+    ----------
+    tablenames: list of tables to be updated
+    frequency: Annual, Quarterly, or Monthly ('A', 'Q', 'M')
+    year: year
+
+    Returns: dictionary of failed tables
+    -------
+
+    """
+    failed_dict = {}
     mb_remaining = 100
     requests_remaining = 100
     for x in tablenames:
         print(x)
-        try:
-            temp = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency='A', Year='2000')
-            # Compute how many megabytes each request is
-            print('This request was ', sys.getsizeof(temp)/1000000, 'megabytes')
-            size = sys.getsizeof(temp) / 1000000
-            mb_remaining -= size
-            requests_remaining -= 1
-            print('You have ', mb_remaining, 'more megabytes before throttling and ', requests_remaining,
-                  'request/s remaining before throttling.')
-            temp.to_csv('../NIPA_DATA/{0}.csv'.format(x))
-            time.sleep(1)
-            if mb_remaining < 5:
-                time.sleep(30)
-                mb_remaining = 100
-            if requests_remaining < 2:
-                time.sleep(45)
-                requests_remaining = 100
-        except KeyError:
-            failed_list.append(x)
-            print('Failure')
+        temp = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency=frequency, Year=year)
+        # Compute how many megabytes each request is
+        print('This request was ', sys.getsizeof(temp)/1000000, 'megabytes')
+        size = sys.getsizeof(temp) / 1000000
+        mb_remaining -= size
+        requests_remaining -= 1
+        print('You have ', mb_remaining, 'more megabytes before throttling and ', requests_remaining,
+              'request/s remaining before throttling.')
+        temp.to_csv('../NIPA_DATA/{0}.csv'.format(x))
+        time.sleep(1)
+        if mb_remaining < 5:
+            time.sleep(30)
+            mb_remaining = 100
+        if requests_remaining < 2:
+            time.sleep(45)
+            requests_remaining = 100
+        if pybea.JSON_ERROR:
+            failed_dict[x] = pybea.JSON_ERROR
             time.sleep(.75)
-    return failed_list
+
+    return failed_dict
 
 
 def main():
+    # Options:
+    # (1) User passes list of tables (by TableID) that they want to update to a function.
+    # The function then updates each of those tables.
+
+    # (2) User updates all NIPA tables.
     print(pybea.get_data_set_list(UserID))
     nipa_params = pybea.get_parameter_list(UserID, 'NIPA')
     nipa_table_names = pybea.get_parameter_values(UserID, 'NIPA', ParameterName='TableName', ResultFormat='JSON')
@@ -63,31 +110,20 @@ def main():
     df = pd.DataFrame(nipa_table_ids)
     tablenames = df['TableName'].values
     print(tablenames)
-    # print(type(tablenames))
 
-    # for x in tablenames:
-    #     print(x)
-
-    """
-    Problem; not all tables accept the same parameters, some break if given different Frequencies, Years, etc.
-    """
-    failed_list = update_nipa(tablenames)
-    # update_nipa(['T11100'])
+    # Save a list of all the tables that failed get_data calls.
+    # failed_dict = update_all_nipa()
+    failed_dict = update_nipa(tablenames, 'A', 2015)
+    print(failed_dict)
 
     # with open('failure.pkl', 'wb') as f:
     #     pickle.dump(failed_list, f)
 
-    with open('failure.pkl', 'rb') as f:
-        failed_list = pickle.load(f)
-        print((failed_list))
-        print(len(failed_list))
+    # with open('failure.pkl', 'rb') as f:
+    #     failed_list = pickle.load(f)
+    #     print((failed_list))
+    #     print(len(failed_list))
 
-    # Options:
-    # (1) User passes list of tables (by TableID) that they want to update to a function.
-    # The function then updates each of those tables.
-
-    # (2) User updates all NIPA tables.
-    pass
 
 if __name__ == '__main__':
     main()

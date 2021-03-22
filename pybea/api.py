@@ -360,7 +360,6 @@ class DataRequest(Request):
 
         super(DataRequest, self).__init__(**required_params)
 
-    # What are these doing? What is self.results? Something inherited from the Request base?
     @property
     def _json_data(self):
         if isinstance(self.results, list):
@@ -452,8 +451,6 @@ class DataRequest(Request):
             k, v = o.get('Name'), o.get('DataType')
             dtypes[k] = cls._dtypes[v]
         return dtypes
-
-
 
 
 class ITARequest(DataRequest):
