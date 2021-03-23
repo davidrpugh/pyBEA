@@ -226,7 +226,6 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         # pp = pprint.PrettyPrinter()
         # pp.pprint(json_content)
 
-
         data = {}
         # This modifies the json response based on the various ways the return data is structured.
         global JSON_ERROR

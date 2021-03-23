@@ -5,8 +5,6 @@ import os
 nipa_path = os.path.join(os.path.dirname(__file__), '..', 'nipa', 'nipadataA.csv')
 print(nipa_path)
 
-
-
 # It turns out that these three separate functions might not be necessary
 # since they all appear to populate the same lists.
 def get_a_tables():

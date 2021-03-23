@@ -7,7 +7,8 @@ import pickle
 
 # If you get temporarily blocked by the BEA use the other API key.
 # UserID = '1985ECDD-2CF4-4239-8A48-4C1C2FFA9A95'
-UserID = 'AEC7FDB2-4F22-4296-982D-7CA35C0341BA'
+# UserID = 'AEC7FDB2-4F22-4296-982D-7CA35C0341BA'
+UserID = '0B4FD943-BC51-49E8-97E1-81C6C85D34F9'
 
 
 def update_all_nipa_tag(frequency):
@@ -15,7 +16,7 @@ def update_all_nipa_tag(frequency):
     requests_remaining = 100
     failures_remaining = 30
 
-    nipa_table_ids = pybea.get_parameter_values(UserID, 'NIPA', ParameterName='TableID', ResultFormat='JSON')
+    nipa_table_ids = pybea.get_parameter_values(UserID, 'NIPA', ParameterName='TableName', ResultFormat='JSON')
     tablenames = nipa_table_ids['TableName'].values
 
     series_code_col = []
@@ -26,7 +27,7 @@ def update_all_nipa_tag(frequency):
     for x in tablenames:
         print(x)
         try:
-            data = pybea.get_data(UserID, 'NIPA', TableName=x, ParameterName='TableID', Frequency=frequency, Year='ALL')
+            data = pybea.get_data(UserID, 'NIPA', TableName=x, ParameterName='TableName', Frequency=frequency, Year='ALL')
             series_code = data['SeriesCode']
             period = data['TimePeriod']
             data_val = data['DataValue']
@@ -40,15 +41,16 @@ def update_all_nipa_tag(frequency):
         except KeyError:
             print('FAILURE', x)
             failures_remaining -= 1
-            if failures_remaining == 1:
-                time.sleep(55)
-            pass
+            if failures_remaining < 3:
+                print('Going to sleep for 60 seconds')
+                time.sleep(60)
+                failures_remaining = 30
 
         mb_remaining -= size
         requests_remaining -= 1
 
-        if mb_remaining < 5 or requests_remaining < 2:
-            time.sleep(40)
+        if mb_remaining < 5 or requests_remaining < 3:
+            time.sleep(60)
             mb_remaining = 100
             requests_remaining = 100
 
@@ -57,7 +59,7 @@ def update_all_nipa_tag(frequency):
     aggregate_nipa['Period'] = period_col
     aggregate_nipa['Value'] = data_val_col
 
-    aggregate_nipa.to_csv('../NIPA_ALL/aggregate_nipa_{0}.csv'.format(frequency))
+    aggregate_nipa.to_csv('../NIPA_ALL/aggregate_nipa_{0}.csv'.format(frequency), index=False)
 
     print(tablenames)
 
@@ -76,7 +78,7 @@ def update_all_nipa():
     mb_remaining = 100
     requests_remaining = 100
 
-    nipa_table_ids = pybea.get_parameter_values(UserID, 'NIPA', ParameterName='TableID', ResultFormat='JSON')
+    nipa_table_ids = pybea.get_parameter_values(UserID, 'NIPA', ParameterName='TableName', ResultFormat='JSON')
     tablenames = nipa_table_ids['TableName'].values
 
     for x in tablenames:
@@ -166,9 +168,9 @@ def main():
     # print(tablenames)
 
     # Updated update function
-    # update_all_nipa_tag('Y')
+    update_all_nipa_tag('A')
     update_all_nipa_tag('Q')
-    # update_all_nipa_tag('M')
+    update_all_nipa_tag('M')
 
     # Save a list of all the tables that failed get_data calls.
     # failed_dict = update_all_nipa()
