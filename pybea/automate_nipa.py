@@ -22,12 +22,13 @@ def update_all_nipa_tag(frequency):
     series_code_col = []
     period_col = []
     data_val_col = []
+    table_name = []
 
     size = .5
     for x in tablenames:
         print(x)
         try:
-            data = pybea.get_data(UserID, 'NIPA', TableName=x, ParameterName='TableName', Frequency=frequency, Year='ALL')
+            data = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency=frequency, Year='ALL')
             series_code = data['SeriesCode']
             period = data['TimePeriod']
             data_val = data['DataValue']
@@ -37,6 +38,8 @@ def update_all_nipa_tag(frequency):
             data_val_col.extend(data_val)
 
             size = (sys.getsizeof(data) / 1000000)
+
+            table_name.append(x)
 
         except KeyError:
             print('FAILURE', x)
@@ -61,7 +64,7 @@ def update_all_nipa_tag(frequency):
 
     aggregate_nipa.to_csv('../NIPA_ALL/aggregate_nipa_{0}.csv'.format(frequency), index=False)
 
-    print(tablenames)
+    print('These are the tables that returned valid results: ', table_name)
 
 
 def update_all_nipa():
@@ -168,8 +171,8 @@ def main():
     # print(tablenames)
 
     # Updated update function
-    update_all_nipa_tag('A')
-    update_all_nipa_tag('Q')
+    # update_all_nipa_tag('A')
+    # update_all_nipa_tag('Q')
     update_all_nipa_tag('M')
 
     # Save a list of all the tables that failed get_data calls.
