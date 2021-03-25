@@ -1,5 +1,6 @@
 import pybea
 import pprint
+import os
 
 
 # UserID = '1985ECDD-2CF4-4239-8A48-4C1C2FFA9A95'
@@ -20,7 +21,7 @@ def main():
     # to see required params for each dataset.
 
     # NIPA Okay
-    # NIPA_example = pybea.get_data(UserID, 'NIPA', TableName='T31101', Frequency='M', Year='1965')
+    # NIPA_example = pybea.get_data(UserID, 'NIPA', TableName='T31101', Frequency='Q', Year='2015')
     # T20600, T20700A, T20700B, T20801, T20803, T20804, T20805, T20806, T20807
     # NIPA_example.to_csv('test.csv')
     # print('This is NIPA example: \n', NIPA_example)
@@ -41,7 +42,7 @@ def main():
     #
     # # FixedAssets Okay
     print(pybea.get_parameter_list(UserID, 'FixedAssets'))
-    print('asdfasd', pybea.get_parameter_values(UserID, 'FixedAssets', 'TableName'))
+    print(pybea.get_parameter_values(UserID, 'FixedAssets', 'TableName'))
     print(pybea.get_data(UserID, 'FixedAssets', TableName='FAAt101', Year='ALL'))
     #
     # # ITA Okay

@@ -59,11 +59,11 @@ def update_all_fa_tag():
             time.sleep(1)
 
     aggregate_fa = pd.DataFrame()
-    aggregate_fa['TableName'] = table_name_col
-    aggregate_fa['LineDescription'] = line_description_col
-    aggregate_fa['SeriesCode'] = series_code_col
-    aggregate_fa['TimePeriod'] = period_col
-    aggregate_fa['DataValue'] = data_val_col
+    aggregate_fa['line_number'] = table_name_col
+    aggregate_fa['line_name_short'] = line_description_col
+    aggregate_fa['series_code'] = series_code_col
+    aggregate_fa['year'] = period_col
+    aggregate_fa['value'] = data_val_col
 
     aggregate_fa.to_csv('../FA_ALL/aggregate_fa.csv', index=False)
 
@@ -167,8 +167,7 @@ def main():
     # fixed_assets = update_fa(tablenames, 'A', 2010)
     # print(fixed_assets)
 
-    failed = update_all_fa_tag()
-    print(failed)
+    update_all_fa_tag()
 
 
 if __name__ == '__main__':
