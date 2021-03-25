@@ -12,7 +12,6 @@ global JSON_ERROR
 JSON_ERROR = ''
 
 
-
 def get_data_set_list(UserID, ResultFormat='JSON'):
     """
     Retrieve list of currently available data sets.
@@ -226,7 +225,6 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
         # print('This is the data in the json response:')
         # pp = pprint.PrettyPrinter()
         # pp.pprint(json_content)
-
 
         data = {}
         # This modifies the json response based on the various ways the return data is structured.
