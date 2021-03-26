@@ -12,6 +12,15 @@ UserID = '0B4FD943-BC51-49E8-97E1-81C6C85D34F9'
 
 
 def update_all_nipa_tag(frequency):
+    """
+    Generates one .csv file (in NIPA_ALL) containing all the NIPA data for a given frequency for all available years.
+    Parameters
+    ----------
+    string frequency: 'A', 'Q', 'M'
+
+    Returns --
+    -------
+    """
     mb_remaining = 100
     requests_remaining = 100
     failures_remaining = 30
@@ -71,7 +80,7 @@ def update_all_nipa():
     """
     Updates all NIPA data (in NIPA_DATA directory) for year 2000 (default, can be changed below)
 
-    Parameters
+    Parameters: None
     ----------
     Returns: dictionary of failed tables
     -------
@@ -86,7 +95,7 @@ def update_all_nipa():
 
     for x in tablenames:
         print(x)
-        temp = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency='A', Year='ALL')
+        temp = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency='A', Year='2000')
         # Compute how many megabytes each request is
         print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
         size = sys.getsizeof(temp) / 1000000
@@ -105,6 +114,7 @@ def update_all_nipa():
         if pybea.JSON_ERROR:
             failed_dict[x] = pybea.JSON_ERROR
             time.sleep(.75)
+
     return failed_dict
 
 
@@ -151,42 +161,11 @@ def update_nipa(tablenames, frequency, year):
 
 
 def main():
-    # Options:
-    # (1) User passes list of tables (by TableID) that they want to update to a function.
-    # The function then updates each of those tables.
-
-    # (2) User updates all NIPA tables.
-    # print(pybea.get_data_set_list(UserID))
-    # nipa_params = pybea.get_parameter_list(UserID, 'NIPA')
-    # nipa_table_names = pybea.get_parameter_values(UserID, 'NIPA', ParameterName='TableName', ResultFormat='JSON')
-    # nipa_table_ids = pybea.get_parameter_values(UserID, 'NIPA', ParameterName='TableID', ResultFormat='JSON')
-
-    # print(nipa_params)
-    # TableNames and TableIDs appear to be the same
-    # print('These are the TableNames for NIPA: \n', nipa_table_names)
-    # print('These are the TableIDs for NIPA: \n', nipa_table_ids)
-
-    # df = pd.DataFrame(nipa_table_ids)
-    # tablenames = df['TableName'].values
-    # print(tablenames)
-
     # Updated update function
     # update_all_nipa_tag('A')
     # update_all_nipa_tag('Q')
     update_all_nipa_tag('M')
 
-    # Save a list of all the tables that failed get_data calls.
-    # failed_dict = update_all_nipa()
-    # failed_dict = update_nipa(tablenames, 'A', 2015)
-    # print(failed_dict)
-
-    # with open('failure.pkl', 'wb') as f:
-    #     pickle.dump(failed_list, f)
-
-    # with open('failure.pkl', 'rb') as f:
-    #     failed_list = pickle.load(f)
-    #     print((failed_list))
-    #     print(len(failed_list))
 
 
 if __name__ == '__main__':

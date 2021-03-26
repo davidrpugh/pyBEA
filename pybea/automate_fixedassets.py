@@ -10,6 +10,11 @@ UserID = 'AEC7FDB2-4F22-4296-982D-7CA35C0341BA'
 
 
 def update_all_fa_tag():
+    """
+    Updates all FixedAssets data for every available year, aggregates in one .csv file and outputs to FA_ALL directory.
+    Returns: None
+    -------
+    """
     failed_dict = {}
     mb_remaining = 100
     requests_remaining = 100
@@ -69,11 +74,13 @@ def update_all_fa_tag():
 
     return failed_dict
 
-def update_all_fa():
+def update_all_fa(year, frequency):
     """
-    Updates all FixedAssets data (in FA_DATA directory) for year 2000 (default, can be changed below)
+    Updates all FixedAssets data (in FA_DATA directory) for user defined year and frequency
 
     Parameters
+    int year: year to get data of
+    string frequency: frequency ('A' for annual, 'Q' for quarterly, 'M' for monthly)
     ----------
     Returns: dictionary of failed tables
     -------
@@ -88,7 +95,7 @@ def update_all_fa():
 
     for x in tablenames:
         print(x)
-        temp = pybea.get_data(UserID, 'FixedAssets', TableName=x, Frequency='A', Year=2000)
+        temp = pybea.get_data(UserID, 'FixedAssets', TableName=x, Frequency=frequency, Year=year)
         # Compute how many megabytes each request is
         print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
         size = sys.getsizeof(temp) / 1000000
@@ -155,18 +162,6 @@ def update_fa(tablenames, frequency, year):
 
 
 def main():
-    # print(pybea.get_data_set_list(UserID))
-    # print(pybea.get_parameter_list(UserID, 'FixedAssets'))
-    # fa_params = pybea.get_parameter_list(UserID, 'FixedAssets')
-
-    # fa_table_names = pybea.get_parameter_values(UserID, 'FixedAssets', ParameterName='TableName', ResultFormat='JSON')
-    # tablenames = fa_table_names['TableName'].values
-    # print(tablenames)
-
-    # nipa_table_ids = pybea.get_parameter_values(UserID, 'FixedAssets', ParameterName='TableID', ResultFormat='JSON')
-    # fixed_assets = update_fa(tablenames, 'A', 2010)
-    # print(fixed_assets)
-
     update_all_fa_tag()
 
 
