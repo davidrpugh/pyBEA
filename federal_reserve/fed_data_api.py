@@ -1,6 +1,7 @@
 import json
 import requests
 import pprint
+import time
 KEY = 'd87219606729528c27784921b44c5630'
 
 pp = pprint.PrettyPrinter()
@@ -36,18 +37,8 @@ for a in dict:
 # This gets the children categories for the National Accounts category; which contains the Flow of Funds category
 # r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32992&api_key={0}&file_type=json'.format(KEY))
 
-# This will return children categories for the Flow of Funds category...
-r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32251&api_key={0}&file_type=json'.format(KEY))
-flow_of_funds_cat = r.json()
-flow_of_funds_cat = flow_of_funds_cat['categories']
-flow_sub_cat = []
-for a in flow_of_funds_cat:
-    flow_sub_cat.append(a['id'])
-
-print('This is flow_sub_cat: ', flow_sub_cat)
-bal_sheet_households = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id=32259&api_key={0}&file_type=json'.format(KEY))
-
-pp.pprint(bal_sheet_households.json())
+# bal_sheet_households = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id=32258&api_key={0}&file_type=json'.format(KEY))
+# pp.pprint(bal_sheet_households.json())
 
 # print('This is the balance sheet of households and nonprofits: ', bal_sheet_households.json())
 
@@ -69,14 +60,62 @@ def get_sub_cat(id):
     r = r.json()
     return r
 
+
 def get_series(id):
+    # Given an ID, returns all associated series
     r = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id={0}&api_key={1}&file_type=json'.format(id, KEY))
+    list_of_series = []
+    temp_dict = r.json()
+    temp_dict = temp_dict['seriess']
+    for a in temp_dict:
+        list_of_series.append(a['id'])
+
+    return list_of_series
+
+
+def get_observation(id):
+    r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id={0}&api_key={1}&file_type=json'.format(id, KEY))
+    r = r.json()
+    return r
+
+
+def get_all_flow_funds_ids():
+    # This will return children series_ids for everything in the Flow of Funds category...
+    r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32251&api_key={0}&file_type=json'.format(KEY))
+    flow_of_funds_cat = r.json()
+    # pp.pprint(flow_of_funds_cat)
+    flow_of_funds_cat = flow_of_funds_cat['categories']
+
+    flow_sub_cat = []
+    for a in flow_of_funds_cat:
+        flow_sub_cat.append(a['id'])
+
+    print(flow_sub_cat)
+    print(get_sub_cat('32251'))
+
+    flow_of_funds_ids = []
+    for i in flow_sub_cat:
+        flow_of_funds_ids.append(get_series(i))
+        print(i)
+        time.sleep(.5)
+        get_sub_cat(i)
+
+    flow_of_funds_ids = [val for sublist in flow_of_funds_ids for val in sublist]
+
+    return flow_of_funds_ids
 
 
 def main():
     sub_cat = get_sub_cat('32251')
-    # sub_series = get_series()
-    # print(sub_cat)
+    sub_series = get_series('32258')
+    series_observations = get_observation('CMLBSHNO')
+
+    flow_of_funds_all = get_all_flow_funds_ids()
+    print(flow_of_funds_all)
+
+    # print('This is sub_cat: ', sub_cat)
+    # print('This is sub_series: ', sub_series)
+    # print('This is series observations: ', series_observations)
 
 
 if __name__ == '__main__':
