@@ -162,9 +162,9 @@ def update_nipa(tablenames, frequency, year):
 
 def main():
     # Updated update function
-    # update_all_nipa_tag('A')
+    update_all_nipa_tag('A')
     # update_all_nipa_tag('Q')
-    update_all_nipa_tag('M')
+    # update_all_nipa_tag('M')
 
 
 
