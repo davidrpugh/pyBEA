@@ -56,6 +56,7 @@ def get_all_flow_funds_ids():
     return flow_of_funds_ids
 
 
+# How should the data be formatted? Depends on where/what this application is used for
 def download_all_observations(series_ids):
     date = []
     value = []
@@ -78,6 +79,11 @@ def download_all_observations(series_ids):
         time.sleep(.2)
 
 
+def get_source_ids(id):
+    # From Category IDs, get all the source ids.
+    r = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id={0}&api_key={1}&file_type=json'.format(id, KEY))
+
+
 def main():
     # sub_cat = get_sub_cat('32251')
     sub_series = get_series('32258')
@@ -93,8 +99,11 @@ def main():
     # flow_of_funds_all = get_all_flow_funds_ids()
     # print(flow_of_funds_all)
 
-    subsample_ids = ['AGSEBSABSHNO', 'ASIRAL', 'BLNECLBSHNO', 'CCLBSHNO', 'CDCABSHNO', 'CDGABSHNO', 'CEABSHNO',
-                     'CFBABSHNO', 'CMIABSHNO', 'CMLBSHNO', 'DABSHNO', 'DULIPLBSHNO']
+    # subsample_ids = ['AGSEBSABSHNO', 'ASIRAL', 'BLNECLBSHNO', 'CCLBSHNO', 'CDCABSHNO', 'CDGABSHNO', 'CEABSHNO',
+    #                  'CFBABSHNO', 'CMIABSHNO', 'CMLBSHNO', 'DABSHNO', 'DULIPLBSHNO']
+
+
+    # xyz = get_source_ids('')
 
     abc = get_observation('CMLBSHNO')
     # pp.pprint(abc)
