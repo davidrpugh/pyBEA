@@ -9,12 +9,6 @@ BASE_URL = 'https://api.stlouisfed.org/fred/'
 
 pp = pprint.PrettyPrinter()
 
-# r = requests.get(url='https://api.stlouisfed.org/fred/series?series_id=GNPCA&api_key={0}&file_type=json'.format(KEY))
-# r = requests.get(url='https://api.stlouisfed.org/fred/category&api_key={0}&file_type=json'.format(KEY))
-
-# Get all Economic SERIES data that matches the string of text
-# r = requests.get(url='https://api.stlouisfed.org/fred/series/search?search_text=flow&api_key={0}&file_type=json'.format(KEY))
-
 
 def get_sub_cat(id):
     r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id={0}&api_key={1}&file_type=json'.format(id, KEY))
@@ -23,7 +17,7 @@ def get_sub_cat(id):
 
 
 def get_series(id):
-    # Given an ID, returns all associated series
+    # Given an category id, returns all associated series
     r = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id={0}&api_key={1}&file_type=json'.format(id, KEY))
     list_of_series = []
     temp_dict = r.json()
@@ -45,15 +39,11 @@ def get_all_flow_funds_ids():
     # This will return children series_ids for everything in the Flow of Funds category...
     r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32251&api_key={0}&file_type=json'.format(KEY))
     flow_of_funds_cat = r.json()
-    # pp.pprint(flow_of_funds_cat)
     flow_of_funds_cat = flow_of_funds_cat['categories']
 
     flow_sub_cat = []
     for a in flow_of_funds_cat:
         flow_sub_cat.append(a['id'])
-
-    # print(flow_sub_cat)
-    # print(get_sub_cat('32251'))
 
     flow_of_funds_ids = []
     for i in flow_sub_cat:
@@ -75,7 +65,7 @@ def download_all_observations(series_ids):
         print(i)
         temp = get_observation(i)
         temp = temp['observations']
-        pp.pprint(temp)
+        # pp.pprint(temp)
 
         for y, x in enumerate(temp):
             date.append(temp[y]['date'])
@@ -85,14 +75,14 @@ def download_all_observations(series_ids):
         resulting_df['date'] = date
         resulting_df['value'] = value
         resulting_df.to_csv('../FED_DATA/{0}.csv'.format(i), index=False)
-        time.sleep(.5)
+        time.sleep(.2)
 
 
 def main():
     # sub_cat = get_sub_cat('32251')
-    # sub_series = get_series('32258')
+    sub_series = get_series('32258')
     # series_observations = get_observation('CMLBSHNO')
-    # series = get_series('CMLBSHNO')
+    print(sub_series)
 
     # print('This is series')
     # pp.pprint(sub_series)
@@ -100,22 +90,22 @@ def main():
     # print('This is series observation example: ')
     # pp.pprint(series_observations)
 
-    flow_of_funds_all = get_all_flow_funds_ids()
-    print('This is flow of funds full length: ', len(flow_of_funds_all))
+    # flow_of_funds_all = get_all_flow_funds_ids()
+    # print(flow_of_funds_all)
 
-    download_all_observations(flow_of_funds_all)
+    subsample_ids = ['AGSEBSABSHNO', 'ASIRAL', 'BLNECLBSHNO', 'CCLBSHNO', 'CDCABSHNO', 'CDGABSHNO', 'CEABSHNO',
+                     'CFBABSHNO', 'CMIABSHNO', 'CMLBSHNO', 'DABSHNO', 'DULIPLBSHNO']
+
+    abc = get_observation('CMLBSHNO')
+    # pp.pprint(abc)
+
+    # download_all_observations(flow_of_funds_all)
 
     # print('This is sub_cat: ', sub_cat)
     # print('This is sub_series: ', sub_series)
     # print('This is series observations: ', series_observations)
 
     # Find flow of funds category and series id, get observation/data
-
-    # This gives the parent categories
-    # r = requests.get(
-    #     url='https://api.stlouisfed.org/fred/category/children?category_id=0&api_key={0}&file_type=json'.format(KEY))
-    # pp.pprint(r.json())
-    # a = r.json()
 
     # Create a list of all the parent categories, append their ids to a list called parent_list
     # dict = a['categories']
@@ -142,23 +132,6 @@ def main():
 
     # print('This is mbf_series: ', mbf_series)
     # print(get_observation('ADJRAM'))
-
-    # bal_sheet_households = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id=32258&api_key={0}&file_type=json'.format(KEY))
-    # pp.pprint(bal_sheet_households.json())
-
-    # print('This is the balance sheet of households and nonprofits: ', bal_sheet_households.json())
-
-    # Get the ids for all of the subcategories of the Flow of Funds...
-    # r = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id=33243&api_key={0}&file_type=json'.format(KEY))
-    # print(r.json())
-
-    # r = requests.get(url='https://api.stlouisfed.org/fred/series?series_id=FBAGSEA027N&api_key={0}&file_type=json'.format(KEY))
-
-    # r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id=FBAGSEA027N&api_key={0}&file_type=json'.format(KEY))
-
-    # r = requests.get(url='https://api.stlouisfed.org/fred/category?category_id=32992&api_key={0}&file_type=json'.format(KEY))
-
-    # r = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id=32992&api_key={0}&file_type=json'.format(KEY))
 
 
 if __name__ == '__main__':
