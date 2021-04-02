@@ -12,7 +12,7 @@ BASE_URL = 'https://api.stlouisfed.org/fred/'
 pp = pprint.PrettyPrinter()
 
 # Get all Economic SERIES data that matches the string of text
-r = requests.get(url='https://api.stlouisfed.org/fred/series/search?search_text=State and Local Governments; municipal securities liability&api_key={0}&file_type=json'.format(KEY))
+r = requests.get(url='https://api.stlouisfed.org/fred/series/search?search_text=Nonfinancial noncorporate business, total liabilities&api_key={0}&file_type=json'.format(KEY))
 pp.pprint(r.json())
 
 # This gives all the parent categories
