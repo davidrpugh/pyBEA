@@ -105,8 +105,8 @@ def main():
 
     # xyz = get_source_ids('')
 
-    abc = get_observation('CMLBSHNO')
-    # pp.pprint(abc)
+    abc = get_observation('BOGZ1FA716025005A')
+    pp.pprint(abc)
 
     # download_all_observations(flow_of_funds_all)
 

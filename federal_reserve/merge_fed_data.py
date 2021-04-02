@@ -12,14 +12,17 @@ pp = pprint.PrettyPrinter()
 
 
 def parse_metadata(id):
+    # Incomplete, use to populate df with other relevant information
+    metadata = fed.get_series(id)
     temp_list = []
     return temp_list
 
 
-def remove_pre_1960(fed_df):
+def remove_pre_1960():
     # Remove everything pre-1960
-    for i in fed_df.iterrows():
-        print(i)
+    fed_df = pd.read_csv('output_fed_merge.csv')
+    fed_df = fed_df[fed_df.date >= 1960]
+    fed_df.to_csv('output_fed_merge.csv', index=False)
 
     return fed_df
 
@@ -41,8 +44,6 @@ def append_observation(fed_data, id):
         temp_values.append(i['value'])
         temp_dates.append(i['date'])
 
-    wrong_ids = []
-
     # Extract only the year from the date.
     for i, x in enumerate(temp_dates):
         temp_dates[i] = x[0:4]
@@ -51,8 +52,9 @@ def append_observation(fed_data, id):
     temp_df['value'] = temp_values
 
     fed_data = fed_data.append(temp_df)
-    print(fed_data)
+    print(id, fed_data)
 
+    # Need the sleep otherwise it fails, might be another throttling issue.
     time.sleep(2)
     return fed_data
 
@@ -69,8 +71,8 @@ def main():
 
     print(fed_key_merged)
     fed_key_merged.to_csv('output_fed_merge.csv', index=False)
+    remove_pre_1960()
 
-    # fed_key_merged = remove_pre_1960(fed_key_merged)
 
 if __name__ == '__main__':
     main()
