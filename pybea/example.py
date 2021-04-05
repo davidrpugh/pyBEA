@@ -21,7 +21,7 @@ def main():
 
     # NIPA Okay
     NIPA_example = pybea.get_data(UserID, 'NIPA', TableName='T31101', Frequency='Q', Year='2015')
-    T20600, T20700A, T20700B, T20801, T20803, T20804, T20805, T20806, T20807
+    # T20600, T20700A, T20700B, T20801, T20803, T20804, T20805, T20806, T20807
     NIPA_example.to_csv('test.csv')
     print('This is NIPA example: \n', NIPA_example)
     NIPA_example = pybea.get_data(UserID, 'NIPA', 'JSON', TableName='T20200A', Frequency='A, Q, M', Year='2017,2018,2019,2020')

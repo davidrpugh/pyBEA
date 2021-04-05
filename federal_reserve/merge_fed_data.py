@@ -12,8 +12,16 @@ pp = pprint.PrettyPrinter()
 
 
 def parse_metadata(id):
-    # Incomplete, use to populate df with other relevant information
+    # Incomplete, use to populate df with other relevant information (first, figure out how much in tag's fed_key_merge
+    # is actually relevant and used by the model... some appear to not be necessary.
+
+    print(id)
+    parent_id = fed.get_observation(id)
+    pp.pprint(parent_id)
+
+
     metadata = fed.get_series(id)
+    print(metadata)
     temp_list = []
     return temp_list
 
@@ -68,6 +76,7 @@ def main():
 
     for i, x in enumerate(series_ids):
         fed_key_merged = append_observation(fed_key_merged, x)
+        metadata = parse_metadata(x)
 
     print(fed_key_merged)
     fed_key_merged.to_csv('output_fed_merge.csv', index=False)

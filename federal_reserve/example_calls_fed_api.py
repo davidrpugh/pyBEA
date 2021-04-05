@@ -13,6 +13,9 @@ pp = pprint.PrettyPrinter()
 
 # Get all Economic SERIES data that matches the string of text
 r = requests.get(url='https://api.stlouisfed.org/fred/series/search?search_text=federal reserve compensation employees&api_key={0}&file_type=json'.format(KEY))
+# pp.pprint(r.json())
+
+r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id=LNU00000000&api_key={0}&file_type=json'.format(KEY))
 pp.pprint(r.json())
 
 # This gives all the parent categories
