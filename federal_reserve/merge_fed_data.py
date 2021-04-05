@@ -11,31 +11,15 @@ BASE_URL = 'https://api.stlouisfed.org/fred/'
 pp = pprint.PrettyPrinter()
 
 
-def parse_metadata(id):
-    # Incomplete, use to populate df with other relevant information (first, figure out how much in tag's fed_key_merge
-    # is actually relevant and used by the model... some appear to not be necessary.
-
-    print(id)
-    parent_id = fed.get_observation(id)
-    pp.pprint(parent_id)
-
-
-    metadata = fed.get_series(id)
-    print(metadata)
-    temp_list = []
-    return temp_list
-
-
 def remove_pre_1960():
     # Remove everything pre-1960
     fed_df = pd.read_csv('output_fed_merge.csv')
     fed_df = fed_df[fed_df.date >= 1960]
     fed_df.to_csv('output_fed_merge.csv', index=False)
 
-    return fed_df
 
-
-def append_observation(fed_data, id):
+def append_observation(fed_data, id, index):
+    # print(index)
     obj = fed.get_observation(id)
     # metadata = fed.get_series(id)
     # pp.pprint(metadata)
@@ -46,25 +30,81 @@ def append_observation(fed_data, id):
     temp_df = pd.DataFrame()
     temp_values = []
     temp_dates = []
+    series_name = []
+    account = []
+    var_number = []
+    var_name = []
+    symbol = []
+    proposed_var_name = []
+    source = []
+    calculation = []
+    fed_unit = []
+    fed_multiplier = []
+    currency = []
+    fed_unique_id = []
+
+    df = pd.read_csv('fed_variable_key.csv')
+    temp_series_name = df['FED Series Name'][index]
+    temp_account = df['Account'][index]
+    temp_var_number = df['Variable Number'][index]
+    temp_var_name = df['Variable Name'][index]
+    temp_symbol = df['Symbol'][index]
+    temp_proposed_var_name = df['Proposed variable name'][index]
+    temp_source = df['Source'][index]
+    temp_calculation = df['calculation'][index]
+    temp_fed_unit = df['FED Unit'][index]
+    temp_fed_multiplier = df['FED Multiplier'][index]
+    temp_currency = df['Currency'][index]
+    temp_fed_unique_id = df['FED Unique Identifier'][index]
 
     # Create temporary lists of values and dates
     for i in obj:
         temp_values.append(i['value'])
         temp_dates.append(i['date'])
+        series_name.append(temp_series_name)
+        account.append(temp_account)
+        var_number.append(temp_var_number)
+        var_name.append(temp_var_name)
+        symbol.append(temp_symbol)
+        proposed_var_name.append(temp_proposed_var_name)
+        source.append(temp_source)
+        calculation.append(temp_calculation)
+        fed_unit.append(temp_fed_unit)
+        fed_multiplier.append(temp_fed_multiplier)
+        currency.append(temp_currency)
+        fed_unique_id.append(temp_fed_unique_id)
+
 
     # Extract only the year from the date.
     for i, x in enumerate(temp_dates):
         temp_dates[i] = x[0:4]
 
+    temp_df['series_name'] = series_name
+    temp_df['Account'] = account
+    temp_df['Variable Number'] = var_number
+    temp_df['Variable Name'] = var_name
+    temp_df['Symbol'] = symbol
+    temp_df['Proposed variable name'] = proposed_var_name
+    temp_df['Source'] = source
+    temp_df['calculation'] = calculation
+    temp_df['FED Unit'] = fed_unit
+    temp_df['FED Multiplier'] = fed_multiplier
+    temp_df['Currency'] = currency
+    temp_df['FED Unique Identifier'] = fed_unique_id
     temp_df['date'] = temp_dates
     temp_df['value'] = temp_values
 
     fed_data = fed_data.append(temp_df)
-    print(id, fed_data)
+    # print(id, fed_data)
 
     # Need the sleep otherwise it fails, might be another throttling issue.
     time.sleep(2)
     return fed_data
+
+
+def merge_var_key():
+    main_df = pd.read_csv('output_fed_merge.csv')
+    # print(main_df)
 
 
 def main():
@@ -75,12 +115,14 @@ def main():
     fed_key_merged = pd.DataFrame()
 
     for i, x in enumerate(series_ids):
-        fed_key_merged = append_observation(fed_key_merged, x)
-        metadata = parse_metadata(x)
+        fed_key_merged = append_observation(fed_key_merged, x, i)
+        # metadata = parse_metadata(x)
 
-    print(fed_key_merged)
+    # print(fed_key_merged)
     fed_key_merged.to_csv('output_fed_merge.csv', index=False)
     remove_pre_1960()
+    merge_var_key()
+    print(fed_key_merged)
 
 
 if __name__ == '__main__':
