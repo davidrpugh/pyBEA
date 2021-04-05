@@ -34,10 +34,7 @@ def append_observation(fed_data, id, index):
     account = []
     var_number = []
     var_name = []
-    symbol = []
     proposed_var_name = []
-    source = []
-    calculation = []
     fed_unit = []
     fed_multiplier = []
     currency = []
@@ -48,10 +45,7 @@ def append_observation(fed_data, id, index):
     temp_account = df['Account'][index]
     temp_var_number = df['Variable Number'][index]
     temp_var_name = df['Variable Name'][index]
-    temp_symbol = df['Symbol'][index]
     temp_proposed_var_name = df['Proposed variable name'][index]
-    temp_source = df['Source'][index]
-    temp_calculation = df['calculation'][index]
     temp_fed_unit = df['FED Unit'][index]
     temp_fed_multiplier = df['FED Multiplier'][index]
     temp_currency = df['Currency'][index]
@@ -65,10 +59,7 @@ def append_observation(fed_data, id, index):
         account.append(temp_account)
         var_number.append(temp_var_number)
         var_name.append(temp_var_name)
-        symbol.append(temp_symbol)
         proposed_var_name.append(temp_proposed_var_name)
-        source.append(temp_source)
-        calculation.append(temp_calculation)
         fed_unit.append(temp_fed_unit)
         fed_multiplier.append(temp_fed_multiplier)
         currency.append(temp_currency)
@@ -81,12 +72,8 @@ def append_observation(fed_data, id, index):
 
     temp_df['series_name'] = series_name
     temp_df['Account'] = account
-    temp_df['Variable Number'] = var_number
     temp_df['Variable Name'] = var_name
-    temp_df['Symbol'] = symbol
     temp_df['Proposed variable name'] = proposed_var_name
-    temp_df['Source'] = source
-    temp_df['calculation'] = calculation
     temp_df['FED Unit'] = fed_unit
     temp_df['FED Multiplier'] = fed_multiplier
     temp_df['Currency'] = currency
