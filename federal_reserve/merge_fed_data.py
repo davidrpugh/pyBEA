@@ -102,9 +102,10 @@ def append_observation(fed_data, id, index):
     return fed_data
 
 
-def merge_var_key():
-    main_df = pd.read_csv('output_fed_merge.csv')
-    # print(main_df)
+def fix_data_multiple():
+    df = pd.read_csv('output_fed_merge.csv')
+    df['value'] = df['value']/1000
+    df.to_csv('output_fed_merge.csv', index=False)
 
 
 def main():
@@ -121,7 +122,7 @@ def main():
     # print(fed_key_merged)
     fed_key_merged.to_csv('output_fed_merge.csv', index=False)
     remove_pre_1960()
-    merge_var_key()
+    fix_data_multiple()
     print(fed_key_merged)
 
 
