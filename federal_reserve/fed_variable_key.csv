@@ -1,0 +1,43 @@
+﻿Account,Variable Number,Variable Name,Symbol,Proposed variable name,Source,calculation,FED Unit,FED Multiplier,Currency,FED Unique Identifier,FED Series Name
+Nonfinancial Corporate Business,,"Nonfinancial corporate business, inventories including IVA",,Nonfinancial_corporate_business_inventories_including_IVA,FED:S5a:32,N/A,Currency,1000000,USD,Z1/Z1/FA105020005.A,FA105020005.A
+Nonfinancial Noncorporate Business,,"Nonfinancial noncorporate business, change in inventories",,Nonfinancial_noncorporate_business_change_in_inventories,FED:S4a:29,N/A,Currency,1000000,USD,Z1/Z1/FA115020005.A,FA115020005.A
+Monetary authority,,"federal reserve, compensation of employees paid (IMA)",,federal_reserve_compensation_of_employees_paid,FED:S61a:4,N/A,Currency,1000000,USD,Z1/Z1/FA716025005.A,FA716025005.A
+Monetary authority,,"federal reserve, dividends paid (IMA)",,federal_reserve_dividends_paid,FED:S61a:18,N/A,Currency,1000000,USD,Z1/Z1/FA716121001.A,FA716121001.A
+Monetary authority,,"federal reserve, net national income/balance of primary incomes, net (IMA)",,federal_reserve_net_national_income_or_balance of_primary_incomes,FED:S61a:22,N/A,Currency,1000000,USD,Z1/Z1/FA716140005.A,FA716140005.A
+Monetary authority,,"federal reserve, current taxes on income, wealth, etc. paid (IMA)",,federal_reserve_current_taxes_on_income_wealth_etc,FED:S61a:23,N/A,Currency,1000000,USD,Z1/Z1/FA716220001.A,FA716220001.A
+Monetary authority,,"federal reserve, consumption of fixed capital, nonresidential structures, equipment, and intellectual property products, current cost basis (IMA)",,federal_reserve_consumption_of_fixed_capital,FED:S61a:2,N/A,Currency,1000000,USD,Z1/Z1/FA716330085.A,FA716330085.A
+Nonfinancial Corporate Business,,"Nonfinancial corporate business, total assets",,nonfinancial_corporate_business_total_assets,FED:S5a:98,N/A,Currency,1000000,USD,Z1/Z1/FL102000005.A,FL102000005.A
+Nonfinancial Corporate Business,,"Nonfinancial corporate business, total liabilities and equity",,Nonfinancial_corporate_business_total_liabilities_and_equity,FED:S5a:130,N/A,Currency,1000000,USD,Z1/Z1/FL104194005.A,FL104194005.A
+Nonfinancial Corporate Business,,"Nonfinancial corporate business, inventories excluding IVA, current cost basis",,nonfinancial_coporate_business_inventories_excluding_IVA_current_cost_basis,FED:S5a:103,N/A,Currency,1000000,USD,Z1/Z1/FL105020015.A,LM105020015.A
+Nonfinancial Noncorporate Business,,"Nonfinancial noncorporate business, total assets",,Nonfinancial_noncorporate_business_total_assets,FED:S4a:78,N/A,Currency,1000000,USD,Z1/Z1/FL112000005.A,FL112000005.A
+Nonfinancial Noncorporate Business,,"Nonfinancial noncorporate business, total liabilities",,Nonfinancial_noncorporate_business_total_liabilities,FED:S4a:106,N/A,Currency,1000000,USD,Z1/Z1/FL114190005.A,FL114190005.A
+Nonfinancial Noncorporate Business,,"Nonfinancial noncorporate business, inventories",,Nonfinancial_noncorporate_business_inventories,FED:S4a:87,N/A,Currency,1000000,USD,Z1/Z1/FL115020005.A,LM115020005.A
+Households and Nonprofit Institutions Serving Households,,"Households and nonprofit organizations, total assets",,Households_and_nonprofit_organizations_total_assets,FED:S3a:96,N/A,Currency,1000000,USD,Z1/Z1/FL152000005.A,FL152000005.A
+Households and Nonprofit Institutions Serving Households,,"Households and nonprofit organizations, proprietors' equity in noncorporate business",,Households_and_nonprofit_organizations_proprietors_equity_in_noncorporate_business,FED:S3a:120,N/A,Currency,1000000,USD,Z1/Z1/FL152090205.A,LM152090205.A
+Households and Nonprofit Institutions Serving Households,,"Households and nonprofit organizations, total liabilities",,Households_and_nonprofit_organizations_total_liabilities,FED:S3a:130,N/A,Currency,1000000,USD,Z1/Z1/FL154190005.A,FL154190005.A
+State and Local Governments,,"State and local governments, excluding employee retirement funds, total assets (does not include land)",,State_and_local_governments_excluding_employee_retirement_funds_total_assets_excluding_land,FED:S8a:76,N/A,Currency,1000000,USD,Z1/Z1/FL212000095.A,FL212000095.A
+State and Local Governments,,"State and local governments, excluding employee retirement funds, municipal securities, liability",,State_and_local_governments_excluding_employee_retirement_funds_municipal_securities_liability,FED:S8a:104,N/A,Currency,1000000,USD,Z1/Z1/FL213162005.A,FL213162005.A
+State and Local Governments,,"State and local governments, excluding employee retirement funds, total liabilities",,State_and_local_governments_excluding_employee_retirement_funds_total_liabilities,FED:S8a:103,N/A,Currency,1000000,USD,Z1/Z1/FL214190005.A,FL214190005.A
+Rest of the World,,"Rest of the world, total financial assets",,Rest_of_the_world_total_financial_assets,FED:S9a:92,N/A,Currency,1000000,USD,Z1/Z1/FL264090005.A,FL264090005.A
+Rest of the World,,"Rest of the world, total liabilities and equity",,Rest_of_the_world_total_liabilities_and_equity,FED:S9a:115,N/A,Currency,1000000,USD,Z1/Z1/FL264194005.A,FL264194005.A
+Federal Government,,"Federal government, total assets (does not include land)",,Federal_government_total_assets_excluding_land,FED:S7a:94,N/A,Currency,1000000,USD,Z1/Z1/FL312000095.A,FL312000095.A
+Federal Government,,"Federal government, debt securities, liability",,Federal_government_debt_securities_liability,FED:S7a:130,N/A,Currency,1000000,USD,Z1/Z1/FL314122005.A,FL314122005.A
+Federal Government,,"Federal government, total liabilities",,Federal_government_total_liabilities,FED:S7a:127,N/A,Currency,1000000,USD,Z1/Z1/FL314190005.A,FL314190005.A
+Financial Business,,"Domestic financial sectors, total assets (does not include land)",,domestic_financial_sectors_total_assets_excluding_land,FED:S6a:101,N/A,Currency,1000000,USD,Z1/Z1/FL792000095.A,FL792000095.A
+Financial Business,,"Domestic financial sectors, total liabilities and equity",,Domestic_financial_sectors_total_liabilities_and_equity,FED:S6a:129,N/A,Currency,1000000,USD,Z1/Z1/FL794194005.A,FL794194005.A
+Allocation,,"Households and nonprofit organizations, treasury securities ",,,FED:S3a:110,N/A,Currency,1000000,USD,,FL153061105.A
+Allocation,,"Households and nonprofit organizations, agency backed securities",,,FED:S3a:111,N/A,Currency,1000000,USD,,FL153061705.A
+Allocation,,"Households and nonprofit organizations, municipal securities ",,,FED:S3a:112,N/A,Currency,1000000,USD,,FL153062005.A
+Allocation,,"Nonfinancial noncorporate business, treasury securities",,,FED:S4a:93,N/A,Currency,1000000,USD,,FL113061003.A
+Allocation,,"Nonfinancial noncorporate business, municipal securities",,,FED:S4a:94,N/A,Currency,1000000,USD,,FL113062003.A
+Allocation,,"Nonfinancial corporate business, treasury securities",,,FED:S5a:114,N/A,Currency,1000000,USD,,FL103061103.A
+Allocation,,"Nonfinancial corporate business, agency backed securities",,,FED:S5a:115,N/A,Currency,1000000,USD,,FL103061703.A
+Allocation,,"Nonfinancial corporate business, municipal securities",,,FED:S5a:116,N/A,Currency,1000000,USD,,FL103062003.A
+Allocation,,Financial business,,,FED:S6a:111,N/A,Currency,1000000,USD,,FL793061105.A
+Allocation,,Financial business,,,FED:S6a:112,N/A,Currency,1000000,USD,,FL793061705.A
+Allocation,,Financial business,,,FED:S6a:113,N/A,Currency,1000000,USD,,FL793062005.A
+Allocation,,Central Bank,,,FED:S61a:72,N/A,Currency,1000000,USD,,FL713061103.A
+Allocation,,Central Bank,,,FED:S61a:73,N/A,Currency,1000000,USD,,FL713061705.A
+Allocation,,Rest of World,,,FED:S9a:107,N/A,Currency,1000000,USD,,LM263061105.A
+Allocation,,Rest of World,,,FED:S9a:108,N/A,Currency,1000000,USD,,LM263061705.A
+Allocation,,Rest of World,,,FED:S9a:109,N/A,Currency,1000000,USD,,FL263062003.A
