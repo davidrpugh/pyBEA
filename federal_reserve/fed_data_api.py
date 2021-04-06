@@ -65,6 +65,7 @@ def get_all_flow_funds_ids():
 
 # How should the data be formatted? Depends on where/what this application is used for
 def download_all_observations(series_ids):
+    """ This downloads all """
     date = []
     value = []
     print(series_ids)
