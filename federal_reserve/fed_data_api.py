@@ -10,15 +10,20 @@ BASE_URL = 'https://api.stlouisfed.org/fred/'
 pp = pprint.PrettyPrinter()
 
 
+payload = {
+    'file_type': 'json',
+    'api_key': KEY
+}
+
 def get_sub_cat(id):
-    r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id={0}&api_key={1}&file_type=json'.format(id, KEY))
+    r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id={0}'.format(id), params=payload)
     r = r.json()
     return r
 
 
 def get_series(id):
     # Given an category id, returns all associated series
-    r = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id={0}&api_key={1}&file_type=json'.format(id, KEY))
+    r = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id={0}'.format(id), params=payload)
     list_of_series = []
     temp_dict = r.json()
     # pp.pprint(temp_dict)
@@ -30,14 +35,16 @@ def get_series(id):
 
 
 def get_observation(id):
-    r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id={0}&api_key={1}&file_type=json'.format(id, KEY))
+    r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id={0}'.format(id, KEY),
+                     params=payload)
     r = r.json()
     return r
 
 
 def get_all_flow_funds_ids():
     # This will return children series_ids for everything in the Flow of Funds category...
-    r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32251&api_key={0}&file_type=json'.format(KEY))
+    r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32251'.format(KEY),
+                     params=payload)
     flow_of_funds_cat = r.json()
     flow_of_funds_cat = flow_of_funds_cat['categories']
 
@@ -81,34 +88,36 @@ def download_all_observations(series_ids):
 
 def get_source_ids(id):
     # From Category IDs, get all the source ids.
-    r = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id={0}&api_key={1}&file_type=json'.format(id, KEY))
+    r = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_id={0}'.format(id), params=payload)
+    r = r.json()
+
+    return r
 
 
 def main():
-    # sub_cat = get_sub_cat('32251')
-    sub_series = get_series('32258')
+    # Find a sub categories of a given category
+    sub_cat = get_sub_cat('32251')
+    pp.pprint(sub_cat)
+
+    sub_series = get_series('33246')
+    pp.pprint(sub_series)
+
+    series_observations = get_observation('BOGZ1FA716140005A')
+    print(series_observations)
+
+
+    # Find sub series of a given category
+    # sub_series = get_series('32258')
+
+
+    # Extract tim series data from particular series
     # series_observations = get_observation('CMLBSHNO')
-    print(sub_series)
 
-    # print('This is series')
-    # pp.pprint(sub_series)
+    # Get all series ids for Flow of Funds data
+    flow_of_funds_all = get_all_flow_funds_ids()
+    print(flow_of_funds_all)
 
-    # print('This is series observation example: ')
-    # pp.pprint(series_observations)
-
-    # flow_of_funds_all = get_all_flow_funds_ids()
-    # print(flow_of_funds_all)
-
-    # subsample_ids = ['AGSEBSABSHNO', 'ASIRAL', 'BLNECLBSHNO', 'CCLBSHNO', 'CDCABSHNO', 'CDGABSHNO', 'CEABSHNO',
-    #                  'CFBABSHNO', 'CMIABSHNO', 'CMLBSHNO', 'DABSHNO', 'DULIPLBSHNO']
-
-
-    # xyz = get_source_ids('')
-
-    abc = get_observation('BOGZ1FA716025005A')
-    pp.pprint(abc)
-
-    # download_all_observations(flow_of_funds_all)
+    download_all_observations(flow_of_funds_all)
 
     # print('This is sub_cat: ', sub_cat)
     # print('This is sub_series: ', sub_series)
@@ -132,15 +141,6 @@ def main():
     # This gets the children categories for the National Accounts category; which contains the Flow of Funds category
     # r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32992&api_key={0}&file_type=json'.format(KEY))
 
-    # mbf_categories = get_sub_cat('32991')
-    # mbf2_categories = get_sub_cat('24')
-
-    # mbf_series = get_series('124')
-    # print('This is mbf_categories: ', mbf_categories)
-    # print('This is mbf2_categories: ', mbf2_categories)
-
-    # print('This is mbf_series: ', mbf_series)
-    # print(get_observation('ADJRAM'))
 
 
 if __name__ == '__main__':
