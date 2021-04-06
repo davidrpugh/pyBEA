@@ -1,9 +1,7 @@
 import pybea
 import pandas as pd
-import numpy as np
 import sys
 import time
-import pickle
 
 # If you get temporarily blocked by the BEA use the other API key.
 # UserID = '1985ECDD-2CF4-4239-8A48-4C1C2FFA9A95'
@@ -14,6 +12,7 @@ UserID = '0B4FD943-BC51-49E8-97E1-81C6C85D34F9'
 def update_all_nipa_tag(frequency):
     """
     Generates one .csv file (in NIPA_ALL) containing all the NIPA data for a given frequency for all available years.
+    The TAG model uses Annual data for the NIPA dataset.
     Parameters
     ----------
     string frequency: 'A', 'Q', 'M'
@@ -163,9 +162,6 @@ def update_nipa(tablenames, frequency, year):
 def main():
     # Updated update function
     update_all_nipa_tag('A')
-    # update_all_nipa_tag('Q')
-    # update_all_nipa_tag('M')
-
 
 
 if __name__ == '__main__':
