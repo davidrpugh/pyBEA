@@ -16,12 +16,20 @@ r = requests.get(url='https://api.stlouisfed.org/fred/series/search?search_text=
 # pp.pprint(r.json())
 
 r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id=LNU00000000&api_key={0}&file_type=json'.format(KEY))
-pp.pprint(r.json())
+# pp.pprint(r.json())
 
 # This gives all the parent categories
 r = requests.get(
     url='https://api.stlouisfed.org/fred/category/children?category_id=0&api_key={0}&file_type=json'.format(KEY))
-# pp.pprint(r.json())
+pp.pprint(r.json())
+
+r = requests.get(
+    url='https://api.stlouisfed.org/fred/category/children?category_id=10&api_key={0}&file_type=json'.format(KEY))
+pp.pprint(r.json())
+
+r = requests.get(
+    url='https://api.stlouisfed.org/fred/category/children?category_id=104&api_key={0}&file_type=json'.format(KEY))
+pp.pprint(r.json())
 
 r = requests.get(
     url='https://api.stlouisfed.org/fred/category/children?category_id=32992&api_key={0}&file_type=json'.format(KEY))
@@ -46,7 +54,9 @@ r = requests.get(url='https://api.stlouisfed.org/fred/category/series?category_i
 r = requests.get(url='https://api.stlouisfed.org/fred/series?series_id=FBAGSEA027N&api_key={0}&file_type=json'.format(KEY))
 
 # Get the series observation data, either directly or from imported functions
-r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id=FBAGSEA027N&api_key={0}&file_type=json'.format(KEY))
+r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id=CNP16OV&api_key={0}&file_type=json&frequency=a'.format(KEY))
+pp.pprint(r.json())
+
 # mon_auth = fed_data_api.get_observation('BOGZ1FA716025005A')
 # print(mon_auth)
 

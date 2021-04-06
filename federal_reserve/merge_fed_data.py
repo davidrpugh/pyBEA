@@ -19,13 +19,8 @@ def remove_pre_1960():
 
 
 def append_observation(fed_data, id, index):
-    # print(index)
     obj = fed.get_observation(id)
-    # metadata = fed.get_series(id)
-    # pp.pprint(metadata)
-    # print(id)
     obj = obj['observations']
-    # pp.pprint(obj)
 
     temp_df = pd.DataFrame()
     temp_values = []
@@ -49,7 +44,6 @@ def append_observation(fed_data, id, index):
     temp_fed_unit = df['FED Unit'][index]
     temp_fed_multiplier = df['FED Multiplier'][index]
     temp_currency = df['Currency'][index]
-    temp_fed_unique_id = df['FED Unique Identifier'][index]
 
     # Create temporary lists of values and dates
     for i in obj:
@@ -63,7 +57,6 @@ def append_observation(fed_data, id, index):
         fed_unit.append(temp_fed_unit)
         fed_multiplier.append(temp_fed_multiplier)
         currency.append(temp_currency)
-        fed_unique_id.append(temp_fed_unique_id)
 
 
     # Extract only the year from the date.
@@ -77,12 +70,10 @@ def append_observation(fed_data, id, index):
     temp_df['FED Unit'] = fed_unit
     temp_df['FED Multiplier'] = fed_multiplier
     temp_df['Currency'] = currency
-    temp_df['FED Unique Identifier'] = fed_unique_id
     temp_df['date'] = temp_dates
     temp_df['value'] = temp_values
 
     fed_data = fed_data.append(temp_df)
-    # print(id, fed_data)
 
     # Need the sleep otherwise it fails, might be another throttling issue.
     time.sleep(2)
@@ -104,7 +95,6 @@ def main():
 
     for i, x in enumerate(series_ids):
         fed_key_merged = append_observation(fed_key_merged, x, i)
-        # metadata = parse_metadata(x)
 
     # print(fed_key_merged)
     fed_key_merged.to_csv('output_fed_merge.csv', index=False)
