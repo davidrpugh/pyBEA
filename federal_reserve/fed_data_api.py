@@ -99,19 +99,13 @@ def main():
     sub_cat = get_sub_cat('32251')
     pp.pprint(sub_cat)
 
+    # Find the series within a category
     sub_series = get_series('33246')
     pp.pprint(sub_series)
 
+    # Extract time series data from particular series
     series_observations = get_observation('BOGZ1FA716140005A')
     print(series_observations)
-
-
-    # Find sub series of a given category
-    # sub_series = get_series('32258')
-
-
-    # Extract tim series data from particular series
-    # series_observations = get_observation('CMLBSHNO')
 
     # Get all series ids for Flow of Funds data
     flow_of_funds_all = get_all_flow_funds_ids()
@@ -119,12 +113,7 @@ def main():
 
     download_all_observations(flow_of_funds_all)
 
-    # print('This is sub_cat: ', sub_cat)
-    # print('This is sub_series: ', sub_series)
-    # print('This is series observations: ', series_observations)
-
     # Find flow of funds category and series id, get observation/data
-
     # Create a list of all the parent categories, append their ids to a list called parent_list
     # dict = a['categories']
     # parent_list = []
@@ -132,15 +121,16 @@ def main():
     #     parent_list.append(a['id'])
 
     # This gives the children of one of the parent categories, in this case, National Accounts
-    # r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32992&api_key={0}&file_type=json'.format(KEY))
+    # r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32992'.format(KEY),
+    #                  params=payload)
     # for i in parent_list:
-    #     r = requests.get(url='https://api.stlouisfed.org/fred/children?category_id={0}&api_key={1}&file_type=json'.format(i, KEY))
+    #     r = requests.get(url='https://api.stlouisfed.org/fred/children?category_id={0}'.format(i), params=payload)
     #     pp.pprint(r.json())
 
     # Need Flow of Funds observation/series data:
     # This gets the children categories for the National Accounts category; which contains the Flow of Funds category
-    # r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32992&api_key={0}&file_type=json'.format(KEY))
-
+    # r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id=32992'.format(KEY),
+    #                  params=payload)
 
 
 if __name__ == '__main__':
