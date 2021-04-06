@@ -5,11 +5,14 @@ import requests
 
 KEY = 'd87219606729528c27784921b44c5630'
 
-pp = pprint.PrettyPrinter()
-
+payload = {
+    'api_key': KEY,
+    'file_type': 'json',
+    'frequency': 'a'
+}
 
 def main():
-    r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id=CNP16OV&frequency=a&api_key={0}&file_type=json'.format(KEY))
+    r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id=CNP16OV', params=payload)
     population_lvl = r.json()
     population_lvl = population_lvl['observations']
 

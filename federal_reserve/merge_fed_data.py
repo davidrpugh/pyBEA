@@ -3,12 +3,19 @@ import requests
 import pprint
 import pandas as pd
 import time
-import fed_data_api as fed
+import os
+import sys
 
 KEY = 'd87219606729528c27784921b44c5630'
 BASE_URL = 'https://api.stlouisfed.org/fred/'
 
-pp = pprint.PrettyPrinter()
+PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'federal_reserve')
+sys.path.append(PATH)
+
+MAP_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'federal_reserve', 'map_name_to_id.csv')
+FED_KEY_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'federal_reserve', 'fed_variable_key.csv')
+
+import fed_data_api as fed
 
 
 def remove_pre_1960():
@@ -35,7 +42,7 @@ def append_observation(fed_data, id, index):
     currency = []
     fed_unique_id = []
 
-    df = pd.read_csv('fed_variable_key.csv')
+    df = pd.read_csv(FED_KEY_PATH)
     temp_series_name = df['FED Series Name'][index]
     temp_account = df['Account'][index]
     temp_var_number = df['Variable Number'][index]
@@ -58,7 +65,6 @@ def append_observation(fed_data, id, index):
         fed_multiplier.append(temp_fed_multiplier)
         currency.append(temp_currency)
 
-
     # Extract only the year from the date.
     for i, x in enumerate(temp_dates):
         temp_dates[i] = x[0:4]
@@ -77,6 +83,7 @@ def append_observation(fed_data, id, index):
 
     # Need the sleep otherwise it fails, might be another throttling issue.
     time.sleep(2)
+    print(id, 'is complete.')
     return fed_data
 
 
@@ -87,7 +94,7 @@ def fix_data_multiple():
 
 
 def main():
-    mapping = pd.read_csv('map_name_to_id.csv')
+    mapping = pd.read_csv(MAP_PATH)
     series_ids = mapping['Series ID'].tolist()
     print(series_ids)
 
@@ -100,7 +107,6 @@ def main():
     fed_key_merged.to_csv('output_fed_merge.csv', index=False)
     remove_pre_1960()
     fix_data_multiple()
-    print(fed_key_merged)
 
 
 if __name__ == '__main__':

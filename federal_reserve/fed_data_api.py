@@ -11,9 +11,10 @@ pp = pprint.PrettyPrinter()
 
 
 payload = {
-    'file_type': 'json',
-    'api_key': KEY
+    'api_key': KEY,
+    'file_type': 'json'
 }
+
 
 def get_sub_cat(id):
     r = requests.get(url='https://api.stlouisfed.org/fred/category/children?category_id={0}'.format(id), params=payload)
@@ -63,9 +64,8 @@ def get_all_flow_funds_ids():
     return flow_of_funds_ids
 
 
-# How should the data be formatted? Depends on where/what this application is used for
 def download_all_observations(series_ids):
-    """ This downloads all """
+    """ This downloads all observations in separate files. Probably should not be used."""
     date = []
     value = []
     print(series_ids)
