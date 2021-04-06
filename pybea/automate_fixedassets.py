@@ -71,6 +71,8 @@ def update_all_fa_tag():
     aggregate_fa['value'] = data_val_col
 
     aggregate_fa.to_csv('../FA_ALL/aggregate_fa.csv', index=False)
+    aggregate_fa.to_csv('aggregate_fa.csv', index=False)
+
 
     return failed_dict
 
@@ -97,7 +99,7 @@ def update_all_fa(year, frequency):
         print(x)
         temp = pybea.get_data(UserID, 'FixedAssets', TableName=x, Frequency=frequency, Year=year)
         # Compute how many megabytes each request is
-        print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
+        # print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
         size = sys.getsizeof(temp) / 1000000
         mb_remaining -= size
         requests_remaining -= 1
@@ -140,7 +142,7 @@ def update_fa(tablenames, frequency, year):
         print(x)
         temp = pybea.get_data(UserID, 'FixedAssets', TableName=x, Frequency=frequency, Year=year)
         # Compute how many megabytes each request is
-        print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
+        # print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
         size = sys.getsizeof(temp) / 1000000
         mb_remaining -= size
         requests_remaining -= 1

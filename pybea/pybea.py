@@ -6,7 +6,10 @@ import pandas as pd
 import json
 import pprint
 import sys
+import os
 
+PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'pybea')
+sys.path.append(PATH)
 import api
 
 global JSON_ERROR

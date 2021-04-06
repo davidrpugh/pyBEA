@@ -50,6 +50,7 @@ def update_all_nipa_tag(frequency):
             table_name.append(x)
 
         except KeyError:
+            # Failures typically mean that the dataset isn't available for the given frequency that was affected.
             print('FAILURE', x)
             failures_remaining -= 1
             if failures_remaining < 3:
@@ -71,8 +72,9 @@ def update_all_nipa_tag(frequency):
     aggregate_nipa['Value'] = data_val_col
 
     aggregate_nipa.to_csv('../NIPA_ALL/aggregate_nipa_{0}.csv'.format(frequency), index=False)
+    aggregate_nipa.to_csv('aggregate_nipa_{0}.csv'.format(frequency), index=False)
 
-    print('These are the tables that returned valid results: ', table_name)
+    # print('These are the tables that returned valid results: ', table_name)
 
 
 def update_all_nipa():
