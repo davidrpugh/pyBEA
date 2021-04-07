@@ -1,11 +1,17 @@
 """
 Functions for fetching data from the Bureau of Economic Analysis (BEA) data api.
-
 """
 import numpy as np
 import pandas as pd
+import sys
+import os
 
-from . import api
+PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'pybea')
+sys.path.append(PATH)
+import api
+
+global JSON_ERROR
+JSON_ERROR = ''
 
 
 def get_data_set_list(UserID, ResultFormat='JSON'):
@@ -29,6 +35,7 @@ def get_data_set_list(UserID, ResultFormat='JSON'):
 
     """
     tmp_request = api.DataSetListRequest(UserID=UserID, ResultFormat=ResultFormat)
+
     return tmp_request.data_set_list
 
 
@@ -112,7 +119,11 @@ def get_parameter_values(UserID, DataSetName, ParameterName, ResultFormat='JSON'
                                              DataSetName=DataSetName,
                                              ParameterName=ParameterName,
                                              ResultFormat=ResultFormat)
-    return tmp_request.parameter_values
+    # return tmp_request.parameter_values
+    temp = tmp_request._json_content
+    temp = temp['BEAAPI']['Results']['ParamValue']
+    df = pd.DataFrame(temp)
+    return df
 
 
 def get_parameter_values_filtered(UserID, DataSetName, ParameterName,
@@ -157,7 +168,7 @@ def get_parameter_values_filtered(UserID, DataSetName, ParameterName,
 
 
 def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
-    r"""
+    """
     Retrieve data from the Bureau of Economic Analysis (BEA) data api.
 
     Parameters
@@ -193,13 +204,53 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
 
     """
     valid_dataset_names = ['NIPA', 'NIUnderlyingDetail', 'FixedAssets', 'MNE',
-                           'GDPbyIndustry', 'ITA', 'IIP', 'RegionalIncome',
-                           'RegionalProduct', 'InputOutput',
+                           'GDPbyIndustry', 'ITA', 'IIP',
+                           'Regional', 'InputOutput',
                            'UnderlyingGDPbyIndustry', 'IntlServTrade']
+
+    df = get_parameter_list(UserID, DataSetName)
+    dtypes = {}
+    for i in df.index:
+        dtypes[df.loc[i]['ParameterName']] = df.loc[i]['ParameterDataType']
+
     if DataSetName in valid_dataset_names:
+        # Format request for Data
         tmp_request = api.DataRequest(UserID, DataSetName, ResultFormat, **params)
-        df = tmp_request.data
+
+        # This is the API call
+        json_content = tmp_request._json_content
+
+        data = {}
+        # This modifies the json response based on the various ways the return data is structured.
+        global JSON_ERROR
+        JSON_ERROR = ''
+
+        try:
+            data = json_content['BEAAPI']['Results']['Data']
+        except (TypeError, KeyError):
+            if DataSetName == 'IIP':
+                try:
+                    data = json_content['BEAAPI']['Data']
+                except (KeyError, TypeError):
+                    pass
+            else:
+                try:
+                    data = json_content['BEAAPI']['Results']
+                    data = data[0]['Data']
+                except (KeyError, TypeError):
+                    pass
+        try:
+            JSON_ERROR = json_content['BEAAPI']['Error']['ErrorDetail']['Description']
+        except:
+            pass
+
+        df = pd.DataFrame(data)
+        return df
+
     else:
         raise ValueError("Invalid DataSetName requested.")
 
     return df
+
+
+

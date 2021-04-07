@@ -227,7 +227,19 @@ class ParameterListRequest(Request):
 
 class ParameterValuesRequest(Request):
 
-    _dtypes = {'Desc': np.dtype('O'), "Key": np.dtype('int')}
+    # This will only work for a TableID ParameterName
+    # _dtypes = {'Desc': np.dtype('O'), "Key": np.dtype('int')}
+    # _dtypes = {'TableName': np.dtype('O'), "Description": np.dtype('str')}
+
+    # _dtypes = {'TableName': np.dtype('O'), "Description": np.dtype('str')}
+    #
+    # if ParameterName == 'TableName':
+    #     _dtypes = {'Desc': np.dtype('O'), "Key": np.dtype('int')}
+    # if ParameterName == 'TableID':
+    #     _dtypes = {'TableName': np.dtype('O'), "Description": np.dtype('str')}
+    # else:
+    #     _dtypes = {'Desc': np.dtype('O'), "Key": np.dtype('int')}
+
 
     def __init__(self, UserID, DataSetName, ParameterName, ResultFormat='JSON'):
         """
@@ -255,6 +267,12 @@ class ParameterValuesRequest(Request):
                            'DataSetName': DataSetName,
                            'ParameterName': ParameterName,
                            'ResultFormat': ResultFormat}
+
+        try:
+            self._dtypes = {required_params['ParameterName']: np.dtype('O'), 'Description': np.dtype('str')}
+        except KeyError:
+            self._dtypes = {'Key': np.dtype('str'), 'Desc': np.dtype('str')}
+
         super(ParameterValuesRequest, self).__init__(**required_params)
 
     @property
@@ -271,8 +289,8 @@ class ParameterValuesRequest(Request):
             df = pd.DataFrame(self._json_parameter_values)
         else:
             df = self._elements_to_dataframe(self._xml_parameter_values, self._dtypes.keys())
-        return df.astype(self._dtypes)
 
+        return df.astype(self._dtypes)
 
 class ParameterValuesFilteredRequest(ParameterValuesRequest):
 
@@ -302,10 +320,10 @@ class ParameterValuesFilteredRequest(ParameterValuesRequest):
         required_params = {'UserID': UserID,
                            'Method': 'GetParameterValuesFiltered',
                            'DataSetName': DataSetName,
-                           'ParameterName': ParameterName,
+                           'ParameterName': TargetParameter,
                            'ResultFormat': ResultFormat}
         required_params.update(params)
-        super(ParameterValuesRequestFiltered, self).__init__(**required_params)
+        super(ParameterValuesFilteredRequest, self).__init__(**required_params)
 
 
 class DataRequest(Request):
@@ -331,6 +349,8 @@ class DataRequest(Request):
             `JSON' and 'XML'.
 
         """
+        self.DataSetName = DataSetName
+
         required_params = {'UserID': UserID,
                            'Method': 'GetData',
                            'DataSetName': DataSetName,
@@ -341,11 +361,18 @@ class DataRequest(Request):
 
     @property
     def _json_data(self):
-        return self.results['Data']
+        if isinstance(self.results, list):
+            return self.results[0]['Data']
+        else:
+            return self.results['Data']
+        return self.results[0]['Data']
 
     @property
     def _json_dimensions(self):
-        return self.results['Dimensions']
+        if isinstance(self.results, list):
+            return self.results[0]['Dimensions']
+        else:
+            return self.results['Dimensions']
 
     @property
     def _json_notes(self):
@@ -367,6 +394,8 @@ class DataRequest(Request):
     def data(self):
         if self['ResultFormat'] == 'JSON':
             dtypes = self._json_to_dtypes(self._json_dimensions)
+            if self.DataSetName == 'GDPbyIndustry':
+                dtypes = self.fix_dictionary(dtypes)
             df = pd.DataFrame(self._json_data)
         else:
             dtypes = self._elements_to_dtypes(self._xml_dimensions)
@@ -386,6 +415,13 @@ class DataRequest(Request):
 
         result = df.astype(dtypes)
         return result
+
+    @classmethod
+    def fix_dictionary(cls, dtypes):
+        temp = dtypes['IndustryDescription']
+        del dtypes['IndustryDescription']
+        dtypes['IndustrYDescription'] = temp
+        return dtypes
 
     @property
     def notes(self):
