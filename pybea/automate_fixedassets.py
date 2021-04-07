@@ -3,7 +3,6 @@ import pprint
 import pandas as pd
 import sys
 import time
-import pickle
 
 # UserID = '1985ECDD-2CF4-4239-8A48-4C1C2FFA9A95'
 UserID = 'AEC7FDB2-4F22-4296-982D-7CA35C0341BA'
@@ -29,10 +28,8 @@ def update_all_fa_tag():
     line_description_col = []
 
     for x in tablenames:
-        print(x)
         temp = pybea.get_data(UserID, 'FixedAssets', TableName=x, Year='ALL')
         # Compute how many megabytes each request is
-        print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
         size = sys.getsizeof(temp) / 1000000
         mb_remaining -= size
         requests_remaining -= 1
@@ -60,7 +57,6 @@ def update_all_fa_tag():
             requests_remaining = 100
         if pybea.JSON_ERROR:
             failed_dict[x] = pybea.JSON_ERROR
-            print('FAILED FAILED FAILED')
             time.sleep(1)
 
     aggregate_fa = pd.DataFrame()
@@ -96,15 +92,14 @@ def update_all_fa(year, frequency):
     tablenames = fa_table_ids['TableName'].values
 
     for x in tablenames:
-        print(x)
         temp = pybea.get_data(UserID, 'FixedAssets', TableName=x, Frequency=frequency, Year=year)
         # Compute how many megabytes each request is
         # print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
         size = sys.getsizeof(temp) / 1000000
         mb_remaining -= size
         requests_remaining -= 1
-        print('You have ', mb_remaining, 'more megabytes before throttling and ', requests_remaining,
-              'request/s remaining before throttling.')
+        # print('You have ', mb_remaining, 'more megabytes before throttling and ', requests_remaining,
+        #       'request/s remaining before throttling.')
         temp.to_csv('../FA_DATA/{0}.csv'.format(x))
         time.sleep(1)
         if mb_remaining < 5:
@@ -141,8 +136,6 @@ def update_fa(tablenames, frequency, year):
     for x in tablenames:
         print(x)
         temp = pybea.get_data(UserID, 'FixedAssets', TableName=x, Frequency=frequency, Year=year)
-        # Compute how many megabytes each request is
-        # print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
         size = sys.getsizeof(temp) / 1000000
         mb_remaining -= size
         requests_remaining -= 1

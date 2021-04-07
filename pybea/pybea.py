@@ -3,8 +3,6 @@ Functions for fetching data from the Bureau of Economic Analysis (BEA) data api.
 """
 import numpy as np
 import pandas as pd
-import json
-import pprint
 import sys
 import os
 
@@ -211,12 +209,9 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
                            'UnderlyingGDPbyIndustry', 'IntlServTrade']
 
     df = get_parameter_list(UserID, DataSetName)
-    # print(get_parameter_list(UserID, DataSetName))
     dtypes = {}
     for i in df.index:
         dtypes[df.loc[i]['ParameterName']] = df.loc[i]['ParameterDataType']
-
-    # print('Dictionary mapping of ParameterName and dtypes.', dtypes)
 
     if DataSetName in valid_dataset_names:
         # Format request for Data
@@ -224,11 +219,6 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
 
         # This is the API call
         json_content = tmp_request._json_content
-
-        # Uncomment to see pretty printed json response before modification
-        # print('This is the data in the json response:')
-        # pp = pprint.PrettyPrinter()
-        # pp.pprint(json_content)
 
         data = {}
         # This modifies the json response based on the various ways the return data is structured.
@@ -251,14 +241,8 @@ def get_data(UserID, DataSetName, ResultFormat='JSON', **params):
                     pass
         try:
             JSON_ERROR = json_content['BEAAPI']['Error']['ErrorDetail']['Description']
-            # print('this is the json error: ', JSON_ERROR)
         except:
             pass
-
-        # pp = pprint.PrettyPrinter()
-        # print('This is the data in prettyprint')
-        # pp.pprint(data)
-        # print('This is the Data dictionary (from the list) only: ', data[0]['Data'])
 
         df = pd.DataFrame(data)
         return df

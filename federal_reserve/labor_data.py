@@ -11,6 +11,7 @@ payload = {
     'frequency': 'a'
 }
 
+
 def main():
     r = requests.get(url='https://api.stlouisfed.org/fred/series/observations?series_id=CNP16OV', params=payload)
     population_lvl = r.json()

@@ -12,7 +12,6 @@ def test_bea_link():
     import pybea
 
     df = pybea.get_data_set_list(UserID=UserID)
-    # print(pybea.get_data_set_list(UserID=UserID))
 
     assert 'DatasetName' in df
 
@@ -24,7 +23,6 @@ def test_get_data_set_list():
     sys.path.append(pybea_path)
     import pybea
     df = pybea.get_data_set_list(UserID)
-    # print(pybea.get_parameter_list(UserID=UserID))
 
     assert 'DatasetDescription' in df
 
@@ -36,7 +34,6 @@ def test_get_parameter_list():
     sys.path.append(pybea_path)
     import pybea
     df = pybea.get_parameter_list(UserID, 'FixedAssets')
-    # print(pybea.get_parameter_list(UserID=UserID))
 
     assert 'ParameterName' in df
 

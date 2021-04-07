@@ -290,7 +290,6 @@ class ParameterValuesRequest(Request):
         else:
             df = self._elements_to_dataframe(self._xml_parameter_values, self._dtypes.keys())
 
-        print('This is df: ', df)
         return df.astype(self._dtypes)
 
 class ParameterValuesFilteredRequest(ParameterValuesRequest):
@@ -370,7 +369,6 @@ class DataRequest(Request):
 
     @property
     def _json_dimensions(self):
-        print('This is self.results: ', self.results)
         if isinstance(self.results, list):
             return self.results[0]['Dimensions']
         else:

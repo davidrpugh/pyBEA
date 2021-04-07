@@ -6,6 +6,8 @@ import time
 import os
 import sys
 
+import fed_data_api as fed
+
 KEY = 'd87219606729528c27784921b44c5630'
 BASE_URL = 'https://api.stlouisfed.org/fred/'
 
@@ -14,8 +16,6 @@ sys.path.append(PATH)
 
 MAP_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'federal_reserve', 'map_name_to_id.csv')
 FED_KEY_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'federal_reserve', 'fed_variable_key.csv')
-
-import fed_data_api as fed
 
 
 def remove_pre_1960():
@@ -26,6 +26,18 @@ def remove_pre_1960():
 
 
 def append_observation(fed_data, id, index):
+    """
+    Parameters
+    ----------
+    fed_data : dataframe
+    id : string
+    index : int
+
+    Returns
+    -------
+    fed_data : dataframe
+
+    """
     obj = fed.get_observation(id)
     obj = obj['observations']
 
@@ -40,7 +52,6 @@ def append_observation(fed_data, id, index):
     fed_unit = []
     fed_multiplier = []
     currency = []
-    fed_unique_id = []
 
     df = pd.read_csv(FED_KEY_PATH)
     temp_series_name = df['FED Series Name'][index]
@@ -83,11 +94,11 @@ def append_observation(fed_data, id, index):
 
     # Need the sleep otherwise it fails, might be another throttling issue.
     time.sleep(2)
-    print(id, 'is complete.')
     return fed_data
 
 
 def fix_data_multiple():
+    # Values reduced by factor of 1000
     df = pd.read_csv('output_fed_merge.csv')
     df['value'] = df['value']/1000
     df.to_csv('output_fed_merge.csv', index=False)
@@ -96,14 +107,12 @@ def fix_data_multiple():
 def main():
     mapping = pd.read_csv(MAP_PATH)
     series_ids = mapping['Series ID'].tolist()
-    print(series_ids)
 
     fed_key_merged = pd.DataFrame()
 
     for i, x in enumerate(series_ids):
         fed_key_merged = append_observation(fed_key_merged, x, i)
 
-    # print(fed_key_merged)
     fed_key_merged.to_csv('output_fed_merge.csv', index=False)
     remove_pre_1960()
     fix_data_multiple()

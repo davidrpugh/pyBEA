@@ -34,7 +34,6 @@ def update_all_nipa_tag(frequency):
 
     size = .5
     for x in tablenames:
-        print(x)
         try:
             data = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency=frequency, Year='ALL')
             series_code = data['SeriesCode']
@@ -51,10 +50,8 @@ def update_all_nipa_tag(frequency):
 
         except KeyError:
             # Failures typically mean that the dataset isn't available for the given frequency that was affected.
-            print('FAILURE', x)
             failures_remaining -= 1
             if failures_remaining < 3:
-                print('Going to sleep for 60 seconds')
                 time.sleep(60)
                 failures_remaining = 30
 
@@ -73,8 +70,6 @@ def update_all_nipa_tag(frequency):
 
     aggregate_nipa.to_csv('../NIPA_ALL/aggregate_nipa_{0}.csv'.format(frequency), index=False)
     aggregate_nipa.to_csv('aggregate_nipa_{0}.csv'.format(frequency), index=False)
-
-    # print('These are the tables that returned valid results: ', table_name)
 
 
 def update_all_nipa():
@@ -95,15 +90,11 @@ def update_all_nipa():
     tablenames = nipa_table_ids['TableName'].values
 
     for x in tablenames:
-        print(x)
         temp = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency='A', Year='2000')
         # Compute how many megabytes each request is
-        print('This request was ', sys.getsizeof(temp) / 1000000, 'megabytes')
         size = sys.getsizeof(temp) / 1000000
         mb_remaining -= size
         requests_remaining -= 1
-        print('You have ', mb_remaining, 'more megabytes before throttling and ', requests_remaining,
-              'request/s remaining before throttling.')
         temp.to_csv('../NIPA_DATA/{0}.csv'.format(x))
         time.sleep(1)
         if mb_remaining < 5:
@@ -137,15 +128,11 @@ def update_nipa(tablenames, frequency, year):
     mb_remaining = 100
     requests_remaining = 100
     for x in tablenames:
-        print(x)
         temp = pybea.get_data(UserID, 'NIPA', TableName=x, Frequency=frequency, Year=year)
         # Compute how many megabytes each request is
-        print('This request was ', sys.getsizeof(temp)/1000000, 'megabytes')
         size = sys.getsizeof(temp) / 1000000
         mb_remaining -= size
         requests_remaining -= 1
-        print('You have ', mb_remaining, 'more megabytes before throttling and ', requests_remaining,
-              'request/s remaining before throttling.')
         temp.to_csv('../NIPA_DATA/{0}.csv'.format(x))
         time.sleep(1)
         if mb_remaining < 5:
